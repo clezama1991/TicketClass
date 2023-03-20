@@ -1,0 +1,31 @@
+
+
+Estados de los asientos.
+
+0 = Apartado
+1 = Disponible
+2 = Blanco
+3 = Vendido
+
+
+
+Buenas!
+Hola Raul,
+
+Gusto en saludarte.
+
+Perfecto! en este email encontraras anexado nuestro formulario.
+
+Tambien te recuerdo que si deaseas realizar pruebas en nuestro sandbox antes de ir a producción, es necesario crear una cuenta en este link: https://app.stg.airtm.io/ 
+
+Posteriormente notificarme con el email que se utilizo para crear la cuenta, de esta manera yo te estare enviando las credenciales de nuestro API (staging) y hare un fondeo para que puedan realizar las pruebas necesarias.
+
+Cualquier duda seguimos en contacto.
+te copio esto 
+que es del Airtm
+
+
+
+
+
+

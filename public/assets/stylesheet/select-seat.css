@@ -1,0 +1,582 @@
+
+.seats__grid {
+	position: relative;
+ }
+ .seats__row {
+   display: -webkit-box;
+   display: -moz-box;
+   display: -webkit-flex;
+   display: -ms-flexbox;
+   display: box;
+   display: flex;
+   -webkit-box-pack: start;
+   -moz-box-pack: start;
+   -o-box-pack: start;
+   -ms-flex-pack: start;
+   -webkit-justify-content: flex-start;
+   justify-content: flex-start;
+   margin: 5px 0;
+ }
+ .seat {
+   cursor: pointer;
+   -webkit-box-flex: 0;
+   -moz-box-flex: 0;
+   -o-box-flex: 0;
+   -ms-box-flex: 0;
+   box-flex: 0;
+   -webkit-flex-grow: 0;
+   flex-grow: 0;
+   -webkit-flex-shrink: 0;
+   flex-shrink: 0;
+   padding-left: 1px;
+   position: relative;
+ }
+ .seat--letter {
+   font-size: 0.5rem;
+   font-weight: bold;
+ }
+ @media screen and (min-width: 48em) {
+   .seat--letter {
+	 font-size: 0.625rem;
+   }
+ }
+ .seat__num {
+   color: #fff;
+	margin: auto;
+   position: absolute;
+   top: 3px;
+   right: 0;
+   left: 0;
+   display: flex;
+   justify-content: center;
+   font-size: 11px;
+	 top: 2px;
+	 font-weight: 400;
+	 font-family: arial;
+ 
+ }
+   
+	 .seats {
+		 border-radius: 5px !important;
+	 }
+ 
+	 .espacio {
+		 height: 10px;
+	 } 
+ 
+	 @keyframes showNav {
+		 from {opacity: 0;}
+		 to {opacity: 1;}
+	 }
+ .asientos_marcados { 
+   animation: showNav 250ms ease-in-out both;
+ }
+
+
+  
+  /*--------------------------------------------------------------
+	  Section Ticket Count
+  ------------------------------------------------------------- */
+  
+  .section-stats{
+	  padding:100px 0;
+	  background: url(../images/stats.jpg) no-repeat center center;
+	  -webkit-background-size: cover;
+	  -moz-background-size: cover;
+	  -o-background-size: cover;
+	  background-size: cover;
+	  position:relative
+  }
+  
+  .section-stats:before{
+	  content: "";
+	  position:absolute;
+	  top:0;
+	  bottom:0;
+	  left:0;
+	  right:0;
+	  background:rgba(36,36,36, 0.8)
+  }
+  
+  .section-stats .section-content ul li{
+	  text-align:center;
+  }
+  
+  .section-stats .section-content ul li span{
+	  color:#fff;
+	  display:block;
+	  font-size:50px;
+	  line-height:50px;
+	  font-family: "Montserrat-Regular";
+  }
+  
+  .section-stats .section-content hr{
+	  background:#fff;
+	  height:2px;
+	  width:45px;
+	  margin:30px auto;
+  }
+  
+  .section-stats .section-content ul li p{
+	  color:#fff;
+	  display:block;
+	  font-size:19px;
+	  line-height:19px;
+	  margin:0;
+	  text-transform:uppercase;
+	  font-family: "Montserrat-Regular";
+  }
+  
+  /*--------------------------------------------------------------
+	  Select Seat Page
+  --------------------------------------------------------------*/
+  
+  .section-select-seat-featured-header{
+	  min-height:322px;
+	  background: url(../images/page-featured-img-2.jpg)no-repeat center center;
+	  -webkit-background-size: cover;
+	  -moz-background-size: cover;
+	  -o-background-size: cover;
+	  background-size: cover;
+	  position:relative;
+  }
+  
+  .section-select-seat-featured-header:before{
+	  content: "";
+	  background: url(../images/overlay.png);
+	  position:absolute;
+	  top:0;
+	  bottom:0;
+	  right:0;
+	  left:0;
+  }
+  
+  .section-select-seat-featured-header .section-content{
+	  text-align:center;
+	  position:relative;
+	  padding:80px 0;
+  }
+  
+  .section-select-seat-featured-header .section-content p{
+	  color:#fff;
+	  font-size:20px;
+	  margin:0;
+  }
+  
+  .section-select-seat-featured-header .section-content p strong{
+	  font-size:40px;
+	  line-height:40px;
+	  display:block;
+	  font-family: "Montserrat-Bold";
+	  margin:5px 0 0;
+	  color:#fff;
+  }
+  
+  .section-select-seat-featured-header .section-content p strong span{
+	  font-family: "Montserrat-Light";
+	  display:inline-block;
+	  font-size:40px;
+	  margin:0;
+  }
+  
+  .section-select-seat-featured-header .section-content p span{
+	  font-size:20px;
+	  line-height:20px;
+	  display:block;
+	  font-family: "Montserrat-Light";
+	  margin:15px 0 0;
+  }
+  
+  .section-select-seat-page-content{
+	  padding:70px 0;
+	  background:#fff
+  }
+  
+  .wrapper-image{
+	  width:100%;
+	  display:block;
+	  overflow-x:hidden;
+	  overflow-y:hidden;
+	  margin:0 0 30px;
+  }
+  
+  .stadium-name{
+	  margin:0 0 35px;
+	  text-align:center
+  }
+  
+  .stadium-name h3{
+	  margin:0;
+	  display:inline-block;
+	  text-align:center;
+	  padding:10px 30px;
+	  border-radius:15px;
+	  font-size:16px;
+	  color:#ff6600;
+	  border:1px solid #ff6600;
+	  font-family: "Montserrat-Light";
+	  
+  }
+  #stadium-seat-plan{
+	  display:block;
+	  margin:0 auto
+  }
+  
+  
+  /*--------------------------------------------------------------
+	  Select Seat Page v2
+  --------------------------------------------------------------*/
+  
+  .section-select-seat-2-featured-header{
+	  min-height:322px;
+	  background: url(../images/page-featured-img.jpg)no-repeat center center;
+	  -webkit-background-size: cover;
+	  -moz-background-size: cover;
+	  -o-background-size: cover;
+	  background-size: cover;
+	  position:relative;
+  }
+  
+  .section-select-seat-2-featured-header:before{
+	  content: "";
+	  background: url(../images/overlay.png);
+	  position:absolute;
+	  top:0;
+	  bottom:0;
+	  right:0;
+	  left:0;
+  }
+  
+  .section-select-seat-2-featured-header .section-content{
+	  text-align:center;
+	  position:relative;
+	  padding:80px 0;
+  }
+  
+  .section-select-seat-2-featured-header .section-content p{
+	  color:#fff;
+	  font-size:20px;
+	  margin:0;
+  }
+  
+  .section-select-seat-2-featured-header .section-content p strong{
+	  font-size:40px;
+	  line-height:40px;
+	  display:block;
+	  font-family: "Montserrat-Bold";
+	  margin:5px 0 0;
+	  color:#fff;
+  }
+  
+  .section-select-seat-2-featured-header .section-content p span{
+	  font-size:20px;
+	  line-height:20px;
+	  display:block;
+	  font-family: "Montserrat-Light";
+	  margin:15px 0 0;
+  }
+  
+  
+  .stage-name{
+	  margin:0 0 55px;
+	  text-align:center
+  }
+  
+  .stage-name h3{
+	  margin:0 0 20px;
+	  display:inline-block;
+	  text-align:center;
+	  padding:10px 30px;
+	  border-radius:15px;
+	  font-size:16px;
+	  color:#ff6600;
+	  border:1px solid #ff6600;
+	  font-family: "Montserrat-Light";
+	  
+  }
+  
+  #mapster_wrap_0{
+	  margin:0 auto 10px;
+  }
+  
+  #hall-seat-plan{
+	  display:block;
+	  margin:0 auto
+  }
+  
+  .stage-name p{
+	  text-align:center;
+	  color:#6f6f6f;
+	  font-size:14px;
+	  font-family: "Montserrat-Regular";
+  }
+  
+  .stage-name p span{
+	  display:block;
+	  font-family: "Montserrat-Light";
+  }
+  
+  .select-popup{
+	  width:122px;
+	  background:#fff;
+	  -webkit-box-shadow: 0px 5px 13px 4px rgba(79,79,79,.42);
+	  -moz-box-shadow: 0px 5px 13px 4px rgba(79,79,79,.42);
+	  box-shadow: 0px 5px 13px 4px rgba(79,79,79,.42);
+	  z-index:99999;
+  }
+  
+  .select-popup:after {
+	  top: 100%;
+	  left: 50%;
+	  border: solid transparent;
+	  content: " ";
+	  height: 0;
+	  width: 0;
+	  position: absolute;
+	  pointer-events: none;
+	  border-color: rgba(255, 255, 255, 0);
+	  border-top-color: #fff;
+	  border-width: 13px;
+	  margin-left: -13px;
+	  
+  }
+  
+  .select-popup img{
+	  display:block;
+	  margin:0 0 10px;
+  }
+  
+  .select-popup p{
+	  text-align:center;
+	  font-size:11px;
+	  color:#6f6f6f;
+	  margin:0;
+	  line-height:11px;
+  }
+  
+  .select-popup strong{
+	  font-size:28px;
+	  line-height:28px;
+	  color:#ff6600;
+	  text-transform:uppercase;
+	  padding:2px 0 10px;
+	  display:block;
+	  font-family: "Montserrat-Bold";
+  }
+  
+  .select-popup span{
+	  display:block;
+	  text-align:center;
+	  color:#fff;
+	  background:#ff6600;
+	  border-radius:5px;
+	  padding:10px 20px;
+	  margin:0 15px 15px;
+	  border:none;
+	  font-family: "Montserrat-Light";
+  }
+  
+  .bs-caret > span{
+	  display:block;
+	  width:14px;
+	  height:7px;
+	  background:url(../images/select-arrow.png);
+	  border:none!important;
+  }
+  
+  .ticket-price .bootstrap-select{
+	  width:100%!important;
+	  margin:0 0 20px;
+  }
+  
+  .ticket-price .bootstrap-select > .btn{
+	  background:#fff!important;
+	  color:#6f6f6f;
+	  font-family: "Montserrat-Regular";
+	  font-weight:400;
+	  font-size:14px;
+  }
+  
+  .slider .tooltip {
+	  margin-top: -7px!important;
+	  font-size:11px;
+	  opacity:1;
+	  font-family: "Montserrat-Light";
+	  width:53px;
+	  height:26px;
+	  cursor:default;
+	  top:0!important;
+	  z-index:1
+  }
+  
+  .tooltip-inner{
+	  border-radius:20px;
+	  color:#f8f8f8;
+	  background:#f89406;
+	  opacity:1!important;
+	  border:2px solid #fff;
+  }
+  
+  .slider-track-low, 
+  .slider-track-high{
+	  background:#dedede
+  }
+  
+  .slider.slider-horizontal{
+	  width:100%;
+  }
+  
+  .slider-selection{
+	  background:#f89406;
+	  box-shadow:none;
+  }
+  
+  .tooltip .tooltip-arrow{
+	  display:none!important
+  }
+  
+  .seat-label{
+	  margin:0 0 45px;
+  }
+  
+  .seat-label ul{
+	  margin:0;
+	  padding:0;
+	  list-style:none;
+	  text-align:center
+  }
+  
+  .seat-label ul li{
+	  display:inline-block;
+	  margin:0 20px;
+  }
+  
+  .seat-label ul li img{
+	  margin:0 20px 0 0
+  }
+  
+  .seat-info{
+	  color:#949494;
+	  font-size:14px;
+	  width:80%;
+	  margin:0 auto;
+	  font-family: "Montserrat-Light";
+	  padding:0 0 0 57px;
+	  background: url(../images/info.png) no-repeat left center;
+  }
+  
+  .tickets label{
+	  display:block;
+	  color:#6f6f6f;
+	  margin:0 0 20px;
+	  font-weight:normal;
+  }
+  
+  .tickets{
+	  background:#fafafa;
+	  border-top:1px solid #cecece;
+	  border-left:1px solid #cecece;
+	  border-right:1px solid #cecece;
+	  padding:30px;
+  }
+  
+  .tickets select{
+	  display:block;
+	  margin:0 0 20px;
+	  width:100%;
+	  font-family: "Montserrat-Light";
+	  padding:10px 30px;
+	  color:#6f6f6f
+  }
+  
+  .ticket-price table, 
+  .ticket-price th, 
+  .ticket-price td{
+	  border:none
+  }
+  
+  .ticket-price table tr td{
+	  color:#6f6f6f;
+	  font-size:15px;
+	  font-family: "Montserrat-Light";
+  }
+  
+  .ticket-price table tr td span{
+	  display:block;
+	  color:#b3b3b3;
+	  font-size:14px;
+	  font-family: "Montserrat-Light";
+  }
+  
+  .ticket-price .table > tbody > tr > td{
+	  padding:30px
+  }
+  
+  .ticket-price .table {
+	  border:1px solid #cecece;
+	  margin:0;
+  }
+  
+  .ticket-price .table > tbody > tr{
+	  position:relative
+  }
+  
+  .ticket-price .table > tbody > tr.selected:before{
+	  content: "";
+	  width:10px;
+	  background:#ff6600;
+	  position:absolute;
+	  left:0;
+	  bottom:0;
+	  top:0;
+  }
+  
+  .ticket-price .table > tbody{
+	  overflow-y:scroll;
+	  height:409px;
+	  display:block;
+  }
+  
+  .ticket-price .table > tbody > tr:hover{
+	  cursor:pointer
+  }
+  
+  .ticket-price .table > thead > tr > th{
+	  border:none;
+	  background:#fafafb;
+	  color:#6f6f70;
+	  font-size:15px;
+	  font-family: "Montserrat-Light";
+	  padding:10px 20px;
+	  font-weight:normal;
+  }
+  
+  .ticket-price .table{
+	  width:100%;
+  }
+  
+  .ticket-price tr,
+  .ticket-price td{
+	  display:block;
+	  overflow:hidden;
+  }
+  
+  .ticket-price th,
+  .ticket-price td{
+	  float:left;
+	  width:45%;
+  }
+  
+  .ticket-price th:nth-child(2),
+  .ticket-price td:nth-child(2){
+	  float:left;
+	  width:20%;
+  }
+  
+  .ticket-price th:nth-child(3),
+  .ticket-price td:nth-child(3){
+	  float:left;
+	  width:35%;
+  }
+  
+  
