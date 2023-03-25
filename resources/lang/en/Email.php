@@ -9,4 +9,6 @@ return array(
     'your_ticket_cancelled'   => 'Tu entrada ha sido cancelada',
     'your_ticket_for_event'   => 'Tu entrada para el evento :event',
     'LLH:obsolete'            => array(),
+    'contact_organiser' => 'Puede ponerse en contacto con :organiser_name directamente en <a href="mailto::organiser_email">:organiser_email</a>, o respondiendo a este correo electrónico.',
+    'message_received_from_organiser' => 'Ha recibido un mensaje de :organiser_name en relación con el evento :event_title.',
 );

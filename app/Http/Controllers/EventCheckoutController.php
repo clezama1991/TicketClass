@@ -26,7 +26,7 @@ use PDF;
 use PhpSpec\Exception\Exception;
 use Validator;
 use App\Models\SeatTicket;
-
+use Mail;
 class EventCheckoutController extends Controller
 {
     /**
@@ -60,6 +60,8 @@ class EventCheckoutController extends Controller
         /*
          * Order expires after X min
          */
+        try {
+            //code...
         $order_expires_time = Carbon::now()->addMinutes(config('attendize.checkout_timeout_after'));
 
         $event = Event::findOrFail($event_id);
@@ -236,6 +238,12 @@ class EventCheckoutController extends Controller
                     ]) . '#order_form',
             ]);
         }
+    } catch (\Throwable $th) {
+        return response()->json([
+            'status'  => 'error',
+            'message' => $th->getMessage(),
+        ]);
+    }
 
         /*
          * Maybe display something prettier than this?
@@ -705,6 +713,33 @@ class EventCheckoutController extends Controller
         event(new OrderCompletedEvent($order));
 
 
+        $data = [
+            'order'        => $order,
+            'attendee'        => $attendee,
+            'message_content' => 'jeje bien',
+            'subject'         => 'Compra Exitosa',
+            'event'           => $attendee->event,
+            'email_logo'      => $attendee->event->organiser->full_logo_path,
+        ];
+
+        Mail::send('Emails.messageTicketsSalesCompleted', $data, function ($message) use ($attendee, $data) {
+            $message->to($attendee->event->organiser->email, $attendee->event->organiser->name)
+                ->from(config('attendize.outgoing_email_noreply'), $attendee->event->organiser->name)
+                // ->replyTo($attendee->event->organiser->email, $attendee->event->organiser->name)
+                ->subject($data['subject'] . ' - Evento '.$attendee->event->title);
+        });
+
+
+
+
+
+
+
+
+
+
+
+
         if ($return_json) {
             return response()->json([
                 'status'      => 'success',
@@ -765,41 +800,51 @@ class EventCheckoutController extends Controller
      */
     public function showOrderTickets(Request $request, $order_reference)
     {
-        $order = Order::where('order_reference', '=', $order_reference)->first();
+        try {
+            //code...
+            $order = Order::where('order_reference', '=', $order_reference)->first();
 
-        if (!$order) {
-            abort(404);
-        }
-        
-        $images = [];
-        $imgs = $order->event->images;
-        $image_path = public_path('user_content/event_images/sin_image_path.jpg');
-        $organiser_full_logo_path = public_path('user_content/organiser_images/sin_logo.png');
-        foreach ($imgs as $img) {
-            if (file_exists(public_path($img->image_path))) {
-                $image_path = public_path($img->image_path);
+            if (!$order) {
+                abort(404);
             }
-            $images[] = base64_encode(file_get_contents($image_path));
-        }
-        
-        if (file_exists(public_path($order->event->organiser->full_logo_path))) {
-            $organiser_full_logo_path = public_path($order->event->organiser->full_logo_path);
-        }
-        $data = [ 
-            'order'     => $order,
-            'event'     => $order->event,
-            'tickets'   => $order->event->tickets,
-            'attendees' => $order->attendees,
-            'css'       => file_get_contents(public_path('assets/stylesheet/ticket.css')),
-            'image'     => base64_encode(file_get_contents($organiser_full_logo_path)),
-            'images'    => $images,
-        ];
+            
+            $images = [];
+            $imgs = $order->event->images;
+            $image_path = public_path('user_content/event_images/sin_image_path.jpg');
+            $organiser_full_logo_path = public_path('user_content/organiser_images/sin_logo.png');
+            foreach ($imgs as $img) {
+                if (file_exists(public_path($img->image_path))) {
+                    $image_path = public_path($img->image_path);
+                }
+                $images[] = base64_encode(file_get_contents($image_path));
+            }
 
-        // dd($data);
-        if ($request->get('download') == '1') {
-           return PDF::html('Public.ViewEvent.Partials.PDFTicket', $data, 'Tickets');
+            if (file_exists(public_path($order->event->organiser->full_logo_path))) {
+                $organiser_full_logo_path = public_path($order->event->organiser->full_logo_path);
+            }
+            
+            $data = [ 
+                'order'     => $order,
+                'event'     => $order->event,
+                'tickets'   => $order->event->tickets,
+                'attendees' => $order->attendees,
+                'css'       => file_get_contents(public_path('assets/stylesheet/ticket.css')),
+                'image'     => base64_encode(file_get_contents($organiser_full_logo_path)),
+                'images'    => $images,
+            ];
+
+            // dd($images,$organiser_full_logo_path, $data);
+            // dd($data);
+            if ($request->get('download') == '1') {
+            return PDF::html('Public.ViewEvent.Partials.PDFTicket', $data, 'Tickets');
+            }
+            return view('Public.ViewEvent.Partials.PDFTicket', $data);
+            
+        } catch (\Throwable $th) {
+            //throw $th;
+            dd($th->getMessage());
         }
-        return view('Public.ViewEvent.Partials.PDFTicket', $data);
+
     }
 
 }

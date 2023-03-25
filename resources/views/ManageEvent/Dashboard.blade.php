@@ -97,9 +97,11 @@
     </div>
 
     <div class="row">
+        <div style="display:none">
          @foreach ($event->sections_map() as $item => $value)
          {{$item}}
          @endforeach  
+        </div>
         <div class="col-md-9 col-sm-6">
             <div class="row">
                 <div class="col-md-6">

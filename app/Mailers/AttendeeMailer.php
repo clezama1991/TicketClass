@@ -26,9 +26,12 @@ class AttendeeMailer extends Mailer
             $message->subject(trans("Email.your_ticket_for_event", ["event" => $attendee->order->event->title]));
 
             $file_name = $attendee->reference;
-            $file_path = public_path(config('attendize.event_pdf_tickets_path')) . '/' . $file_name . '.pdf';
 
-            $message->attach($file_path);
+            if (file_exists(public_path(config('attendize.event_pdf_tickets_path')) . '/' . $file_name . '.pdf')) {
+                $file_path = public_path(config('attendize.event_pdf_tickets_path')) . '/' . $file_name . '.pdf';
+                $message->attach($file_path);
+            }
+
         });
 
     }
@@ -88,9 +91,11 @@ class AttendeeMailer extends Mailer
             $message->subject(trans("Email.your_ticket_for_event", ["event" => $attendee->order->event->title]));
 
             $file_name = $attendee->getReferenceAttribute();
-            $file_path = public_path(config('attendize.event_pdf_tickets_path')) . '/' . $file_name . '.pdf';
-
-            $message->attach($file_path);
+            
+            if (file_exists(public_path(config('attendize.event_pdf_tickets_path')) . '/' . $file_name . '.pdf')) {
+                $file_path = public_path(config('attendize.event_pdf_tickets_path')) . '/' . $file_name . '.pdf';
+                $message->attach($file_path);
+            } 
         });
 
     }

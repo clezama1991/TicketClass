@@ -111,6 +111,8 @@ class EventAttendeesController extends MyBaseController
      */
     public function postInviteAttendee(Request $request, $event_id)
     {
+        try {
+            
         $rules = [
             'first_name' => 'required',
             'ticket_id'  => 'required|exists:tickets,id,account_id,' . \Auth::user()->account_id,
@@ -231,6 +233,14 @@ class EventAttendeesController extends MyBaseController
                 'error'  => trans("Controllers.attendee_exception")
             ]);
         }
+        
+    } catch (\Throwable $th) {
+        return response()->json([
+            'status' => 'error',
+            'line'  => $th->getLine(),
+            'error'  => $th->getMessage()
+        ]);
+    }
 
     }
 
@@ -430,52 +440,60 @@ class EventAttendeesController extends MyBaseController
      */
     public function postMessageAttendee(Request $request, $attendee_id)
     {
-        $rules = [
-            'subject' => 'required',
-            'message' => 'required',
-        ];
+        try { 
+            $rules = [
+                'subject' => 'required',
+                'message' => 'required',
+            ];
 
-        $validator = Validator::make($request->all(), $rules);
+            $validator = Validator::make($request->all(), $rules);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status'   => 'error',
-                'messages' => $validator->messages()->toArray(),
-            ]);
-        }
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'   => 'error',
+                    'messages' => $validator->messages()->toArray(),
+                ]);
+            }
 
-        $attendee = Attendee::scope()->findOrFail($attendee_id);
+            $attendee = Attendee::scope()->findOrFail($attendee_id);
 
-        $data = [
-            'attendee'        => $attendee,
-            'message_content' => $request->get('message'),
-            'subject'         => $request->get('subject'),
-            'event'           => $attendee->event,
-            'email_logo'      => $attendee->event->organiser->full_logo_path,
-        ];
+            $data = [
+                'attendee'        => $attendee,
+                'message_content' => $request->get('message'),
+                'subject'         => $request->get('subject'),
+                'event'           => $attendee->event,
+                'email_logo'      => $attendee->event->organiser->full_logo_path,
+            ];
 
-        //@todo move this to the SendAttendeeMessage Job
-        Mail::send('Emails.messageReceived', $data, function ($message) use ($attendee, $data) {
-            $message->to($attendee->email, $attendee->full_name)
-                ->from(config('attendize.outgoing_email_noreply'), $attendee->event->organiser->name)
-                ->replyTo($attendee->event->organiser->email, $attendee->event->organiser->name)
-                ->subject($data['subject']);
-        });
-
-        /* Could bcc in the above? */
-        if ($request->get('send_copy') == '1') {
+            //@todo move this to the SendAttendeeMessage Job
             Mail::send('Emails.messageReceived', $data, function ($message) use ($attendee, $data) {
-                $message->to($attendee->event->organiser->email, $attendee->event->organiser->name)
+                $message->to($attendee->email, $attendee->full_name)
                     ->from(config('attendize.outgoing_email_noreply'), $attendee->event->organiser->name)
                     ->replyTo($attendee->event->organiser->email, $attendee->event->organiser->name)
-                    ->subject($data['subject'] . trans("Email.organiser_copy"));
+                    ->subject($data['subject']);
             });
-        }
 
-        return response()->json([
-            'status'  => 'success',
-            'message' => trans("Controllers.message_successfully_sent"),
-        ]);
+            /* Could bcc in the above? */
+            if ($request->get('send_copy') == '1') {
+                Mail::send('Emails.messageReceived', $data, function ($message) use ($attendee, $data) {
+                    $message->to($attendee->event->organiser->email, $attendee->event->organiser->name)
+                        ->from(config('attendize.outgoing_email_noreply'), $attendee->event->organiser->name)
+                        ->replyTo($attendee->event->organiser->email, $attendee->event->organiser->name)
+                        ->subject($data['subject'] . trans("Email.organiser_copy"));
+                });
+            }
+
+            return response()->json([
+                'status'  => 'success',
+                'message' => trans("Controllers.message_successfully_sent"),
+            ]);
+            
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => $th->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -503,32 +521,41 @@ class EventAttendeesController extends MyBaseController
      */
     public function postMessageAttendees(Request $request, $event_id)
     {
-        $rules = [
-            'subject'    => 'required',
-            'message'    => 'required',
-            'recipients' => 'required',
-        ];
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
+        try {
+            
+            
+            $rules = [
+                'subject'    => 'required',
+                'message'    => 'required',
+                'recipients' => 'required',
+            ];
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'   => 'error',
+                    'messages' => $validator->messages()->toArray(),
+                ]);
+            }
+            $message = Message::createNew();
+            $message->message = $request->get('message');
+            $message->subject = $request->get('subject');
+            $message->recipients = ($request->get('recipients') == 'all') ? 'all' : $request->get('recipients');
+            $message->event_id = $event_id;
+            $message->save();
+            /*
+            * Queue the emails
+            */
+            $this->dispatch(new SendMessageToAttendees($message));
             return response()->json([
-                'status'   => 'error',
-                'messages' => $validator->messages()->toArray(),
+                'status'  => 'success',
+                'message' => 'Message Successfully Sent',
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status'  => 'success',
+                'message' => $th->getMessage(),
             ]);
         }
-        $message = Message::createNew();
-        $message->message = $request->get('message');
-        $message->subject = $request->get('subject');
-        $message->recipients = ($request->get('recipients') == 'all') ? 'all' : $request->get('recipients');
-        $message->event_id = $event_id;
-        $message->save();
-        /*
-         * Queue the emails
-         */
-        $this->dispatch(new SendMessageToAttendees($message));
-        return response()->json([
-            'status'  => 'success',
-            'message' => 'Message Successfully Sent',
-        ]);
     }
 
     /**

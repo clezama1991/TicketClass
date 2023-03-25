@@ -346,6 +346,17 @@ class Event extends MyBaseModel
         return urlencode($string);
     }
 
+    public function getFullAddressAttribute()
+    {
+        $string = $this->venue_name . ','
+            . $this->location_address_line_1 . ','
+            . $this->location_state . ','
+            . $this->location_post_code . ','
+            . $this->location_country;
+
+        return $string;
+    }
+
     /**
      * Get the big image url.
      *
