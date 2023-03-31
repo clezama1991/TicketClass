@@ -34,10 +34,10 @@ class EventTicketsController extends MyBaseController
      */
     public function postSalesTickets(Request $request, $ticket_id, $return_json = true)
     {
-
+        
         try {
             DB::beginTransaction();
-
+            $price_neto = $services_fee_neto = 0;
             $nombre = $request->get('first_name');
             $apellido = $request->get('last_name');
             $email = $request->get('email');
@@ -74,9 +74,12 @@ class EventTicketsController extends MyBaseController
                 ]);
             }
 
-            $order_total = $cantidad * $ticket->price;
+            $order_total = $cantidad * $ticket->price_neto;
             $booking_fee = $cantidad * $ticket->booking_fee;
             $organiser_booking_fee = $cantidad * $ticket->organiser_booking_fee;
+            $services_fee = $cantidad * $ticket->price_service;
+            $services_fee_neto = $ticket->price_service;
+            $price_neto = $ticket->price_neto;
 
             $event_id = $ticket->event_id;
 
@@ -100,6 +103,7 @@ class EventTicketsController extends MyBaseController
             $order->amount = $order_total;
             $order->booking_fee = $booking_fee;
             $order->organiser_booking_fee = $organiser_booking_fee;
+            $order->services_fee = $services_fee;
             $order->discount = 0.00;
             $order->account_id = $event->account->id;
             $order->event_id = $event_id;
@@ -140,7 +144,7 @@ class EventTicketsController extends MyBaseController
              * Update the event sales volume
              */
             $event->increment('sales_volume', $orderService->getGrandTotal());
-            $event->increment('organiser_fees_volume', $order->organiser_booking_fee);
+            $event->increment('organiser_fees_volume', ($order->organiser_booking_fee+$order->services_fee));
 
             /*
              * Update affiliates stats stats
@@ -192,8 +196,8 @@ class EventTicketsController extends MyBaseController
             $orderItem->title = $ticket->title;
             $orderItem->quantity = $cantidad;
             $orderItem->order_id = $order->id;
-            $orderItem->unit_price = $order->amount;
-            $orderItem->unit_booking_fee = $booking_fee + $organiser_booking_fee;
+            $orderItem->unit_price = $price_neto;
+            $orderItem->unit_booking_fee = $booking_fee + $organiser_booking_fee + $services_fee_neto;
             $orderItem->save();
 
             /*
@@ -438,7 +442,10 @@ class EventTicketsController extends MyBaseController
             $ticket->start_sale_date = $request->get('start_sale_date');
             $ticket->seat_zone = $request->get('seat_zone');
             $ticket->end_sale_date = $request->get('end_sale_date');
-            $ticket->price = $request->get('price');
+            $ticket->price_neto = $request->get('price_neto');
+            $ticket->price_service = $request->get('price_service');
+            $ticket->price_paypal = $request->get('price_paypal');
+            $ticket->price = $request->get('price_neto')+$request->get('price_service');
             $ticket->min_per_person = $request->get('min_per_person');
             $ticket->max_per_person = $request->get('max_per_person');
             $ticket->description = strip_tags($request->get('description'));
@@ -633,10 +640,13 @@ class EventTicketsController extends MyBaseController
 
         // Check if the ticket visibility changed on update
         $ticketPreviouslyHidden = (bool) $ticket->is_hidden;
-
+        dd($request->all());
         $ticket->title = $request->get('title');
         $ticket->quantity_available = !$request->get('quantity_available') ? null : $request->get('quantity_available');
-        $ticket->price = $request->get('price');
+        $ticket->price_neto = $request->get('price_neto');
+        $ticket->price_service = $request->get('price_service');
+        $ticket->price_paypal = $request->get('price_paypal');
+        $ticket->price = $request->get('price_neto')+$request->get('price_service');
         $ticket->seat_zone = $request->get('seat_zone');
         $ticket->start_sale_date = $request->get('start_sale_date');
         $ticket->end_sale_date = $request->get('end_sale_date');

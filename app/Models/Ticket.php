@@ -17,6 +17,13 @@ class Ticket extends MyBaseModel
      *
      * @return array $rules
      */
+    protected function getPriceOnlineAttribute()
+    {
+        
+        return '5000';
+        
+    }
+
     public function rules()
     {
         $format = config('attendize.default_datetime_format');
@@ -194,6 +201,11 @@ class Ticket extends MyBaseModel
         return $this->getTotalBookingFeeAttribute() + $this->price;
     }
 
+    public function getTotalPriceOnlineAttribute()
+    {
+        return $this->getTotalBookingFeeOnlineAttribute() + $this->price + $this->price_paypal;
+    }
+
     /**
      * Get the total booking fee of the ticket.
      *
@@ -202,6 +214,11 @@ class Ticket extends MyBaseModel
     public function getTotalBookingFeeAttribute()
     {
         return $this->getBookingFeeAttribute() + $this->getOrganiserBookingFeeAttribute();
+    }
+
+    public function getTotalBookingFeeOnlineAttribute()
+    {
+        return $this->getBookingFeeOnlineAttribute() + $this->getOrganiserBookingFeeOnlineAttribute();
     }
 
     /**
@@ -217,6 +234,14 @@ class Ticket extends MyBaseModel
         );
     }
 
+    public function getBookingFeeOnlineAttribute()
+    {
+        return (int)ceil($this->price) === 0 ? 0 : round(
+            (($this->price+$this->price_paypal) * (config('attendize.ticket_booking_fee_percentage') / 100)) + (config('attendize.ticket_booking_fee_fixed')),
+            2
+        );
+    }
+
     /**
      * Get the organizer's booking fee.
      *
@@ -226,6 +251,14 @@ class Ticket extends MyBaseModel
     {
         return (int)ceil($this->price) === 0 ? 0 : round(
             ($this->price * ($this->event->organiser_fee_percentage / 100)) + ($this->event->organiser_fee_fixed),
+            2
+        );
+    }
+
+    public function getOrganiserBookingFeeOnlineAttribute()
+    {
+        return (int)ceil($this->price) === 0 ? 0 : round(
+            (($this->price+$this->price_paypal) * ($this->event->organiser_fee_percentage / 100)) + ($this->event->organiser_fee_fixed),
             2
         );
     }
