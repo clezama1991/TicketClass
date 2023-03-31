@@ -172,8 +172,7 @@ return [
         Laracasts\Utilities\JavaScript\JavaScriptServiceProvider::class,
         Mcamara\LaravelLocalization\LaravelLocalizationServiceProvider::class,
 
-        // Nitmedia\Wkhtml2pdf\L5Wkhtml2pdfServiceProvider::class, 
-
+        Nitmedia\Wkhtml2pdf\L5Wkhtml2pdfServiceProvider::class,
 
     ],
 
@@ -240,5 +239,5 @@ return [
         'Omnipay'      => Omnipay\Omnipay::class,
         'LaravelLocalization' => Mcamara\LaravelLocalization\Facades\LaravelLocalization::class,
 
-    ],
+     ],
 ];
