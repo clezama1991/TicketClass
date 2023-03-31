@@ -640,7 +640,6 @@ class EventTicketsController extends MyBaseController
 
         // Check if the ticket visibility changed on update
         $ticketPreviouslyHidden = (bool) $ticket->is_hidden;
-        dd($request->all());
         $ticket->title = $request->get('title');
         $ticket->quantity_available = !$request->get('quantity_available') ? null : $request->get('quantity_available');
         $ticket->price_neto = $request->get('price_neto');
