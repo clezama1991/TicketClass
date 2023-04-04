@@ -722,34 +722,6 @@ class EventCheckoutController extends Controller
         Log::info('Firing the event');
         event(new OrderCompletedEvent($order));
 
-
-        $data = [
-            'order'        => $order,
-            'attendee'        => $attendee,
-            'message_content' => 'jeje bien',
-            'subject'         => 'Compra Exitosa',
-            'event'           => $attendee->event,
-            'email_logo'      => $attendee->event->organiser->full_logo_path,
-        ];
-
-        Mail::send('Emails.messageTicketsSalesCompleted', $data, function ($message) use ($attendee, $data) {
-            $message->to($attendee->event->organiser->email, $attendee->event->organiser->name)
-                ->from(config('attendize.outgoing_email_noreply'), $attendee->event->organiser->name)
-                // ->replyTo($attendee->event->organiser->email, $attendee->event->organiser->name)
-                ->subject($data['subject'] . ' - Evento '.$attendee->event->title);
-        });
-
-
-
-
-
-
-
-
-
-
-
-
         if ($return_json) {
             return response()->json([
                 'status'      => 'success',

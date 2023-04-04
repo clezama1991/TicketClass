@@ -23,6 +23,21 @@ class OrderMailer
             $message->to($order->account->email);
             $message->subject(trans("Controllers.new_order_received", ["event"=> $order->event->title, "order" => $order->order_reference]));
         });
+        
+        $data = [
+            'order'        => $order,
+            'attendee'        => $order->attendees,
+            'message_content' => 'jeje bien',
+            'subject'         => 'Compra Exitosa',
+            'event'           => $order->event,
+            'email_logo'      => $order->event->organiser->full_logo_path,
+        ];
+
+        Mail::send('Emails.messageTicketsSalesCompleted', $data, function ($message) use ($order, $data) {
+            $message->to($order->email, $order->first_name)
+                ->subject($data['subject'] . ' - Evento '.$order->event->title);
+        });
+ 
 
     }
 
