@@ -9,11 +9,26 @@ use Mail;
 
 class OrderMailer
 {
+   
     public function sendOrderNotification(Order $order)
     {
         $orderService = new OrderService($order->amount, $order->organiser_booking_fee, $order->event);
         $orderService->calculateFinalCosts();
 
+        $data = [
+            'order'        => $order,
+            'attendee'        => $order->attendees,
+            'message_content' => 'jeje bien',
+            'subject'         => 'Compra Exitosa',
+            'event'           => $order->event,
+            'email_logo'      => $order->event->organiser->full_logo_path,
+        ];
+
+        Mail::send('Emails.messageTicketsSalesCompleted', $data, function ($message) use ($order, $data) {
+            $message->to($order->email, $order->first_name)
+                ->subject($data['subject'] . ' - Evento '.$order->event->title);
+        });
+ 
         $data = [
             'order' => $order,
             'orderService' => $orderService
