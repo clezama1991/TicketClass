@@ -15,16 +15,6 @@ class OrderMailer
         $orderService->calculateFinalCosts();
 
         $data = [
-            'order' => $order,
-            'orderService' => $orderService
-        ];
-
-        Mail::send('Emails.OrderNotification', $data, function ($message) use ($order) {
-            $message->to($order->account->email);
-            $message->subject(trans("Controllers.new_order_received", ["event"=> $order->event->title, "order" => $order->order_reference]));
-        });
-        
-        $data = [
             'order'        => $order,
             'attendee'        => $order->attendees,
             'message_content' => 'jeje bien',
@@ -38,6 +28,15 @@ class OrderMailer
                 ->subject($data['subject'] . ' - Evento '.$order->event->title);
         });
  
+        $data = [
+            'order' => $order,
+            'orderService' => $orderService
+        ];
+
+        Mail::send('Emails.OrderNotification', $data, function ($message) use ($order) {
+            $message->to($order->account->email);
+            $message->subject(trans("Controllers.new_order_received", ["event"=> $order->event->title, "order" => $order->order_reference]));
+        });
 
     }
 
