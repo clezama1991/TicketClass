@@ -108,6 +108,20 @@
 
 
         });
+        $(".selected_zone_map").on('click', function (e)
+        {
+            
+            var seat = $(this).data("seatzone");
+            console.log("🚀 ~ file: EmbeddedEventPage.blade.php:97 ~ seat", seat)
+            
+            if(seat!='sold'){
+                //$('#map-event').hide();
+                $('#zone-event-'+seat).show();
+            }
+ 
+
+
+        });
 
         $(".back").on('click', function (e)
         {

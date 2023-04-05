@@ -27,11 +27,10 @@
                             $zonas_disponibles = $tickets->where('is_hidden', false)->pluck('seat_zone')->toArray();                                
                         ?>                      
                         @foreach($event->sections_map() as $key => $map_section)
-                        <area data-seat="{{ in_array($map_section->combine,$zonas_disponibles) ? 'sold' : "
-                            x".$map_section->combine }}"
-                            data-seatzone="{{ $map_section->combine}}" class="selected_zone" alt="{{ $map_section->combine }}"
+                        <area data-seat="{{ in_array($map_section->combine,$zonas_disponibles) ? 'sold' : "x".$map_section->combine }}"
+                            data-seatzone="{{ strtoupper($map_section->combine)}}" class="selected_zone_map" alt="{{ $map_section->combine }}"
                             title="{{ $map_section->combine }}" href="#" shape="{{$map_section->shape}}" coords="{{$map_section->coords}}"
-                            data-toggle="{{ in_array($map_section->combine,$zonas_disponibles) ? 'modal' : 'sold' }}" data-target="#myModal"
+                            data-toggle="{{ in_array(strtoupper($map_section->combine),$zonas_disponibles) ? 'modal' : 'sold' }}" data-target="#myModal"
                             >
                         @endforeach
                     </map>
