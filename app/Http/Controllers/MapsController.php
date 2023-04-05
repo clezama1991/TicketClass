@@ -212,6 +212,7 @@ class MapsController extends MyBaseController
                 $new['rows'] = $request->rows;
                 $new['cols'] = $request->cols;
                 $new['coords'] = $request->coords;
+                $new['shape'] = $request->shape;
                 $new['active'] = isset($request->active)?$request->active:0;
             
                 MapsDetails::create($new);
@@ -259,6 +260,7 @@ class MapsController extends MyBaseController
                 $new['rows'] = $request->rows;
                 $new['cols'] = $request->cols;
                 $new['coords'] = $request->coords;
+                $new['shape'] = $request->shape;
                 $new['active'] = isset($request->active)?$request->active:0;
             
                 MapsDetails::where('id',$request->id)->update($new);
