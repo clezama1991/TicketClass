@@ -453,7 +453,7 @@ ICSTemplate;
 
     public function sections_map()
     {
-        return ($this->map) ? $this->map->sections->pluck('coords','combine') : [];
+        return ($this->map) ? $this->map->sections : [];
     }
 
 

@@ -22,18 +22,17 @@
                 <div id="" class="col-md-7">
                     <img id="hall-seat-plan" src="{{ asset($event->image_map()) }}" alt="stage" usemap="#map" />
                     <map name="map" class="seatmap">
-                        <!-- SEAT A -->
-                        @foreach ($event->sections_map() as $item => $value)
-                        <?php $coords[$item] = $value; ?>
-                        @endforeach
+                        <!-- SEAT A --> 
                         <?php                            
-                                $zonas_disponibles = $tickets->where('is_hidden', false)->pluck('seat_zone')->toArray();                                
-                            ?>
-                        @foreach($coords as $key => $ticket)
-                        <area data-seat="{{ in_array($key,$zonas_disponibles) ? $key : 'sold' }}" class="selected_zone"
-                            data-toggle="{{ in_array($key,$zonas_disponibles) ? 'modal' : 'sold' }}"
-                            data-target="#myModal" title="{{ $key }}" alt="{{ $key }}" href="#" shape="poly"
-                            coords="{{$ticket}}">
+                            $zonas_disponibles = $tickets->where('is_hidden', false)->pluck('seat_zone')->toArray();                                
+                        ?>                      
+                        @foreach($event->sections_map() as $key => $map_section)
+                        <area data-seat="{{ in_array($map_section->combine,$zonas_disponibles) ? 'sold' : "
+                            x".$map_section->combine }}"
+                            data-seatzone="{{ $map_section->combine}}" class="selected_zone" alt="{{ $map_section->combine }}"
+                            title="{{ $map_section->combine }}" href="#" shape="{{$map_section->shape}}" coords="{{$map_section->coords}}"
+                            data-toggle="{{ in_array($map_section->combine,$zonas_disponibles) ? 'modal' : 'sold' }}" data-target="#myModal"
+                            >
                         @endforeach
                     </map>
 

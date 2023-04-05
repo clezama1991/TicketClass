@@ -36,6 +36,7 @@ class MapsDetails extends MyBaseModel
         'rows',
         'cols',
         'coords',
+        'shape',
         'active'
     ];
 
