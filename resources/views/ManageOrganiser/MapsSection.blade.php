@@ -137,6 +137,15 @@
                                                             )) !!}
                                                         </div>
 
+                                                        <div class="form-group">
+                                                          <label for="shape">Tipo de Área</label>
+                                                          <select class="form-control" name="shape" id="shape">
+                                                            <option value="poly" {{$row->shape=='poly' ? 'selected' : ''}} >Poligono</option>
+                                                            <option value="rect" {{$row->shape=='rect' ? 'selected' : ''}}>Cuadrado</option>
+                                                            <option value="circle" {{$row->shape=='circle' ? 'selected' : ''}}>Circulo</option>
+                                                          </select>
+                                                        </div>
+                                                        
                                                         <div class="custom-checkbox mb5">
                                                             <h5>@lang("Organiser.th_status")</h5>
                                                             {!! Form::checkbox('active', 1, $row->active, ['id' =>
@@ -244,6 +253,14 @@
                             )) !!}
                         </div>
  
+                        <div class="form-group">
+                            <label for="shape">Tipo de Área</label>
+                            <select class="form-control" name="shape" id="shape">
+                              <option value="poly" selected>Poligono</option>
+                              <option value="rect">Cuadrado</option>
+                              <option value="circle">Circulo</option>
+                            </select>
+                          </div>
 
                         <div class="custom-checkbox mb5">
                             <h5>@lang("Organiser.th_status")</h5>

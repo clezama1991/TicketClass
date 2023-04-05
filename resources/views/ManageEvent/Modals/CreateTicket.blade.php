@@ -54,18 +54,14 @@
                                                 <map name="map" class="seatmap">
                                                     <!-- SEAT A -->
 
-                                                    <?php $coords = []; ?>
-                                                    @foreach ($event->sections_map() as $item => $value)
-                                                    <?php $coords[$item] = $value; ?>
-                                                    @endforeach
                                                     <?php                     
                                                         $zonas_disponibles = $event->seat_zone_ocupadas();
                                                      ?>
-                                                    @foreach($coords as $key => $ticket)
-                                                    <area data-seat="{{ in_array($key,$zonas_disponibles) ? 'sold' : "
-                                                        x".$key }}" {{-- data-seat="x{{ $key}}" --}}
-                                                        data-seatzone="{{ $key}}" class="selected_zone" alt="{{ $key }}"
-                                                        title="{{ $key }}" href="#" shape="poly" coords="{{$ticket}}">
+                                                    @foreach($event->sections_map() as $key => $map_section)
+                                                    <area data-seat="{{ in_array($map_section->combine,$zonas_disponibles) ? 'sold' : "
+                                                        x".$map_section->combine }}" {{-- data-seat="x{{ $key}}" --}}
+                                                        data-seatzone="{{ $map_section->combine}}" class="selected_zone" alt="{{ $map_section->combine }}"
+                                                        title="{{ $map_section->combine }}" href="#" shape="{{$map_section->shape}}" coords="{{$map_section->coords}}">
                                                     @endforeach
 
                                                     {{-- <area data-seat="a2"
