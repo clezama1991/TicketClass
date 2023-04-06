@@ -52,8 +52,6 @@
                                                 <img id="hall-seat-plan" src="{{ asset($event->image_map()) }}"
                                                     alt="stage" usemap="#map" />
                                                 <map name="map" class="seatmap">
-                                                    <!-- SEAT A -->
-
                                                     <?php                     
                                                         $zonas_disponibles = $event->seat_zone_ocupadas();
                                                      ?>
@@ -63,26 +61,6 @@
                                                         data-seatzone="{{ $map_section->combine}}" class="selected_zone" alt="{{ $map_section->combine }}"
                                                         title="{{ $map_section->combine }}" href="#" shape="{{$map_section->shape}}" coords="{{$map_section->coords}}">
                                                     @endforeach
-
-                                                    {{-- <area data-seat="a2"
-                                                        coords="212,241,224,227,240,212,220,179,202,195,190,209,180,223">
-                                                    <area data-seat="a3 coords="
-                                                        264,199,283,192,302,189,301,150,273,156,243,168">
-
-                                                    <!-- SEAT C -->
-                                                    <area
-                                                        dcoords="0,302,38,302,39,282,43,261,48,241,53,221,60,205,68,187,36,168,26,187,20,205,14,224,8,243,5,262,2,281">
-                                                    <area data-seat="c2" alt="c2" href="#" shape="poly"
-                                                        coords="146,50,132,59,117,70,102,83,88,96,75,110,63,125,53,139,49,146,82,165,93,150,107,133,125,112,142,97,166,80">
-                                                    <area data-seat="sold" alt="c3" href="#" shape="poly"
-                                                        coords="186,68,219,55,250,46,280,40,302,38,300,1,263,4,234,11,199,22,168,36">
-                                                    <area data-seat="sold" alt="c4" href="#" shape="poly"
-                                                        coords="326,0,327,39,347,40,365,42,383,46,402,52,417,58,440,69,460,37,444,28,422,19,396,10,374,5,351,2">
-                                                    <area data-seat="c5" alt="c5" href="#" shape="poly"
-                                                        coords="464,81,481,94,500,110,514,124,532,144,547,164,580,146,568,130,552,109,530,86,504,63,482,49">
-                                                    <area data-seat="c6" alt="c6" href="#" shape="poly"
-                                                        coords="560,187,568,204,574,222,580,241,586,261,588,278,589,301,627,301,627,282,624,260,619,235,612,212,604,191,592,168">
-                                                    --}}
                                                 </map>
                                             </div>
                                         </div>
