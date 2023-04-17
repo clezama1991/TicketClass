@@ -12,7 +12,7 @@
     -->
     <title>
         @section('title')
-            Attendize -
+            {{config('app.name')}} -
         @show
     </title>
 

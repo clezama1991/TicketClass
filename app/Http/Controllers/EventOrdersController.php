@@ -9,7 +9,9 @@ use App\Models\Event;
 use App\Models\EventStats;
 use App\Models\SeatTicket;
 use App\Models\Order;
+use App\Models\OrderStatus;
 use App\Services\Order as OrderService;
+
 use DB;
 use Excel;
 use Illuminate\Http\Request;
@@ -32,41 +34,83 @@ class EventOrdersController extends MyBaseController
     {
         $allowed_sorts = ['first_name', 'email', 'order_reference', 'order_status_id', 'created_at'];
 
+        $importes = $pedidos = $entradas = $completados = $otros = 0;
+
         $searchQuery = $request->get('q');
+        $dateStartQuery = $request->get('date_start');
+        $dateEndQuery = $request->get('date_end');
+        $statusQuery = $request->get('status');
         $sort_by = (in_array($request->get('sort_by'), $allowed_sorts) ? $request->get('sort_by') : 'created_at');
         $sort_order = $request->get('sort_order') == 'asc' ? 'asc' : 'desc';
-
         $event = Event::scope()->find($event_id);
+
+        
+        
+        $orders_all = $event->orders();
+
 
         if ($searchQuery) {
             /*
-             * Strip the hash from the start of the search term in case people search for
-             * order references like '#EDGC67'
-             */
+            * Strip the hash from the start of the search term in case people search for
+            * order references like '#EDGC67'
+            */
             if ($searchQuery[0] === '#') {
                 $searchQuery = str_replace('#', '', $searchQuery);
             }
-
-            $orders = $event->orders()
-                ->where(function ($query) use ($searchQuery) {
-                    $query->where('order_reference', 'like', $searchQuery . '%')
+            
+            $orders_all->where(function ($query) use ($searchQuery) {
+                $query->where('order_reference', 'like', $searchQuery . '%')
                         ->orWhere('first_name', 'like', $searchQuery . '%')
                         ->orWhere('email', 'like', $searchQuery . '%')
                         ->orWhere('last_name', 'like', $searchQuery . '%');
-                })
-                ->orderBy($sort_by, $sort_order)
-                ->paginate();
-        } else {
-            $orders = $event->orders()->orderBy($sort_by, $sort_order)->paginate();
-        }
+                });
 
-        $data = [
-            'orders'     => $orders,
-            'event'      => $event,
-            'sort_by'    => $sort_by,
-            'sort_order' => $sort_order,
-            'q'          => $searchQuery ? $searchQuery : '',
-        ];
+            }
+            
+            if($dateStartQuery){
+                $orders_all->where('created_at', '>=', $dateStartQuery);
+            }
+            
+            if($dateEndQuery){
+                $orders_all->where('created_at', '<=', $dateEndQuery);
+            }
+            
+            if($statusQuery){
+                $orders_all->where('order_status_id', $statusQuery);
+            }
+            
+            $orders = $orders_all->orderBy($sort_by, $sort_order)->paginate();
+            
+            $importes = $orders->sum('amount') +$orders->sum('services_fee');
+            $pedidos = $orders->count();
+
+            foreach ($orders as $key => $value) {
+                $entradas += $value->SumQuantyorderItems();
+            }
+            
+            $completados = $orders->where('order_status_id',1)->count();
+            
+            $otros = $orders->where('order_status_id','!=',1)->count();
+              
+            
+            $status = OrderStatus::get();
+
+            $data = [
+                'type_status'     => $status,
+                'orders'     => $orders,
+                'event'      => $event,
+                'sort_by'    => $sort_by,
+                'sort_order' => $sort_order,
+                'q'          => $searchQuery,
+                'date_start'          => $dateStartQuery,
+                'date_end'          => $dateEndQuery,
+                'status'          => $statusQuery,
+                'importes'          => $importes,
+                'pedidos'          => $pedidos,
+                'entradas'          => $entradas,
+                'completados'          => $completados,
+                'otros'          => $otros,
+            ];
 
         return view('ManageEvent.Orders', $data);
     }

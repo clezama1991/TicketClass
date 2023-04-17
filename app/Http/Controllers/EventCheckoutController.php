@@ -339,7 +339,7 @@ class EventCheckoutController extends Controller
 
         $orderRequiresPayment = $ticket_order['order_requires_payment'];
 
- //return $this->completeOrder($event_id);
+ return $this->completeOrder($event_id);
          
         if ($orderRequiresPayment && $request->get('pay_offline') && $event->enable_offline_payments) {
             return $this->completeOrder($event_id);
