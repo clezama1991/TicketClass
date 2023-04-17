@@ -27,7 +27,94 @@
 @stop
 
 @section('page_header')
-<div class="col-md-9 col-sm-6">
+
+
+
+<div class="col-md-12 col-sm-6">
+<div class="row">            
+    {!! Form::open(array('url' => route('showEventOrders', ['event_id'=>$event->id,'sort_by'=>$sort_by]), 'method' => 'get')) !!}
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="date_start">F. Inicio</label>
+            <input id='date_start' name='date_start' value="{{$date_start}}" placeholder="@lang('Order.search_placeholder')" type="date" class="form-control">
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="date_end">F. Fin</label>
+            <input id='date_end' name='date_end' value="{{$date_end}}" placeholder="@lang('Order.search_placeholder')" type="date" class="form-control">
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="form-group">
+            <label for="status">Estado</label>
+            <select name="status" id="status" class="form-control">
+                <option value="" {{$status=='' ? 'selected' : ''}}>Todos</option>
+                @foreach ($type_status as $item)
+                    <option value="{{$item->id}}" {{$status==$item->id ? 'selected' : ''}}> {{$item->name}}</option>                    
+                @endforeach
+            </select>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="input-group">
+            <label for="">Buscar</label>
+            <input name='q' value="{{$q}}" placeholder="Buscar" type="text" class="form-control">
+            <span class="input-group-btn">
+            </span>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+         <div class="form-group"> 
+            <label class="text-white">0</label>
+             <span class="input-group-btn">
+                 <button class="btn btn-default btn-block" type="submit"><i class="ico-search" style="margin-right: 5px"></i>Filtrar</button>
+             </span>
+         </div>
+     </div>
+
+    {!! Form::close() !!}
+</div>
+</div>
+
+<div class="col-md-12 col-sm-6">
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="stat-box">
+                <h3>{{ money($importes, $event->currency) }}</h3>
+                <span>Importes</span>
+            </div>
+
+            
+
+
+
+
+
+        </div>
+        <div class="col-sm-3">
+            <div class="stat-box">
+                <h3>{{$pedidos}}</h3>
+                <span>Pedidos</span>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="stat-box">
+                <h3>{{$entradas}}</h3>
+                <span>Entradas</span>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="stat-box">
+                <h3>{{$completados}} / {{$otros}}</h3>
+                <span>Completadas / Otros</span>
+            </div>
+        </div>
+    </div>
+    </div>
+    
+<div class="col-md-12 col-sm-6">
     <!-- Toolbar -->
     <div class="btn-toolbar" role="toolbar">
         <div class="btn-group btn-group btn-group-responsive">
@@ -41,18 +128,9 @@
                 <li><a href="{{route('showExportOrders', ['event_id'=>$event->id,'export_as'=>'html'])}}">@lang("File_format.html")</a></li>
             </ul>
         </div>
+        
     </div>
     <!--/ Toolbar -->
-</div>
-<div class="col-md-3 col-sm-6">
-   {!! Form::open(array('url' => route('showEventOrders', ['event_id'=>$event->id,'sort_by'=>$sort_by]), 'method' => 'get')) !!}
-    <div class="input-group">
-        <input name='q' value="{{$q or ''}}" placeholder="@lang('Order.search_placeholder')" type="text" class="form-control">
-        <span class="input-group-btn">
-            <button class="btn btn-default" type="submit"><i class="ico-search"></i></button>
-        </span>
-    </div>
-   {!! Form::close() !!}
 </div>
 @stop
 
@@ -72,22 +150,22 @@
                     <thead>
                         <tr>
                             <th>
-                               {!! Html::sortable_link(trans("Order.order_ref"), $sort_by, 'order_reference', $sort_order, ['q' => $q , 'page' => $orders->currentPage()]) !!}
+                               {!! Html::sortable_link(trans("Order.order_ref"), $sort_by, 'order_reference', $sort_order, ['q' => $q, 'date_start' => $date_start, 'date_end' => $date_end, 'status' => $status , 'page' => $orders->currentPage()]) !!}
                             </th>
                             <th>
-                               {!! Html::sortable_link(trans("Order.order_date"), $sort_by, 'created_at', $sort_order, ['q' => $q , 'page' => $orders->currentPage()]) !!}
+                               {!! Html::sortable_link(trans("Order.order_date"), $sort_by, 'created_at', $sort_order, ['q' => $q, 'date_start' => $date_start, 'date_end' => $date_end, 'status' => $status , 'page' => $orders->currentPage()]) !!}
                             </th>
                             <th>
-                               {!! Html::sortable_link(trans("Attendee.name"), $sort_by, 'first_name', $sort_order, ['q' => $q , 'page' => $orders->currentPage()]) !!}
+                               {!! Html::sortable_link(trans("Attendee.name"), $sort_by, 'first_name', $sort_order, ['q' => $q, 'date_start' => $date_start, 'date_end' => $date_end, 'status' => $status , 'page' => $orders->currentPage()]) !!}
                             </th>
                             <th>
-                               {!! Html::sortable_link(trans("Attendee.email"), $sort_by, 'email', $sort_order, ['q' => $q , 'page' => $orders->currentPage()]) !!}
+                               {!! Html::sortable_link(trans("Attendee.email"), $sort_by, 'email', $sort_order, ['q' => $q, 'date_start' => $date_start, 'date_end' => $date_end, 'status' => $status , 'page' => $orders->currentPage()]) !!}
                             </th>
                             <th>
-                               {!! Html::sortable_link(trans("Order.amount"), $sort_by, 'amount', $sort_order, ['q' => $q , 'page' => $orders->currentPage()]) !!}
+                               {!! Html::sortable_link(trans("Order.amount"), $sort_by, 'amount', $sort_order, ['q' => $q, 'date_start' => $date_start, 'date_end' => $date_end, 'status' => $status , 'page' => $orders->currentPage()]) !!}
                             </th>
                             <th>
-                               {!! Html::sortable_link(trans("Order.status"), $sort_by, 'order_status_id', $sort_order, ['q' => $q , 'page' => $orders->currentPage()]) !!}
+                               {!! Html::sortable_link(trans("Order.status"), $sort_by, 'order_status_id', $sort_order, ['q' => $q, 'date_start' => $date_start, 'date_end' => $date_end, 'status' => $status , 'page' => $orders->currentPage()]) !!}
                             </th>
                             <th></th>
                         </tr>
@@ -141,7 +219,7 @@
         </div>
     </div>
     <div class="col-md-12">
-        {!!$orders->appends(['sort_by' => $sort_by, 'sort_order' => $sort_order, 'q' => $q])->render()!!}
+        {!!$orders->appends(['sort_by' => $sort_by, 'sort_order' => $sort_order, 'q' => $q, 'date_start' => $date_start, 'date_end' => $date_end, 'status' => $status])->render()!!}
     </div>
 
     @else

@@ -2,14 +2,14 @@
 
 @section('message_content')
 
-    <p>Hi there,</p>
+    <p>Hola,</p>
     <p>
-        You have received a refund on behalf of your cancelled ticket for <b>{{{$attendee->event->title}}}</b>.
-        <b>{{{ $refund_amount }}} has been refunded to the original payee, you should see the payment in a few days.</b>
+        Ha recibido un reembolso en nombre de su billete cancelado por <b>{{{$attendee->event->title}}}</b>.
+        <b>{{{ $refund_amount }}} ha sido reembolsado al beneficiario original, debería ver el pago en unos días.</b>
     </p>
 
     <p>
-        You can contact <b>{{{ $attendee->event->organiser->name }}}</b> directly at <a href='mailto:{{{$attendee->event->organiser->email}}}'>{{{$attendee->event->organiser->email}}}</a> or by replying to this email should you require any more information.
+        Puedes contactar <b>{{{ $attendee->event->organiser->name }}}</b> directamente en <a href='mailto:{{{$attendee->event->organiser->email}}}'>{{{$attendee->event->organiser->email}}}</a> o respondiendo a este correo electrónico si necesita más información.
     </p>
 @stop
 

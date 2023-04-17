@@ -82,7 +82,7 @@
 
         <div class="col-sm-3">
             <div class="stat-box">
-                <h3>{{ $event->tickets->sum('quantity_sold') }}</h3>
+                <h3>{{ $event->amount_orders() }}</h3>
                 <span>Total en Fisco</span>
             </div>
         </div>

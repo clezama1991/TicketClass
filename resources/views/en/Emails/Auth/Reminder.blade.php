@@ -6,6 +6,6 @@
         To reset your password, complete this form: {{ route('password.reset', ['token' => $token]) }}.
         <br><br><br>
         Thank you,<br>
-        Team Attendize
+        Team {{config('app.name')}}
     </div>
 @stop

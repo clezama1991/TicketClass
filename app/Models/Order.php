@@ -44,6 +44,15 @@ class Order extends MyBaseModel
         return $this->hasMany(\App\Models\OrderItem::class);
     }
 
+    public function SumQuantyorderItems()
+    {
+        $quanty  = 0;
+        foreach ($this->orderItems as $key => $value) {
+            $quanty += $value->quantity;
+        }
+        return $quanty;
+    }
+
     /**
      * The attendees associated with the order.
      *

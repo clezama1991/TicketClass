@@ -139,6 +139,15 @@ class Event extends MyBaseModel
         return $this->hasMany(\App\Models\Order::class);
     }
 
+    public function amount_orders()
+    {
+        $total = 0;
+        foreach ($this->orders as $key => $value) {
+            $total += $value->getOrganiserAmountAttribute();
+        }
+        return $total;
+    }
+
     /**
      * The access codes associated with the event.
      *
