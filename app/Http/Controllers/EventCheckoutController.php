@@ -91,6 +91,7 @@ class EventCheckoutController extends Controller
         $order_total = 0;
         $order_total_neto = 0;
         $order_total_price_service = 0;
+        $order_neto_price_online = 0;
         $total_ticket_quantity = 0;
         $booking_fee = 0;
         $organiser_booking_fee = 0;
@@ -133,6 +134,7 @@ class EventCheckoutController extends Controller
             $price_tickets_online = ($ticket->price + $ticket->price_paypal);
 
             $order_total = $order_total + ($current_ticket_quantity * $price_tickets_online);
+            $order_neto_price_online = ($current_ticket_quantity * ($ticket->price_neto + $ticket->price_paypal));
             $order_total_neto = $order_total_neto + ($current_ticket_quantity * $ticket->price_neto);
             $order_total_price_service = $order_total_price_service + ($current_ticket_quantity * $ticket->price_service);
             $booking_fee = $booking_fee + ($current_ticket_quantity * $ticket->booking_fee);
@@ -144,7 +146,8 @@ class EventCheckoutController extends Controller
                 'asientos_ids'      => $asientos_ids,
                 'qty'                   => $current_ticket_quantity,
                 'price'                 => ($current_ticket_quantity * $price_tickets_online),
-                'booking_fee'           => ($current_ticket_quantity * $ticket->booking_fee),
+                'booking_fee'           => $order_total_price_service,
+                'order_total_price_service'           => $order_total_price_service,
                 'organiser_booking_fee' => ($current_ticket_quantity * $ticket->organiser_booking_fee),
                 'full_price'            => $price_tickets_online + $ticket->total_booking_fee,
             ];
@@ -223,6 +226,7 @@ class EventCheckoutController extends Controller
             'reserved_tickets_id'     => $reservedTickets->id,
             'order_total'             => $order_total,
             'order_total_neto'             => $order_total_neto,
+            'order_neto_price_online'             => $order_neto_price_online,
             'order_total_price_service'             => $order_total_price_service,
             'booking_fee'             => $booking_fee,
             'organiser_booking_fee'   => $organiser_booking_fee,
@@ -339,7 +343,7 @@ class EventCheckoutController extends Controller
 
         $orderRequiresPayment = $ticket_order['order_requires_payment'];
 
- return $this->completeOrder($event_id);
+//  return $this->completeOrder($event_id);
          
         if ($orderRequiresPayment && $request->get('pay_offline') && $event->enable_offline_payments) {
             return $this->completeOrder($event_id);
@@ -556,7 +560,7 @@ class EventCheckoutController extends Controller
             $order->last_name = strip_tags($request_data['order_last_name']);
             $order->email = $request_data['order_email'];
             $order->order_status_id = isset($request_data['pay_offline']) ? config('attendize.order_awaiting_payment') : config('attendize.order_complete');
-            $order->amount = $ticket_order['order_total_neto'];
+            $order->amount = $ticket_order['order_neto_price_online'];
             $order->services_fee = $ticket_order['order_total_price_service'];
             $order->booking_fee = $ticket_order['booking_fee'];
             $order->organiser_booking_fee = $ticket_order['organiser_booking_fee'];
@@ -616,11 +620,10 @@ class EventCheckoutController extends Controller
                 /*
                  * Update some ticket info
                  */
+                $neto = $attendee_details['ticket']['price_neto'] + $attendee_details['ticket']['price_paypal'];
                 $ticket->increment('quantity_sold', $attendee_details['qty']);
-                $ticket->increment('sales_volume', ($attendee_details['ticket']['price'] * $attendee_details['qty']));
-                $ticket->increment('organiser_fees_volume',
-                    ($attendee_details['ticket']['organiser_booking_fee'] * $attendee_details['qty']));
-
+                $ticket->increment('sales_volume', ($neto * $attendee_details['qty']));
+                $ticket->increment('organiser_fees_volume',($attendee_details['order_total_price_service']));
 
                 /*
                  * Insert order items (for use in generating invoices)
@@ -629,7 +632,7 @@ class EventCheckoutController extends Controller
                 $orderItem->title = $attendee_details['ticket']['title'];
                 $orderItem->quantity = $attendee_details['qty'];
                 $orderItem->order_id = $order->id;
-                $orderItem->unit_price = $attendee_details['ticket']['price_neto'] + $attendee_details['ticket']['price_paypal'];
+                $orderItem->unit_price = $neto;
                 $orderItem->unit_booking_fee = $attendee_details['ticket']['booking_fee'] + $attendee_details['ticket']['organiser_booking_fee'] + $attendee_details['ticket']['price_service'];
                 $orderItem->save();
 

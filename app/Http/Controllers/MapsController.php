@@ -27,9 +27,9 @@ class MapsController extends MyBaseController
      
  
         if ($searchQuery) {
-            $attendees = Maps::where('organiser_id',$organiser_id)->paginate();
+            $attendees = Maps::paginate();
         } else {
-            $attendees = Maps::where('organiser_id',$organiser_id)->paginate();
+            $attendees = Maps::paginate();
         }
 
         $data = [
@@ -273,6 +273,7 @@ class MapsController extends MyBaseController
 
             return response()->json([
                 'status'      => 'error',
+                'message'      => $th->getMessage(),
                 'redirectUrl' => '',
             ]);
         }
