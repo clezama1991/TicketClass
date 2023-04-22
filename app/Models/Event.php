@@ -142,7 +142,16 @@ class Event extends MyBaseModel
     public function amount_orders()
     {
         $total = 0;
-        foreach ($this->orders as $key => $value) {
+        foreach ($this->orders->where('payment_gateway_id',null) as $key => $value) {
+            $total += $value->getOrganiserAmountAttribute();
+        }
+        return $total;
+    }
+
+    public function amount_orders_online()
+    {
+        $total = 0;
+        foreach ($this->orders->where('payment_gateway_id','!=',null) as $key => $value) {
             $total += $value->getOrganiserAmountAttribute();
         }
         return $total;

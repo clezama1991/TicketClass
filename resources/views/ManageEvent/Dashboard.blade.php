@@ -68,28 +68,28 @@
 
         <div class="col-sm-3">
             <div class="stat-box">
-                <h3>{{ $event->sales_volume }}</h3>
+                <h3>{{ money($event->sales_volume, $event->currency) }}</h3>
                 <span>Total Organizador</span>
             </div>
         </div>
 
         <div class="col-sm-3">
             <div class="stat-box">
-                <h3>{{ $event->organiser_fees_volume }}</h3>
+                <h3>{{ money($event->organiser_fees_volume, $event->currency) }}</h3>
                 <span>Total Cargo por Servicio</span>
             </div>
         </div>
 
         <div class="col-sm-3">
             <div class="stat-box">
-                <h3>{{ $event->amount_orders() }}</h3>
+                <h3>{{ money($event->amount_orders(), $event->currency) }}</h3>
                 <span>Total en Fisco</span>
             </div>
         </div>
 
         <div class="col-sm-3">
             <div class="stat-box">
-                <h3>0</h3>
+                <h3>{{ money($event->amount_orders_online(), $event->currency) }}</h3>
                 <span>Total en Linea</span>
             </div>
         </div>
