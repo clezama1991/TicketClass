@@ -579,7 +579,8 @@ class EventCheckoutController extends Controller
             /*
              * Update the event sales volume
              */
-            $event->increment('sales_volume', $orderService->getGrandTotal());
+            // $event->increment('sales_volume', $orderService->getGrandTotal());
+            $event->increment('sales_volume', $order->amount);
             $event->increment('organiser_fees_volume', ($order->organiser_booking_fee+$order->services_fee));
 
             /*
@@ -588,7 +589,7 @@ class EventCheckoutController extends Controller
             if ($ticket_order['affiliate_referral']) {
                 $affiliate = Affiliate::where('name', '=', $ticket_order['affiliate_referral'])
                     ->where('event_id', '=', $event_id)->first();
-                $affiliate->increment('sales_volume', $order->amount + $order->organiser_booking_fee);
+                $affiliate->increment('sales_volume', $order->amount + $order->services_fee);
                 $affiliate->increment('tickets_sold', $ticket_order['total_ticket_quantity']);
             }
 
@@ -601,10 +602,10 @@ class EventCheckoutController extends Controller
             ]);
             $event_stats->increment('tickets_sold', $ticket_order['total_ticket_quantity']);
 
-            if ($ticket_order['order_requires_payment']) {
+            // if ($ticket_order['order_requires_payment']) {
                 $event_stats->increment('sales_volume', $order->amount);
-                $event_stats->increment('organiser_fees_volume', $order->organiser_booking_fee);
-            }
+                $event_stats->increment('organiser_fees_volume', $order->services_fee);
+            // }
 
             /*
              * Add the attendees

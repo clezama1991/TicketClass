@@ -165,10 +165,11 @@ class EventTicketsController extends MyBaseController
             ]);
             $event_stats->increment('tickets_sold', $cantidad);
 
-            if (!is_null($ticket_order) && $ticket_order['order_requires_payment']) {
+            // if (!is_null($ticket_order) && $ticket_order['order_requires_payment']) {
+            // if (!is_null($ticket_order)) {
                 $event_stats->increment('sales_volume', $order->amount);
                 $event_stats->increment('organiser_fees_volume', $order->services_fee);
-            }
+            // }
 
             /*
              * Add the attendees
