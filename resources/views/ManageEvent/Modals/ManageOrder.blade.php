@@ -207,7 +207,7 @@
                                         {{$attendee->email}}
                                     </td>
                                     <td>
-                                        {{{$attendee->ticket->title}}}
+                                        {{{$attendee->ticket->title ?? null}}}
                                         {{{$order->order_reference}}}-{{{$attendee->reference_index}}}
                                     </td>
                                     

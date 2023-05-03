@@ -68,28 +68,28 @@
 
         <div class="col-sm-3">
             <div class="stat-box">
-                <h3>{{ $event->sales_volume }}</h3>
+                <h3>{{ money($event->sales_volume, $event->currency) }}</h3>
                 <span>Total Organizador</span>
             </div>
         </div>
 
         <div class="col-sm-3">
             <div class="stat-box">
-                <h3>{{ $event->organiser_fees_volume }}</h3>
+                <h3>{{ money($event->organiser_fees_volume, $event->currency) }}</h3>
                 <span>Total Cargo por Servicio</span>
             </div>
         </div>
 
         <div class="col-sm-3">
             <div class="stat-box">
-                <h3>{{ $event->amount_orders() }}</h3>
+                <h3>{{ money($event->amount_orders(), $event->currency) }}</h3>
                 <span>Total en Fisco</span>
             </div>
         </div>
 
         <div class="col-sm-3">
             <div class="stat-box">
-                <h3>0</h3>
+                <h3>{{ money($event->amount_orders_online(), $event->currency) }}</h3>
                 <span>Total en Linea</span>
             </div>
         </div>
@@ -127,7 +127,8 @@
                             <h3 class="panel-title">
                                 @lang("Dashboard.ticket_sales_volume")
                                 <span style="color: green; float: right;">
-                                    {{money($event->sales_volume, $event->currency)}}
+                                    {{-- {{money($event->sales_volume, $event->currency)}} --}}
+                                    {{ money($event->sales_volume + $event->organiser_fees_volume, $event->currency) }}
                                     @lang("basic.total")
                                 </span>
                             </h3>
@@ -172,6 +173,35 @@
                             <div class="chart-wrap">
                                 <div style="height:200px;" class="statChart" id="pieChart"></div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="panel">
+                        <div class="panel-heading panel-default">
+                            <h3 class="panel-title">
+                                Ventas Por entradas
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <td>Entrada</td>
+                                        <td>Plataforma</td>
+                                        <td>Online</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($tickets_data_totales as $totales)
+                                    <tr>
+                                        <td>{{{$totales['label']}}}</td> 
+                                        <td class="text-center">{{{$totales['value']['plata']}}}</td> 
+                                        <td class="text-center">{{{$totales['value']['online']}}}</td> 
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

@@ -16,6 +16,12 @@ class EventStats extends \Illuminate\Database\Eloquent\Model
 
     public static $unguarded = true;
 
+    
+    public function event()
+    {
+        return $this->belongsTo(Event::class, 'event_id', 'id');
+    }
+
     /**
      * @todo This shouldn't be in a view.
      * Update the amount of revenue a ticket has earned.

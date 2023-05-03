@@ -74,6 +74,38 @@ class EventDashboardController extends MyBaseController
             ];
         }
 
+        $tickets_data_id = [];
+        $tickets_data_totales = [];
+        foreach ($event->orders as $key => $value) {
+            $plata = 0;
+            $online = 0;
+            if( is_null($value->payment_gateway_id)){
+                $plata = $value->SumQuantyorderItems();
+            }else{
+                $online = $value->SumQuantyorderItems();
+            }
+            foreach ($value->orderItems as $key => $orderItems) {
+                if(!in_array($orderItems->title, $tickets_data_id)){
+                    $tickets_data_id[] = $orderItems->title;                    
+                    $tickets_data_totales[$orderItems->title] = [
+                        'label' => $orderItems->title,
+                        'value' => [
+                            'plata' => $plata,
+                            'online' => $online
+                        ]
+                    ];                    
+                }else{
+                    $tickets_data_totales[$orderItems->title] = [
+                        'label' => $orderItems->title,
+                        'value' => [
+                            'plata' => $tickets_data_totales[$orderItems->title]['value']['plata'] + $plata,
+                            'online' => $tickets_data_totales[$orderItems->title]['value']['online'] + $online
+                        ]
+                    ];
+                }                
+            }
+        }
+ 
         foreach ($event->tickets as $ticket) {
             $tickets_data[] = [
                 'value' => $ticket->quantity_sold,
@@ -83,6 +115,7 @@ class EventDashboardController extends MyBaseController
 
         $data = [
             'event'      => $event,
+            'tickets_data_totales'      => $tickets_data_totales,
             'chartData'  => json_encode($result),
             'ticketData' => json_encode($tickets_data),
         ];
