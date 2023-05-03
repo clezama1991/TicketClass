@@ -176,6 +176,35 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-md-6">
+                    <div class="panel">
+                        <div class="panel-heading panel-default">
+                            <h3 class="panel-title">
+                                Ventas Por entradas
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <td>Entrada</td>
+                                        <td>Plataforma</td>
+                                        <td>Online</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($tickets_data_totales as $totales)
+                                    <tr>
+                                        <td>{{{$totales['label']}}}</td> 
+                                        <td class="text-center">{{{$totales['value']['plata']}}}</td> 
+                                        <td class="text-center">{{{$totales['value']['online']}}}</td> 
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>
