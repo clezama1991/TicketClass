@@ -789,6 +789,8 @@ class EventCheckoutController extends Controller
         try {
             //code...
             $order = Order::where('order_reference', '=', $order_reference)->first();
+            $order->is_print = true;
+            $order->save();
 
             if (!$order) {
                 abort(404);

@@ -228,7 +228,9 @@
                 <a href="javascript:void(0);" data-modal-id="edit-order-{{ $order->id }}" data-href="{{route('showEditOrder', ['order_id'=>$order->id])}}" title="Edit Order" class="btn btn-info loadModal">
                     @lang("Order.edit")
                 </a>
-                <a class="btn btn-primary" target="_blank" href="{{route('showOrderTickets', ['order_reference' => $order->order_reference])}}?download=1">@lang("ManageEvent.print_tickets")</a>
+                <a class="btn {{$order->is_print ? 'btn-warning' : 'btn-primary'}}" target="_blank" href="{{route('showOrderTickets', ['order_reference' => $order->order_reference])}}?download=1">
+                    @lang("ManageEvent.print_tickets") @if($order->is_print) <i class="ico-print" aria-hidden="true"></i> @endif
+                </a>
                 <span class="pauseTicketSales btn btn-success" data-id="{{$order->id}}" data-route="{{route('resendOrder', ['order_id'=>$order->id])}}">@lang("ManageEvent.resend_tickets")</span>
                {!! Form::button(trans("ManageEvent.close"), ['class'=>"btn modal-close btn-danger",'data-dismiss'=>'modal']) !!}
             </div>

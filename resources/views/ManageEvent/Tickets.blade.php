@@ -182,7 +182,7 @@
                                                                 </span>
                                                             @endif
                                                         @else
-                                                            {{\App\Models\TicketStatus::find($ticket->sale_status)->name}}
+                                                            {{\App\Models\TicketStatus::find($ticket->sale_status)->name ?? null}}
                                                         @endif
                                                     </a>
                                                 </li>
