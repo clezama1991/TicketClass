@@ -227,6 +227,31 @@
 
         });
         
+        
+
+
+
+        
+        $('.view_zones').hide();
+        $(".selected_section_group").on('click', function (e)
+        {            
+            $('.section_group').hide();
+            $('.view_zones').show();
+            $('.view_sectiones').hide();    
+            var gropu_section = $(this).data("gropu_section");  
+            console.log(gropu_section);             
+            $('.'+gropu_section).show(); 
+
+
+
+
+
+        });
+        $(".back_sectiones").on('click', function (e)
+        {            
+             $('.view_zones').hide();
+            $('.view_sectiones').show();
+        });
     </script>
 </html>
 

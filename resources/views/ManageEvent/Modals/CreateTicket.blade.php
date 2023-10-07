@@ -140,6 +140,18 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
+                                    {!! Form::label('group', trans("ManageEvent.group"),
+                                    array('class'=>' control-label required')) !!}
+                                    {!! Form::text('group_zone', Input::old('group_zone'),
+                                    array(
+                                    'class'=>'form-control',
+                                    'placeholder'=> 'General Por Defecto'
+                                    )
+                                    ) !!}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
                                     <label class="" style="color: #fff">.</label>
                                     <div class="custom-checkbox">
                                         {!! Form::checkbox('select_seat', 1, false, ['id' => 'select_seat']) !!}

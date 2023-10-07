@@ -66,6 +66,7 @@ return array(
     'publish_it'                              => 'Publicar',
     'qr_instructions'                         => 'Pon el código QR delante de tu cámara (no demasiado cerca)',
     'quantity_available'                      => 'Cantidad Disponible',
+    'group'                                     => 'Grupo de la Entrada',
     'quantity_available_placeholder'          => 'P.ej.: 100 (deja en blanco para ilimitado)',
     'refund_amount'                           => 'Importe de la devolución',
     'refund_this_order?'                      => '¿Reembolsar este pedido?',

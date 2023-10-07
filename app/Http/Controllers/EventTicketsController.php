@@ -287,6 +287,7 @@ class EventTicketsController extends MyBaseController
 
         // Getting get parameters.
         $q = $request->get('q', '');
+        $view = $request->get('view', 'full');
         $sort_by = $request->get('sort_by');
         if (isset($allowed_sorts[$sort_by]) === false) {
             $sort_by = 'sort_order';
@@ -300,11 +301,18 @@ class EventTicketsController extends MyBaseController
 
         // Get tickets for event.
         $tickets = empty($q) === false
-            ? $event->tickets()->where('title', 'like', '%' . $q . '%')->orderBy($sort_by, 'asc')->paginate()
-            : $event->tickets()->orderBy($sort_by, 'asc')->paginate();
+            ? $event->tickets()->where('title', 'like', '%' . $q . '%')->orderBy($sort_by, 'asc')->get()
+            : $event->tickets()->orderBy($sort_by, 'asc')->get();
 
+
+        $tickets_all = [];
+        foreach ($tickets as $key => $value) {
+            $tickets_all[$value->group_zone][] = $value;
+        }
+            
+            // dd($tickets, $tickets_all);
         // Return view.
-        return view('ManageEvent.Tickets', compact('event', 'tickets', 'sort_by', 'q', 'allowed_sorts'));
+        return view('ManageEvent.Tickets', compact('event', 'tickets','tickets_all', 'sort_by', 'q', 'allowed_sorts','view'));
     }
 
     /**
@@ -448,6 +456,7 @@ class EventTicketsController extends MyBaseController
             $ticket->max_per_person = $request->get('max_per_person');
             $ticket->description = strip_tags($request->get('description'));
             $ticket->is_hidden = $request->get('is_hidden') ? 1 : 0;
+            $ticket->group_zone = $request->get('group_zone') =='' ? 'General' : $request->get('group_zone');
             $ticket->quantity_row =  $select_seat ? json_encode($filas) : null;
             $ticket->seat_white =  $select_seat ? json_encode($s_blancas) : null;
             $ticket->select_seat = $select_seat ? 1 : 0;
@@ -654,6 +663,7 @@ class EventTicketsController extends MyBaseController
         $ticket->quantity_row =  $select_seat ? json_encode($filas) : null;
         $ticket->seat_white =  $select_seat ? json_encode($s_blancas) : null;
         $ticket->select_seat = $select_seat ? 1 : 0;
+        $ticket->group_zone = $request->get('group_zone') =='' ? 'General' : $request->get('group_zone');
         $ticket->save();
 
         if ($select_seat && $seat_anterior == 0) {

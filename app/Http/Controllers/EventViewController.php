@@ -32,9 +32,18 @@ class EventViewController extends Controller
             return view('Public.ViewEvent.EventNotLivePage');
         }
 
+        $tickets = $event->tickets()->orderBy('sort_order', 'asc')->get();
+        
+        $tickets_all = [];
+        foreach ($tickets as $key => $value) {
+            $tickets_all[$value->group_zone][] = $value;
+        }
+            
+
         $data = [
             'event' => $event,
-            'tickets' => $event->tickets()->orderBy('sort_order', 'asc')->get(),
+            'tickets' => $tickets,
+            'tickets_all' => $tickets_all,
             'is_embedded' => 0,
         ];
         /*

@@ -19,8 +19,8 @@
     <section class="section-page-content" id="map-event">
         <div class=" ">
             <div class="row">
-                <div id="" class="col-md-7">
-                    <img id="hall-seat-plan" src="{{ asset($event->image_map()) }}" alt="stage" usemap="#map" />
+                <div id="" class="col-md-8 ">
+                    <img id="hall-seat-plan" style="width:500px" src="{{ asset($event->image_map()) }}" alt="stage" usemap="#map" />
                     <map name="map" class="seatmap">
                         <!-- SEAT A --> 
                         <?php                            
@@ -45,13 +45,43 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-md-1"></div>
-                <div class="col-md-4">
-
-                    <table class="table table-hover seat-row">
+                {{-- <div class="col-md-1"></div> --}}
+                <div class="col-md-4" style=" max-height:500px; overflow-y:auto">
+                    
+                    <table class="table table-hover view_sectiones">
                         <thead>
                             <tr>
-                                <th class="">Sección</th>
+                                <th class="">Zonas</th> 
+                            </tr>
+                        </thead>
+                        <tbody> 
+                            @foreach($tickets_all as $key_tickets_all => $ticket_all)
+                                <tr style="cursor: pointer" class="selected_section_group" data-gropu_section="{{str_replace(' ', '_', $key_tickets_all )}}" >
+                                    <td>
+                                        {{$key_tickets_all}}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table> 
+                    
+                    <div style="padding-bottom: 10px;
+                    text-align-last: end;cursor: pointer" class="view_zones back_sectiones"> 
+                        <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                        width="20px" height="20px" viewBox="0 0 459 459" style="enable-background:new 0 0 459 459;" xml:space="preserve">
+                        <g>
+                        <g id="reply">
+                        <path d="M178.5,140.25v-102L0,216.75l178.5,178.5V290.7c127.5,0,216.75,40.8,280.5,130.05C433.5,293.25,357,165.75,178.5,140.25z"
+                            />
+                        </g>
+                        </g> 
+                        </svg>
+                        Volver a las Zonas
+                    </div>
+                    <table class="table table-hover seat-rowr view_zones">
+                        <thead>
+                            <tr>
+                                <th class="">Secciones</th>
                                 <th class="">Asientos</th>
                                 <th class="text-right">Precio</th>
                             </tr>
@@ -59,7 +89,7 @@
                         <tbody>
 
                             @foreach($tickets->where('is_hidden', false) as $ticket)
-                            <tr style="cursor: pointer" data-seat="{{$ticket->seat_zone}}" class="selected_zone"
+                            <tr style="cursor: pointer" data-seat="{{$ticket->seat_zone}}" class="selected_zone section_group {{ str_replace(' ', '_', $ticket->group_zone) }}"
                                 data-toggle="modal" data-target="#myModal">
                                 <td class="">
                                     <span style="text-transform: uppercase;">{{$ticket->seat_zone}}</span>
@@ -125,6 +155,7 @@
                                             <table class="table seat-row">
                                                 <thead>
                                                     <tr>
+                                                        <th class="text-center">Zona</th>
                                                         <th class="text-center">Sección</th>
                                                         <th class="text-center">Precio</th>
                                                         {{-- <th class="text-center">Asientos Disp / Ocup</th> --}}
@@ -133,6 +164,7 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr>
+                                                        <td class="text-center">{{$ticket->group_zone}}</td>
                                                         <td class="text-center">{{$ticket->title}}</td>
                                                         <td class="text-center">{{$ticket->price}}</td>
                                                         {{-- <td class="text-center">{{$ticket->max_per_person}} /
