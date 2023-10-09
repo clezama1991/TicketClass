@@ -824,7 +824,11 @@ class EventCheckoutController extends Controller
             // dd($images,$organiser_full_logo_path, $data);
             // dd($data);
             if ($request->get('download') == '1') {
-            return PDF::html('Public.ViewEvent.Partials.PDFTicket', $data, 'Tickets');
+                if ($order->event->version_ticket == '1') {
+                    return PDF::html('Public.ViewEvent.Partials.PDFTicketV2', $data, 'Tickets');
+                }else{
+                    return PDF::html('Public.ViewEvent.Partials.PDFTicket', $data, 'Tickets');
+                }
             }
             return view('Public.ViewEvent.Partials.PDFTicket', $data);
             

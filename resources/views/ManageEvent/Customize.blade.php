@@ -564,10 +564,16 @@
                                                             ])  !!}
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 {!! Form::label('is_1d_barcode_enabled', trans("Ticket.show_1d_barcode"), ['class' => 'control-label required']) !!}
                                 {!! Form::select('is_1d_barcode_enabled', [1 => trans("basic.yes"), 0 => trans("basic.no")], $event->is_1d_barcode_enabled, ['class'=>'form-control']) !!}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {!! Form::label('version_ticket','Formato de la entrada', ['class' => 'control-label required']) !!}
+                                {!! Form::select('version_ticket', [1 => 'Formato Con Imagen', 0 => 'Formato Con Texto'], $event->version_ticket, ['class'=>'form-control']) !!}
                             </div>
                         </div>
                     </div>

@@ -153,6 +153,7 @@ class EventCustomizeController extends MyBaseController
         $event->ticket_text_color = $request->get('ticket_text_color');
         $event->ticket_sub_text_color = $request->get('ticket_sub_text_color');
         $event->is_1d_barcode_enabled = $request->get('is_1d_barcode_enabled');
+        $event->version_ticket = $request->get('version_ticket');
 
         $event->save();
 
