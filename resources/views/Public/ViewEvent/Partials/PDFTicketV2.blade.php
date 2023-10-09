@@ -471,11 +471,11 @@ table{
                                                         
                                                         {{money($grand_total, $order->event->currency)}} <br> 
                                                         
-                                                        @if ($attendee->ticket->price_service) 
+                                                        @if ($attendee->ticket->price_service && $attendee->ticket->price_service>0) 
                                                           ( Mas {{money($attendee->ticket->price_service, $order->event->currency)}} @lang("Public_ViewEvent.inc_fees"))
                                                         @endif 
 
-                                                        @if ($event->organiser->tax_name) 
+                                                        @if ($event->organiser->tax_name && $tax_amt>0) 
                                                           (inc. {{money($tax_amt, $order->event->currency)}} {{$event->organiser->tax_name}})
                                                           <br><br>{{$event->organiser->tax_name}} ID: {{ $event->organiser->tax_id }}
                                                         @endif 
