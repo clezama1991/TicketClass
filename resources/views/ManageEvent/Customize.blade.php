@@ -573,7 +573,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 {!! Form::label('version_ticket','Formato de la entrada', ['class' => 'control-label required']) !!}
-                                {!! Form::select('version_ticket', [1 => 'Formato Con Imagen', 0 => 'Formato Con Texto'], $event->version_ticket, ['class'=>'form-control']) !!}
+                                {!! Form::select('version_ticket', [0 => 'Formato Con Imagen', 1 => 'Formato Con Texto'], $event->version_ticket, ['class'=>'form-control']) !!}
                             </div>
                         </div>
                     </div>
