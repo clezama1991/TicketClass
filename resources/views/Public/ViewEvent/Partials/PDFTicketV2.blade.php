@@ -368,7 +368,7 @@ table{
                                         <table class="table"> 
                                             <tbody>
                                                 <tr> 
-                                                    <td class="ticket--info--title">EVENTO</td>
+                                                    <td class="ticket--info--title">@lang("Ticket.event")</td>
                                                 </tr> 
                                                 <tr> 
                                                     <td class="ticket--info--subtitle"> {{$event->title}}</td>
@@ -385,7 +385,7 @@ table{
                                         <table class="table"> 
                                             <tbody>
                                                 <tr> 
-                                                    <td class="ticket--info--title">REF. DE ASISTENTE</td>
+                                                    <td class="ticket--info--title">@lang("Ticket.attendee_ref")</td>
                                                 </tr> 
                                                 <tr> 
                                                     <td class="ticket--info--subtitle"> {{$attendee->reference}}</td>
@@ -404,8 +404,7 @@ table{
                                                     <td><span class="ticket--info--title">@lang("Ticket.start_date_time")</span></td>
                                                 </tr> 
                                                 <tr> 
-                                                    <td>        <span class="ticket--info--subtitle">{{$event->startDateFormatted()}}</span>
-</td>
+                                                    <td>        <span class="ticket--info--subtitle">{{$event->startDateFormatted()}}</span> </td>
                                                 </tr> 
                                             </tbody>
                                         </table>
@@ -416,8 +415,12 @@ table{
                                             <tbody>
                                                 <tr> 
                                                     <td>
-                                                      <span class="ticket--info--title">@lang("Ticket.venue")</span>: 
-                                                      <span class="ticket--info--subtitle">{{$event->venue_name}} </span>
+                                                      <span class="ticket--info--title">@lang("Ticket.venue")</span>
+                                                     </td>
+                                                </tr>  
+                                                <tr> 
+                                                    <td>
+                                                       <span class="ticket--info--subtitle">{{$event->venue_name}} </span>
                                                     </td>
                                                 </tr>  
                                             </tbody>
@@ -426,41 +429,65 @@ table{
                                     </td>
                                 </tr>  
                                 <tr class="ticket--center--row"> 
-                                    <td  colspan="2"> 
-                                        
+                                    <td  width="50%">  
                                         <table class="table"> 
                                             <tbody>
                                                 <tr> 
-                                                    <td class="ticket--info--title">TIPO DE ENTRADA / PRECIO</td>
+                                                    <td><span class="ticket--info--title">@lang("Ticket.ticket_type")</span></td>
                                                 </tr> 
                                                 <tr> 
-                                                    <td class="ticket--info--subtitle">
-                                                        
-                                                        
-                                                        
-                                      {{$attendee->ticket->title}} 
-                                      
-                                      @if($attendee->seats)
-                                            <h4>
-                                                {{{$attendee->seats->seat()}}}
-                                            </h4>
-                                        @endif  
-                                        / 
-                                      @php
-                                          // Calculating grand total including tax
-                                          $grand_total = $attendee->ticket->total_price;
-                                          $tax_amt = ($grand_total * $event->organiser->tax_value) / 100;
-                                          $grand_total = $attendee->ticket->price_neto;
-                                      @endphp
-                                      {{money($grand_total, $order->event->currency)}} @if ($attendee->ticket->price_service) ( Mas {{money($attendee->ticket->price_service, $order->event->currency)}} @lang("Public_ViewEvent.inc_fees")) @endif @if ($event->organiser->tax_name) (inc. {{money($tax_amt, $order->event->currency)}} {{$event->organiser->tax_name}})
-                                      <br><br>{{$event->organiser->tax_name}} ID: {{ $event->organiser->tax_id }}
-                                      @endif</td>
+                                                  <td>        
+                                                    <span class="ticket--info--subtitle"> 
+                                                      {{$attendee->ticket->title}} 
+                                                      
+                                                      @if($attendee->seats)
+                                                            <h4>
+                                                                {{{$attendee->seats->seat()}}}
+                                                            </h4>
+                                                        @endif  
+                                                    </span> 
+                                                  </td>
                                                 </tr> 
+                                            </tbody>
+                                        </table>  
+                                    </td>
+                                    <td  width="50%">  
+                                        <table class="table"> 
+                                            <tbody>
+                                                <tr> 
+                                                    <td>
+                                                      <span class="ticket--info--title">@lang("Ticket.price")</span> 
+                                                     </td>
+                                                </tr>  
+                                                <tr> 
+                                                    <td>
+                                                      <span class="ticket--info--subtitle"> 
+                                                        @php
+                                                          // Calculating grand total including tax
+                                                          $grand_total = $attendee->ticket->total_price;
+                                                          $tax_amt = ($grand_total * $event->organiser->tax_value) / 100;
+                                                          $grand_total = $attendee->ticket->price_neto;
+                                                        @endphp
+                                                        
+                                                        {{money($grand_total, $order->event->currency)}} <br> 
+                                                        
+                                                        @if ($attendee->ticket->price_service) 
+                                                          ( Mas {{money($attendee->ticket->price_service, $order->event->currency)}} @lang("Public_ViewEvent.inc_fees"))
+                                                        @endif 
+
+                                                        @if ($event->organiser->tax_name) 
+                                                          (inc. {{money($tax_amt, $order->event->currency)}} {{$event->organiser->tax_name}})
+                                                          <br><br>{{$event->organiser->tax_name}} ID: {{ $event->organiser->tax_id }}
+                                                        @endif 
+
+                                                      </span>
+                                                    </td>
+                                                </tr>  
                                             </tbody>
                                         </table>
                         
                                     </td>
-                                </tr>  
+                                </tr>   
                                 <tr class="ticket--center--row"> 
                                 
                                     <td colspan="2"> 
@@ -468,12 +495,7 @@ table{
                                     </td>
                                 </tr>  
                             </tbody>
-                        </table>
-                        
-                        
-                        
-                        
-                         
+                        </table> 
                     </td> 
                 </tr> 
             </tbody>
