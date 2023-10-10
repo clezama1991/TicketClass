@@ -224,7 +224,7 @@
 
                 @foreach ($tickets_all as $group => $tickets)
                     <div class="col-md-12">
-                        <a data-toggle="collapse" data-parent="#QuestionsAccordion" href="#collapse{{ $group }}"
+                        <a data-toggle="collapse" data-parent="#QuestionsAccordion" href="#collapse{{str_replace(' ', '', substr($group))}}"
                             class="collapsed" style="display: contents;">
                             <span class="h4">
                                 {{ $group }}
@@ -234,7 +234,7 @@
                             </span>
                         </a>    
                     </div>
-                    <div id="collapse{{ $group }}" class="panel-collapse in">
+                    <div id="collapse{{str_replace(' ', '', substr($group))}}" class="panel-collapse in">
                         @foreach ($tickets as $ticket)
                             <div id="ticket_{{ $ticket->id }}" class="col-md-4 col-sm-6 col-xs-12">
                                 <div class="panel panel-success ticket" data-ticket-id="{{ $ticket->id }}">
