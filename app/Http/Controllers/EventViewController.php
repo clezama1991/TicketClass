@@ -32,14 +32,50 @@ class EventViewController extends Controller
             return view('Public.ViewEvent.EventNotLivePage');
         }
 
-        $tickets = $event->tickets()->orderBy('sort_order', 'asc')->get();
-        
         $tickets_all = [];
-        foreach ($tickets as $key => $value) {
-            $tickets_all[$value->group_zone][] = $value;
-        }
+        $tickets = $event->tickets()->orderBy('group_zone', 'desc')->get();
+         
+        if($event_id==52){
+            $grupo = ['BARRERA SOMBRA Fila 1',
+                'BARRERA SOMBRA Fila 2',
+                'BARRERA SOMBRA Fila 3',
+                'BARRERA SOMBRA Fila 4',
+                'BARRERA SOL Fila 1',
+                'BARRERA SOL Fila 2',
+                'BARRERA SOL Fila 3',
+                'BARRERA SOL Fila 4',
+                'BARRERA SOL Fila 1',
+                '1er TENDIDO SOMBRA Fila 1',
+                '1er TENDIDO SOMBRA Fila 2',
+                '1er TENDIDO SOMBRA Fila 3',
+                '1er TENDIDO SOMBRA Fila 4',
+                '1er TENDIDO SOMBRA Fila 5',
+                '1er TENDIDO SOMBRA Fila 6',
+                '1er TENDIDO SOL Fila 1',
+                '1er TENDIDO SOL Fila 2',
+                '1er TENDIDO SOL Fila 3',
+                '1er TENDIDO SOL Fila 4',
+                '1er TENDIDO SOL Fila 5',
+                '1er TENDIDO SOL Fila 6',
+                'Segundo Tendido Sombra',
+                'Segundo Tendido Sol',
+                'General Sombra',
+                'General Sol',
+                'TENDIDO ALTO' 
+            ];
             
-
+            
+            foreach ($grupo as $key => $value) {
+                $tickets_all[$value][] =$event->tickets()->where('group_zone',$value)->orderBy('group_zone', 'desc')->get();
+            }
+        }else{
+        
+            $tickets_all = [];
+            foreach ($tickets as $key => $value) {
+                $tickets_all[$value->group_zone][] = $value;
+            }
+        }
+        
         $data = [
             'event' => $event,
             'tickets' => $tickets,
