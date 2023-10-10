@@ -414,13 +414,13 @@ table{
                                         <table class="table"> 
                                             <tbody>
                                                 <tr> 
-                                                    <td>
+                                                    <td  align="center">
                                                       <span class="ticket--info--title">@lang("Ticket.venue")</span>
                                                      </td>
                                                 </tr>  
                                                 <tr> 
-                                                    <td>
-                                                       <span class="ticket--info--subtitle">{{$event->venue_name}} </span>
+                                                    <td  align="center">
+                                                       <span class="ticket--info--subtitle" style="text-transform: uppercase !important;">{{$event->venue_name}} </span>
                                                     </td>
                                                 </tr>  
                                             </tbody>
@@ -437,7 +437,7 @@ table{
                                                 </tr> 
                                                 <tr> 
                                                   <td>        
-                                                    <span class="ticket--info--subtitle"> 
+                                                    <span class="ticket--info--subtitle" style="text-transform: uppercase !important;"> 
                                                       {{$attendee->ticket->title}} 
                                                       
                                                       @if($attendee->seats)
@@ -455,12 +455,12 @@ table{
                                         <table class="table"> 
                                             <tbody>
                                                 <tr> 
-                                                    <td>
+                                                    <td align="center">
                                                       <span class="ticket--info--title">@lang("Ticket.price")</span> 
                                                      </td>
                                                 </tr>  
                                                 <tr> 
-                                                    <td>
+                                                    <td align="center">
                                                       <span class="ticket--info--subtitle"> 
                                                         @php
                                                           // Calculating grand total including tax
