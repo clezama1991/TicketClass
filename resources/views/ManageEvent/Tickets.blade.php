@@ -221,118 +221,134 @@
 
         @elseif ($view=='full')
             @if ($tickets->count())
-
-                @foreach ($tickets_all as $group => $tickets)
-                    <div class="col-md-12">
-                        <a data-toggle="collapse" data-parent="#QuestionsAccordion" href="#collapse{{str_replace(' ', '', $group)}}"
-                            class="collapsed" style="display: contents;">
-                            <span class="h4">
-                                {{ $group }}
-                            </span>
-                            <span class="event_count">
-                                @lang('Ticket.n_tickets', ['num' => count($tickets_all[$group])])
-                            </span>
-                        </a>    
-                    </div>
-                    <div id="collapse{{str_replace(' ', '', $group)}}" class="panel-collapse in">
-                        @foreach ($tickets as $ticket)
-                            <div id="ticket_{{ $ticket->id }}" class="col-md-4 col-sm-6 col-xs-12">
-                                <div class="panel panel-success ticket" data-ticket-id="{{ $ticket->id }}">
-                                    <div style="cursor: pointer;" data-modal-id='ticket-{{ $ticket->id }}'
-                                        data-href="{{ route('showEditTicket', ['event_id' => $event->id, 'ticket_id' => $ticket->id]) }}"
-                                        class="panel-heading loadModal">
-                                        <h3 class="panel-title">
-                                            @if ($ticket->is_hidden)
-                                                <i title="@lang('Ticket.this_ticket_is_hidden')"
-                                                    class="ico-eye-blocked ticket_icon mr5 ellipsis"></i>
-                                            @else
-                                                <i class="ico-ticket ticket_icon mr5 ellipsis"></i>
-                                            @endif
-                                            {{ $ticket->title }}
-                                            <span class="pull-right">
-                                                {{ $ticket->is_free ? trans('Order.free') : money($ticket->price, $event->currency) }}
+                <div class="col-md-12">  
+                    <div class="panel-group" id="bgOptions">
+                        @php
+                            $i =0;
+                        @endphp
+                        @foreach ($tickets_all as $group => $tickets) 
+                            <div class="panel panel-default"  style="margin-bottom: 25px;">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#bgOptions" href="#{{str_replace(' ', '', $group)}}"
+                                        class="{{($event->loop == 0) ? 'collapsed' : ''}}">
+                                            <span class="arrow mr5"></span> {{ $group }} <span class="event_count">
+                                            ( @lang('Ticket.n_tickets', ['num' => count($tickets_all[$group])]) )
                                             </span>
-                                        </h3>
-                                    </div>
-                                    <div class='panel-body'>
-                                        <ul class="nav nav-section nav-justified mt5 mb5">
-                                            <li>
-                                                <div class="section">
-                                                    <h4 class="nm">{{ $ticket->quantity_sold }}</h4>
+                                        </a>
+                                    </h4>
+                                </div> 
+                                
+                                <div id="{{str_replace(' ', '', $group)}}" class="panel-body panel-collapse {{($i == 0) ? 'in' : 'collapse'}}"">
+                                    @foreach ($tickets as $ticket)
+                                        <div id="ticket_{{ $ticket->id }}" class="col-md-4 col-sm-6 col-xs-12" style="margin-bottom: 25px;">
+                                            <div class="panel panel-success ticket" data-ticket-id="{{ $ticket->id }}">
+                                                <div style="cursor: pointer;" data-modal-id='ticket-{{ $ticket->id }}'
+                                                    data-href="{{ route('showEditTicket', ['event_id' => $event->id, 'ticket_id' => $ticket->id]) }}"
+                                                    class="panel-heading loadModal">
+                                                    <h3 class="panel-title">
+                                                        @if ($ticket->is_hidden)
+                                                            <i title="@lang('Ticket.this_ticket_is_hidden')"
+                                                                class="ico-eye-blocked ticket_icon mr5 ellipsis"></i>
+                                                        @else
+                                                            <i class="ico-ticket ticket_icon mr5 ellipsis"></i>
+                                                        @endif
+                                                        {{ $ticket->title }}
+                                                        <span class="pull-right">
+                                                            {{ $ticket->is_free ? trans('Order.free') : money($ticket->price, $event->currency) }}
+                                                        </span>
+                                                    </h3>
+                                                </div>
+                                                <div class='panel-body'>
+                                                    <ul class="nav nav-section nav-justified mt5 mb5">
+                                                        <li>
+                                                            <div class="section">
+                                                                <h4 class="nm">{{ $ticket->quantity_sold }}</h4>
 
-                                                    <p class="nm text-muted">@lang('Ticket.sold')</p>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="section">
-                                                    <h4 class="nm">
-                                                        {{ $ticket->quantity_available === null ? '∞' : $ticket->quantity_remaining }}
-                                                    </h4>
+                                                                <p class="nm text-muted">@lang('Ticket.sold')</p>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div class="section">
+                                                                <h4 class="nm">
+                                                                    {{ $ticket->quantity_available === null ? '∞' : $ticket->quantity_remaining }}
+                                                                </h4>
 
-                                                    <p class="nm text-muted">@lang('Ticket.remaining')</p>
+                                                                <p class="nm text-muted">@lang('Ticket.remaining')</p>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div class="section">
+                                                                <h4 class="nm hint--top"
+                                                                    title="{{ money($ticket->sales_volume, $event->currency) }} + {{ money($ticket->organiser_fees_volume, $event->currency) }} @lang('Order.organiser_booking_fees')">
+                                                                    {{ money($ticket->sales_volume + $ticket->organiser_fees_volume, $event->currency) }}
+                                                                    <sub title="@lang('Ticket.doesnt_account_for_refunds').">*</sub>
+                                                                </h4>
+                                                                <p class="nm text-muted">@lang('Ticket.revenue')</p>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
                                                 </div>
-                                            </li>
-                                            <li>
-                                                <div class="section">
-                                                    <h4 class="nm hint--top"
-                                                        title="{{ money($ticket->sales_volume, $event->currency) }} + {{ money($ticket->organiser_fees_volume, $event->currency) }} @lang('Order.organiser_booking_fees')">
-                                                        {{ money($ticket->sales_volume + $ticket->organiser_fees_volume, $event->currency) }}
-                                                        <sub title="@lang('Ticket.doesnt_account_for_refunds').">*</sub>
-                                                    </h4>
-                                                    <p class="nm text-muted">@lang('Ticket.revenue')</p>
+                                                <div class="panel-footer" style="height: 56px;
+                                                margin-left: 0px;
+                                                margin-right: 0px;
+                                                padding-bottom: 0px;
+                                                margin-bottom: 0px;">
+                                                    <div class="row">
+                                                        <div class="sortHandle col-md-2" title="@lang('basic.drag_to_reorder')">
+                                                            <i class="ico-paragraph-justify"></i>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <ul class="nav nav-section nav-justified">
+                                                                <li>
+                                                                    <a href="javascript:void(0);">
+                                                                        @if ($ticket->sale_status === config('attendize.ticket_status_on_sale'))
+                                                                            @if ($ticket->is_paused)
+                                                                                @lang('Ticket.ticket_sales_paused') &nbsp;
+                                                                                <span class="pauseTicketSales label label-info"
+                                                                                    data-id="{{ $ticket->id }}"
+                                                                                    data-route="{{ route('postPauseTicket', ['event_id' => $event->id]) }}">
+                                                                                    <i class="ico-play4"></i> @lang('Ticket.resume')
+                                                                                </span>
+                                                                            @else
+                                                                                @lang('Ticket.on_sale') &nbsp;
+                                                                                <span class="pauseTicketSales label label-info"
+                                                                                    data-id="{{ $ticket->id }}"
+                                                                                    data-route="{{ route('postPauseTicket', ['event_id' => $event->id]) }}">
+                                                                                    <i class="ico-pause"></i> @lang('Ticket.pause')
+                                                                                </span>
+                                                                            @endif
+                                                                        @else
+                                                                            {{ \App\Models\TicketStatus::find($ticket->sale_status)->name ?? null }}
+                                                                        @endif
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <button data-modal-id="newSaleTicket"
+                                                                data-href="{{ route('newSalesTickets', ['ticket_id' => $ticket->id, 'price' => $ticket->price]) }}"
+                                                                type="button" class="btn btn-block btn-success loadModal"><i
+                                                                    class="ico-shopping-cart"></i></button>
+                                                        </div>
+                                                        <div class="col-md-2" style="display: contents;">
+                                                            <span class="btn btn-info">{{ $ticket->seat_zone ?? 'S/I' }}</span>
+                                                        </div>
+                                                    </div>
+
                                                 </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="panel-footer" style="height: 56px;">
-                                        <div class="row">
-                                            <div class="sortHandle col-md-2" title="@lang('basic.drag_to_reorder')">
-                                                <i class="ico-paragraph-justify"></i>
-                                            </div>
-                                            <div class="col-md-7">
-                                                <ul class="nav nav-section nav-justified">
-                                                    <li>
-                                                        <a href="javascript:void(0);">
-                                                            @if ($ticket->sale_status === config('attendize.ticket_status_on_sale'))
-                                                                @if ($ticket->is_paused)
-                                                                    @lang('Ticket.ticket_sales_paused') &nbsp;
-                                                                    <span class="pauseTicketSales label label-info"
-                                                                        data-id="{{ $ticket->id }}"
-                                                                        data-route="{{ route('postPauseTicket', ['event_id' => $event->id]) }}">
-                                                                        <i class="ico-play4"></i> @lang('Ticket.resume')
-                                                                    </span>
-                                                                @else
-                                                                    @lang('Ticket.on_sale') &nbsp;
-                                                                    <span class="pauseTicketSales label label-info"
-                                                                        data-id="{{ $ticket->id }}"
-                                                                        data-route="{{ route('postPauseTicket', ['event_id' => $event->id]) }}">
-                                                                        <i class="ico-pause"></i> @lang('Ticket.pause')
-                                                                    </span>
-                                                                @endif
-                                                            @else
-                                                                {{ \App\Models\TicketStatus::find($ticket->sale_status)->name ?? null }}
-                                                            @endif
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <button data-modal-id="newSaleTicket"
-                                                    data-href="{{ route('newSalesTickets', ['ticket_id' => $ticket->id, 'price' => $ticket->price]) }}"
-                                                    type="button" class="btn btn-block btn-success loadModal"><i
-                                                        class="ico-shopping-cart"></i></button>
-                                            </div>
-                                            <div class="col-md-2" style="display: contents;">
-                                                <span class="btn btn-info">{{ $ticket->seat_zone ?? 'S/I' }}</span>
                                             </div>
                                         </div>
-
-                                    </div>
+                                    @endforeach
                                 </div>
+                                
+                                @php
+                                    $i++;
+                                @endphp
                             </div>
                         @endforeach
                     </div>
-                @endforeach
+                </div>
             @else
                 @if ($q)
                     @include('Shared.Partials.NoSearchResults')
