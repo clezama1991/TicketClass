@@ -236,7 +236,7 @@ table{
     .vertical-text {
    -webkit-transform: rotate(90deg);
     top:270px !important;
-    left:-125px !important;
+    left:-100px !important;
     position: absolute;
 }
 .info1{
@@ -396,7 +396,7 @@ table{
                                     </td>
                                 </tr>  
                                 <tr class="ticket--center--row"> 
-                                    <td  width="50%"> 
+                                    <td  width="60%"> 
                                         
                                         <table class="table"> 
                                             <tbody>
@@ -410,7 +410,7 @@ table{
                                         </table>
                         
                                     </td>
-                                    <td  width="50%">  
+                                    <td  width="40%">  
                                         <table class="table"> 
                                             <tbody>
                                                 <tr> 
