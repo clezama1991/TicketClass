@@ -227,7 +227,7 @@
                             $i =0;
                         @endphp
                         @foreach ($tickets_all as $group => $tickets) 
-                            <div class="panel panel-default"  style="margin-bottom: 15px;">
+                            <div class="panel panel-default"  style="margin-bottom: 10px;">
                                 <div class="panel-heading">
                                     <h4 class="panel-title">
                                         <a data-toggle="collapse" data-parent="#bgOptions" href="#{{str_replace(' ', '', $group)}}"
