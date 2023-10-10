@@ -12,6 +12,7 @@ use App\Models\Order;
 use App\Models\OrderStatus;
 use App\Services\Order as OrderService;
 
+use App\Models\User;
 use DB;
 use Excel;
 use Illuminate\Http\Request;
@@ -40,13 +41,14 @@ class EventOrdersController extends MyBaseController
         $dateStartQuery = $request->get('date_start');
         $dateEndQuery = $request->get('date_end');
         $statusQuery = $request->get('status');
+        $user_id = $request->get('user_id');
         $sort_by = (in_array($request->get('sort_by'), $allowed_sorts) ? $request->get('sort_by') : 'created_at');
         $sort_order = $request->get('sort_order') == 'asc' ? 'asc' : 'desc';
         $event = Event::scope()->find($event_id);
 
         
         
-        $orders_all = $event->orders();
+        $orders_all = Order::where('event_id',$event_id);
 
 
         if ($searchQuery) {
@@ -66,20 +68,32 @@ class EventOrdersController extends MyBaseController
                 });
 
             }
-            
+
             if($dateStartQuery){
-                $orders_all->where('created_at', '>=', $dateStartQuery);
+                $orders_all->whereDate('created_at', '>=', $dateStartQuery);
             }
             
             if($dateEndQuery){
-                $orders_all->where('created_at', '<=', $dateEndQuery);
+                $orders_all->whereDate('created_at', '<=', $dateEndQuery);
             }
             
             if($statusQuery){
                 $orders_all->where('order_status_id', $statusQuery);
             }
             
-            $orders = $orders_all->orderBy($sort_by, $sort_order)->paginate();
+
+            $user_ids = $orders_all->pluck('user_id')->toArray();
+            $users = User::whereIn('id',$user_ids)->get();
+
+            if($user_id){
+                if($user_id!='linea'){ 
+                    $orders_all->where('user_id', $user_id);
+                }else{ 
+                    $orders_all->where('user_id', null);
+                }
+            }
+            
+            $orders = $orders_all->get();
             
             $importes = $orders->sum('amount') +$orders->sum('services_fee');
             $pedidos = $orders->count();
@@ -105,6 +119,8 @@ class EventOrdersController extends MyBaseController
                 'date_start'          => $dateStartQuery,
                 'date_end'          => $dateEndQuery,
                 'status'          => $statusQuery,
+                'user_id'          => $user_id,
+                'users'          => $users,
                 'importes'          => $importes,
                 'pedidos'          => $pedidos,
                 'entradas'          => $entradas,

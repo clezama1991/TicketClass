@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use DB;
 use PDF;
 use Illuminate\Support\Str;
-
+use Auth;
 class Order extends MyBaseModel
 {
     use SoftDeletes;
@@ -186,13 +186,19 @@ class Order extends MyBaseModel
         parent::boot();
 
         static::creating(function ($order) {
+            $user_id = null;
+            if(Auth::check()) {
+                $user_id = Auth::user()->id;
+            } 
             do {
                     //generate a random string using Laravel's str_random helper
                     $token = Str::Random(5) . date('jn');
-            } //check if the token already exists and if it does, try again
-            
+                    
+            } //check if the token already exists and if it does, try again 
 			while (Order::where('order_reference', $token)->first());
+            
             $order->order_reference = $token;
+            $order->user_id = $user_id;
         
 		});
     }
