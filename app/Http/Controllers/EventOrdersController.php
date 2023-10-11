@@ -48,7 +48,7 @@ class EventOrdersController extends MyBaseController
 
         
         
-        $orders_all = Order::where('event_id',$event_id)->where('is_Active',true);
+        $orders_all = Order::where('event_id',$event_id)->where('is_active',true);
 
 
         if ($searchQuery) {
