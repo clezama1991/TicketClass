@@ -9,6 +9,10 @@
             @lang("Public_ViewEvent.below_order_details_header")
         </div>
         <div class="col-md-4 col-md-push-8">
+            
+            <div style="padding-bottom: 10px; color:red; cursor: pointer" class="view_zones"> 
+                * El costo por boleto ya incluye cargo por pago con tarjeta *
+           </div>
             <div class="panel">
                 <div class="panel-heading">
                     <h3 class="panel-title">

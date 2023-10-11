@@ -78,6 +78,9 @@
                         </svg>
                         Volver a las Zonas
                     </div>
+                    <div style="padding-bottom: 10px; color:red; cursor: pointer" class="view_zones"> 
+                         * El costo por boleto no incluye cargo por pago con tarjeta
+                    </div>
                     <table class="table table-hover seat-rowr view_zones">
                         <thead>
                             <tr>
@@ -106,12 +109,19 @@
                                         class="ver_asientos_marcados_seccion_comprar_zona_{{ $ticket_seat_zone }}">0</span>
                                 </td>
                                 <td class="text-right">
+                                    <span title='{{money(($ticket->price), $event->currency)}} @lang("Public_ViewEvent.ticket_price")'>
+                                        {{money($ticket->price, $event->currency)}} 
+                                    </span>
+{{--                                     
                                     <span 
                                         title='{{money(($ticket->price+$ticket->price_paypal), $event->currency)}} 
                                         @lang("Public_ViewEvent.ticket_price") + {{money($ticket->total_booking_fee_online, $event->currency)}} 
                                         @lang("Public_ViewEvent.booking_fees")'>
                                         {{money($ticket->total_price_online, $event->currency)}} 
-                                    </span><br>
+                                    </span>
+                                     --}}
+                                    
+                                    <br>
                                     <span class="tax-amount text-muted text-smaller">
                                         100{{ ($event->organiser->tax_name &&
                                         $event->organiser->tax_value) ?
