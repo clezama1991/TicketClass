@@ -87,9 +87,13 @@
                             </tr>
                         </thead>
                         <tbody>
-
                             @foreach($tickets->where('is_hidden', false) as $ticket)
-                            <tr style="cursor: pointer" data-seat="{{$ticket->seat_zone}}" class="selected_zone section_group {{ str_replace(' ', '_', $ticket->group_zone) }}"
+                                
+                                @php
+                                    $ticket_seat_zone = str_replace(' ', '_', $ticket->seat_zone );
+                                @endphp
+                            
+                            <tr style="cursor: pointer" data-seat="{{$ticket_seat_zone}}" class="selected_zone section_group {{ str_replace(' ', '_', $ticket->group_zone) }}"
                                 data-toggle="modal" data-target="#myModal">
                                 <td class="">
                                     <span style="text-transform: uppercase;">{{$ticket->seat_zone}}</span>
@@ -97,8 +101,9 @@
                                     <span class="tax-amount text-muted text-">
                                         {{$ticket->title}}</span>
                                 </td>
-                                <td class=""><span
-                                        class="ver_asientos_marcados_seccion_comprar_zona_{{ $ticket->seat_zone }}">0</span>
+                                <td class="">
+                                    <span
+                                        class="ver_asientos_marcados_seccion_comprar_zona_{{ $ticket_seat_zone }}">0</span>
                                 </td>
                                 <td class="text-right">
                                     <span 
@@ -140,7 +145,11 @@
 
                                 @foreach($tickets->where('is_hidden', false) as $ticket)
                                 {{-- {{$ticket}} --}}
-
+    
+                                @php
+                                    $ticket_seat_zone = str_replace(' ', '_', $ticket->seat_zone );
+                                @endphp
+                            
                                 {!! Form::hidden('tickets[]', $ticket->id) !!}
                                 <meta property="availability" content="http://schema.org/InStock">
                                 @if($ticket->select_seat==1)
@@ -148,7 +157,7 @@
                                 <input type="hidden" name="ticket_{{$ticket->id}}" value="0">
                                 <input type="hidden" name="asientos_{{$ticket->id}}">
                                 @endif
-                                <div class="zone-events" id="{{'zone-event-'.$ticket->seat_zone}}">
+                                <div class="zone-events" id="{{'zone-event-'.$ticket_seat_zone}}">
                                     <div class="row" style="padding-left: 2rem;
                                     padding-right: 2rem;">
                                         <div class="col-md-12">
@@ -170,7 +179,7 @@
                                                         {{-- <td class="text-center">{{$ticket->max_per_person}} /
                                                             {{$ticket->quantity_available}}</td> --}}
                                                         <td class="text-center"><span
-                                                                class="ver_asientos_marcados_seccion_comprar_zona_{{ $ticket->seat_zone }}">0</span>
+                                                                class="ver_asientos_marcados_seccion_comprar_zona_{{ $ticket_seat_zone }}">0</span>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -224,7 +233,7 @@
                                                     @else
                                                     <label for="">Seleccione cantidad de asientos</label>
                                                     <select name="ticket_{{$ticket->id}}" data-id="{{$ticket->id}}"
-                                                        data-seatzone="{{ $ticket->seat_zone }}"
+                                                        data-seatzone="{{ $ticket_seat_zone }}"
                                                         class="form-control select-nro-seat" style="text-align: center">
                                                         @if ($tickets->count() > 1)
                                                         <option value="0">0</option>
@@ -263,7 +272,7 @@
                                                                 style="width: 25px; padding-left: 1px;"
                                                                 id="{{ $seat->id }}" data-asiento="{{ $seat->seat() }}"
                                                                 data-ticket="{{ $ticket->id }}"
-                                                                data-seatzone="{{ $ticket->seat_zone }}" title="{{ "
+                                                                data-seatzone="{{ $ticket_seat_zone }}" title="{{ "
                                                                 Fila: ".$seat->row." - Asiento: ".$seat->column }}" {{
                                                                 $seat->is_available == 3 ? "disabled": "" }}
                                                                 >
@@ -308,7 +317,7 @@
                                                                 style="width: 25px; padding-left: 1px;"
                                                                 id="{{ $seat->id }}" data-asiento="{{ $seat->seat() }}"
                                                                 data-ticket="{{ $ticket->id }}"
-                                                                data-seatzone="{{ $ticket->seat_zone }}" title="{{ "
+                                                                data-seatzone="{{ $ticket_seat_zone }}" title="{{ "
                                                                 Fila: ".$seat->row." - Asiento: ".$seat->column }}" {{
                                                                 $seat->is_available == 3 ? "disabled": "" }}
                                                                 >
