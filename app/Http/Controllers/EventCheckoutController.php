@@ -498,7 +498,7 @@ class EventCheckoutController extends Controller
         }
 
         $ticket_order = session()->get('ticket_order_' . $event_id);
-        $gateway = Omnipay::create($ticket_order['payment_gateway']->name);
+        $gateway = Omnipay::create($ticket_order['payment_gateway']->name??'PayPal_Express');
 
         $gateway->initialize($ticket_order['account_payment_gateway']->config + [
                 'testMode' => config('attendize.enable_test_payments'),
@@ -643,7 +643,7 @@ class EventCheckoutController extends Controller
                 for ($i = 0; $i < $attendee_details['qty']; $i++) {
 
                     $seat = null;
-                    if($attendee_details['ticket']['select_seat']==1){
+                    if($attendee_details['ticket']['select_seat']==1 && isset($seatings[$posicion_seat])){
                         $seat = $seatings[$posicion_seat];
                         $posicion_seat++;
                     }
