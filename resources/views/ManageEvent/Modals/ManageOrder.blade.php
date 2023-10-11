@@ -69,7 +69,10 @@
                             <b>@lang("Order.payment_gateway")</b><br> <a href="{{ $order->payment_gateway->provider_url }}" target="_blank">{{$order->payment_gateway->provider_name}}</a>
                         </div>
                         @endif
-
+                         <div class="col-sm-6 col-xs-6">
+                            <b>Metodo de Pago</b><br> {{$order->payment_method  == 'card' ? 'Tarjeta' : 'Efectivo'}}
+                        </div>
+ 
                     </div>
                 </div>
 

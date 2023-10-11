@@ -92,35 +92,40 @@
 
 <div class="col-md-12 col-sm-6">
     <div class="row">
-        <div class="col-sm-3">
+        <div class="col-sm-2">
             <div class="stat-box">
                 <h3>{{ money($importes, $event->currency) }}</h3>
                 <span>Importes</span>
-            </div>
-
-            
-
-
-
-
-
+            </div> 
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-2">
+            <div class="stat-box">
+                <h3>{{ money($importes_card, $event->currency) }}</h3>
+                <span>Tarjeta</span>
+            </div> 
+        </div>
+        <div class="col-sm-2">
+            <div class="stat-box">
+                <h3>{{ money($importes_cash, $event->currency) }}</h3>
+                <span>Efectivo</span>
+            </div> 
+        </div>
+        <div class="col-sm-2">
             <div class="stat-box">
                 <h3>{{$pedidos}}</h3>
                 <span>Pedidos</span>
             </div>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-2">
             <div class="stat-box">
                 <h3>{{$entradas}}</h3>
                 <span>Entradas</span>
             </div>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-2">
             <div class="stat-box">
                 <h3>{{$completados}} / {{$otros}}</h3>
-                <span>Completadas / Otros</span>
+                <span>Compl. / Otros</span>
             </div>
         </div>
     </div>

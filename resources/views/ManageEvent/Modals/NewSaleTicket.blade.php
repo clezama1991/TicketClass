@@ -156,15 +156,26 @@
                                 <div class="col-md-12">
                                     <h4>Compra</h4>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <h5>Nro Asientos Apartados: </h5>
                                     <div class="h5">&nbsp;<span id="set_quantity">0</span></div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <h5>Asientos Apartados: </h5>
                                     <div class="h5">&nbsp;<span id="set_asiento"></span></div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
+                                    <h5>Asientos Apartados: </h5>
+                                    <div class="h5">
+                                        <div class="form-group">
+                                            <select class="form-control payment_method" name="payment_method" id="payment_method">
+                                              <option value="cash" selected>Efectivo</option> 
+                                              <option value="card">Tarjeta</option> 
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
                                     <input type="hidden"  id="total_pagar2" value="{{ $price }}">
                                     <h5>Total a Cobrar: </h5>
                                     <div class="h5">&nbsp;$<span id="total_pagar">0</span></div>
@@ -175,15 +186,26 @@
                                 <div class="col-md-12">
                                     <h4>Compra</h4>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <h5>Nro Tickets Apartados: </h5>
                                     <div class="h5">&nbsp;<span id="set_quantity_gen">0</span></div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <h5>Asientos Apartados: </h5>
                                     <div class="h5">&nbsp;<span id="">N/A</span></div>
                                 </div>
-                                <div class="col-md-4  {{ $detalles->select_seat == 1 ? "" : "" }}">
+                                <div class="col-md-3">
+                                    <h5>Metodo de Pago: </h5>
+                                    <div class="h5">
+                                        <div class="form-group"> 
+                                          <select class="form-control payment_method" name="payment_method" id="payment_method">
+                                            <option value="cash" selected>Efectivo</option> 
+                                            <option value="card">Tarjeta</option> 
+                                          </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3  {{ $detalles->select_seat == 1 ? "" : "" }}">
                                     <input type="hidden"  id="total_pagar2" value="{{ $price }}">
                                     <h5>Total a Cobrar: </h5>
                                     <div class="h5">&nbsp;$<span id="total_pagar">0</span></div>
@@ -376,7 +398,35 @@
     {
         var valor = $("#total_pagar2").val();
         var cant =$(this).val();
-        $("#total_pagar").html(valor*cant);
+        var payment_method = $('.payment_method').val();
+        var total_pay = valor*cant;
+
+        if(payment_method=='card'){ 
+            total_pay = (total_pay) * 1.045;
+        }
+  
+        total_pay = parseFloat(total_pay).toFixed(2);
+        $("#total_pagar").html(total_pay);
         $("#set_quantity_gen").html(cant);
+  
     });
+
+    $(".payment_method").on('change', function (e)
+    {
+        var valor = $("#total_pagar2").val();
+        var cant = $("#quantity").val();
+        var payment_method = $('.payment_method').val();
+        var total_pay = valor*cant;
+
+        if(payment_method=='card'){ 
+            total_pay = (total_pay) * 1.045;
+        }
+  
+        total_pay = parseFloat(total_pay).toFixed(2);
+        $("#total_pagar").html(total_pay);
+   
+    });
+ 
+
+
 </script>

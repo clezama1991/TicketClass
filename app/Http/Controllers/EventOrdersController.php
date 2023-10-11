@@ -95,7 +95,10 @@ class EventOrdersController extends MyBaseController
             
             $orders = $orders_all->get();
             
-            $importes = $orders->sum('amount') +$orders->sum('services_fee');
+            $importes = $orders->sum('amount') +$orders->sum('services_fee'); 
+            $importes_cash = $orders->where('payment_method','cash')->sum('amount') + $orders->where('payment_method','cash')->sum('services_fee');
+            $importes_card = $orders->where('payment_method','card')->sum('amount') + $orders->where('payment_method','card')->sum('services_fee');
+            
             $pedidos = $orders->count();
 
             foreach ($orders as $key => $value) {
@@ -122,6 +125,8 @@ class EventOrdersController extends MyBaseController
                 'user_id'          => $user_id,
                 'users'          => $users,
                 'importes'          => $importes,
+                'importes_cash'          => $importes_cash,
+                'importes_card'          => $importes_card,
                 'pedidos'          => $pedidos,
                 'entradas'          => $entradas,
                 'completados'          => $completados,

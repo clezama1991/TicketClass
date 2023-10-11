@@ -44,6 +44,7 @@ class EventTicketsController extends MyBaseController
             $cantidad = $request->get('quantity');
             $email_ticket = $request->get('email_ticket');
             $getasientos = explode(',', $request->get('asientos_marcados')); 
+            $payment_method = $request->get('payment_method');
             $ticket = Ticket::find($ticket_id);
             $ticket_quantity_remaining = $ticket->quantity_remaining;
             $max_per_person = min($ticket_quantity_remaining, $ticket->max_per_person);
@@ -109,6 +110,7 @@ class EventTicketsController extends MyBaseController
             $order->event_id = $event_id;
             $order->is_payment_received = 1;
             $order->seating = $request->get('asientos_marcados');
+            $order->payment_method = $payment_method;
 
             // Calculating grand total including tax
             $orderService = new OrderService($order_total, $booking_fee, $event);
