@@ -89,7 +89,7 @@
 
         <div class="col-sm-3">
             <div class="stat-box">
-                <h3>{{ money($event->amount_orders_online(), $event->currency) }}</h3>
+                <h3>{{ money($event->amount_orders_online_without_paypal(), $event->currency) }}</h3>
                 <span>Total en Linea</span>
             </div>
         </div>
