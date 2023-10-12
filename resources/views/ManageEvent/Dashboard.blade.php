@@ -42,7 +42,7 @@
     <div class="row">
         <div class="col-sm-3">
             <div class="stat-box">
-                <h3>{{ money($event->sales_volume + $event->organiser_fees_volume, $event->currency) }}</h3>
+                <h3>{{ money(($event->sales_volume - $event->amout_commision_paypal()) + $event->organiser_fees_volume , $event->currency) }}</h3>
                 <span>@lang("Dashboard.sales_volume")</span>
             </div>
         </div>
@@ -68,7 +68,7 @@
 
         <div class="col-sm-3">
             <div class="stat-box">
-                <h3>{{ money($event->sales_volume, $event->currency) }}</h3>
+                <h3>{{ money($event->sales_volume - $event->amout_commision_paypal(), $event->currency) }}</h3>
                 <span>Total Organizador</span>
             </div>
         </div>
