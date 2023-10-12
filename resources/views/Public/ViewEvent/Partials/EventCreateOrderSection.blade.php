@@ -63,7 +63,7 @@
         <div class="col-md-8 col-md-pull-4">
             <div class="event_order_form">
                 {!! Form::open(['url' => route('postCreateOrder', ['event_id' => $event->id]), 'class' => ($order_requires_payment && @$payment_gateway->is_on_site) ? 'ajax payment-form' : 'ajax', 'data-stripe-pub-key' => isset($account_payment_gateway->config['publishableKey']) ? $account_payment_gateway->config['publishableKey'] : '']) !!}
-                {!! Form::hidden("asientos_ids", $ticket['asientos_ids']) !!} 
+                {{-- {!! Form::hidden("asientos_ids", $ticket['asientos_ids']) !!}  --}}
                 {!! Form::hidden('event_id', $event->id) !!}
 
                 <h3> @lang("Public_ViewEvent.your_information")</h3>

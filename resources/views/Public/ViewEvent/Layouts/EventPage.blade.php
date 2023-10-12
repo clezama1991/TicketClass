@@ -13,6 +13,10 @@
         {!!HTML::style('assets/stylesheet/select-seat.css')!!}
         {!!HTML::style('assets/stylesheet/bootstrap-slider.min.css')!!}
 
+        {!!HTML::style('css/sales_view_new/styles_v3.css')!!}
+        {!!HTML::style('css/sales_view_new/paso1.css')!!}
+        {!!HTML::style('css/sales_view_new/bootstrap.min.css')!!}
+ 
         <!-- Open Graph data -->
         <meta property="og:title" content="{{{$event->title}}}" />
         <meta property="og:type" content="article" />
@@ -72,8 +76,11 @@
     </head>
     <body class="attendize">
         <div id="event_page_wrap" vocab="http://schema.org/" typeof="Event">
+            <div style="width:100%; text-align:center">
+
             @yield('content')
 
+            </div>
             {{-- Push for sticky footer--}}
             @stack('footer')
         </div>
@@ -99,8 +106,18 @@
         {!!HTML::script('assets/javascript/jquery.flexslider-min.js')!!}
         {!!HTML::script('assets/javascript/jquery.imagemapster.min.js')!!}
         {!!HTML::script('assets/javascript/tooltip.js')!!}
-        {!!HTML::script('assets/javascript/main.js')!!}
+       {!!HTML::script('assets/javascript/main.js')!!}
+       {!!HTML::script('assets/javascript/jquery.bootstrap-touchspin.js')!!}
+        /*  {!!HTML::script('assets/javascript/paso1a.js')!!} */
+
+        
+        @yield('scripts')
+
     <script>
+
+        
+
+
         var asientos = [];
         var asientos_id = [];
         var nro_asientos = 0;

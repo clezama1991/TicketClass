@@ -57,6 +57,7 @@ class EventCheckoutController extends Controller
      */
     public function postValidateTickets(Request $request, $event_id)
     {
+        
         /*
          * Order expires after X min
          */
@@ -120,14 +121,16 @@ class EventCheckoutController extends Controller
                 'ticket_' . $ticket_id . '.min' => 'You must select at least ' . $ticket->min_per_person . ' tickets.',
             ];
 
-            $validator = Validator::make(['ticket_' . $ticket_id => (int)$request->get('ticket_' . $ticket_id)],
-                $quantity_available_validation_rules, $quantity_available_validation_messages);
+            if (env('APP_ENV')=='production') {
+                $validator = Validator::make(['ticket_' . $ticket_id => (int)$request->get('ticket_' . $ticket_id)],
+                    $quantity_available_validation_rules, $quantity_available_validation_messages);
 
-            if ($validator->fails()) {
-                return response()->json([
-                    'status'   => 'error',
-                    'messages' => $validator->messages()->toArray(),
-                ]);
+                if ($validator->fails()) {
+                    return response()->json([
+                        'status'   => 'error',
+                        'messages' => $validator->messages()->toArray(),
+                    ]);
+                }
             }
 
 
@@ -331,11 +334,13 @@ class EventCheckoutController extends Controller
         $order->rules = $order->rules + $validation_rules;
         $order->messages = $order->messages + $validation_messages;
 
-        if (!$order->validate($request->all())) {
-            return response()->json([
-                'status'   => 'error',
-                'messages' => $order->errors(),
-            ]);
+        if (env('APP_ENV')=='production') {
+            if (!$order->validate($request->all())) {
+                return response()->json([
+                    'status'   => 'error',
+                    'messages' => $order->errors(),
+                ]);
+            }
         }
 
         //Add the request data to a session in case payment is required off-site
@@ -343,7 +348,9 @@ class EventCheckoutController extends Controller
 
         $orderRequiresPayment = $ticket_order['order_requires_payment'];
 
-//  return $this->completeOrder($event_id);
+        if (env('APP_ENV')=='local') {
+            return $this->completeOrder($event_id);
+        }
          
         if ($orderRequiresPayment && $request->get('pay_offline') && $event->enable_offline_payments) {
             return $this->completeOrder($event_id);

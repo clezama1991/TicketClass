@@ -1,5 +1,65 @@
+
+<div class="ancho_100" style="background-color:#F0F0F0;"><img
+    src="./GLORIA_files/spacer.gif" height="10px"></div>
+<div class="ancho_100"
+style="background-color:#ffffff; padding:1px 10px; border:none; margin-bottom:10px"
+align="center">
+
+<div class="font16 boldear800 borde_artista" style="width:100%; margin-top:10px;">
+    Comparte los grandes eventos
+</div>
+
+<div class="font18 boldear800" align="left" style="padding-bottom:20PX">
+
+    <div class="tb centrarDIV">
+        <div class="row">
+            <div class="col" style=" vertical-align: top; padding:0px 2px;">
+                <div class="fb-like fb_iframe_widget"
+                    data-href="https://www.eticket.mx/masinformacion.aspx?idevento=31281"
+                    data-width="" data-layout="button" data-action="like"
+                    data-size="large" data-show-faces="false" data-share="true"
+                    data-font="trebuchet ms" fb-xfbml-state="rendered"
+                    fb-iframe-plugin-query="action=like&amp;app_id=132081130190180&amp;container_width=0&amp;font=trebuchet%20ms&amp;href=https%3A%2F%2Fwww.eticket.mx%2Fmasinformacion.aspx%3Fidevento%3D31281&amp;layout=button&amp;locale=en_US&amp;sdk=joey&amp;share=true&amp;show_faces=false&amp;size=large&amp;width=">
+                    <span
+                        style="vertical-align: bottom; width: 138px; height: 28px;"><iframe
+                            name="f286b88e5f85fa4" width="1000px" height="1000px"
+                            data-testid="fb:like Facebook Social Plugin"
+                            title="fb:like Facebook Social Plugin" frameborder="0"
+                            allowtransparency="true" allowfullscreen="true"
+                            scrolling="no" allow="encrypted-media"
+                            src="./GLORIA_files/like.html"
+                            style="border: none; visibility: visible; width: 138px; height: 28px;"
+                            class=""></iframe></span></div>
+            </div>
+            <div class="col" style=" vertical-align: top; padding:0px 2px">
+                <iframe id="twitter-widget-0" scrolling="no" frameborder="0"
+                    allowtransparency="true" allowfullscreen="true"
+                    class="twitter-share-button twitter-share-button-rendered twitter-tweet-button"
+                    style="position: static; visibility: visible; width: 81px; height: 28px;"
+                    title="Twitter Tweet Button"
+                    src="./GLORIA_files/tweet_button.d37472b4a6622d0b1fff46ad904f6896.en.html"
+                    data-url="https://www.eticket.mx/masinformacion.aspx?idevento=31281"></iframe>
+            </div>
+            <div class="col" style=" vertical-align: top; padding:0px 2px">
+                <a onclick="abreShareMail(); _ga.trackMail(); return false;"
+                    style="cursor:pointer">
+                    <img src="./GLORIA_files/sharemail.png" width="60" height="28"
+                        border="0"></a>
+            </div>
+            <!--
+                <div class="col_i-Desplegada_o-SmartPhone" style=" vertical-align: top; padding:0px 2px">
+                            <div class="fb-like" data-href="https://www.eticket.mx/masinformacion.aspx?idevento=31281" data-layout="button" data-size="large" data-send="true"  data-show-faces="false" data-font="trebuchet ms" data-action="recommend" data-colorscheme="dark"></div>                    
+                </div>                                                                               -->
+        </div>
+    </div>
+
+</div>
+
+
+</div>
+
 @if($event->social_show_facebook || $event->social_show_linkedin || $event->social_show_twitter || $event->social_show_googleplus || $event->social_show_whatsapp || $event->social_show_email)
-<section id="share" class="container">
+<section id="share" class="container d-none">
     <div class="row">
         <h1 class="section_head">
             @lang("Public_ViewEvent.share_event")

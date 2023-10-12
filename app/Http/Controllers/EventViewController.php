@@ -36,38 +36,73 @@ class EventViewController extends Controller
         $tickets = $event->tickets()->orderBy('group_zone', 'desc')->get();
          
         if($event_id==52){
-            $grupo = ['BARRERA SOMBRA Fila 1',
-                'BARRERA SOMBRA Fila 2',
-                'BARRERA SOMBRA Fila 3',
-                'BARRERA SOMBRA Fila 4',
-                'BARRERA SOL Fila 1',
-                'BARRERA SOL Fila 2',
-                'BARRERA SOL Fila 3',
-                'BARRERA SOL Fila 4',
-                'BARRERA SOL Fila 1',
-                '1er TENDIDO SOMBRA Fila 1',
-                '1er TENDIDO SOMBRA Fila 2',
-                '1er TENDIDO SOMBRA Fila 3',
-                '1er TENDIDO SOMBRA Fila 4',
-                '1er TENDIDO SOMBRA Fila 5',
-                '1er TENDIDO SOMBRA Fila 6',
-                '1er TENDIDO SOL Fila 1',
-                '1er TENDIDO SOL Fila 2',
-                '1er TENDIDO SOL Fila 3',
-                '1er TENDIDO SOL Fila 4',
-                '1er TENDIDO SOL Fila 5',
-                '1er TENDIDO SOL Fila 6',
-                'Segundo Tendido Sombra',
-                'Segundo Tendido Sol',
-                'General Sombra',
-                'General Sol',
-                'TENDIDO ALTO' 
+            $grupo = [
+                [
+                    'grupo' => 'BARRERA',
+                    'secciones' => [ 
+                        'BARRERA SOMBRA Fila 1',
+                        'BARRERA SOMBRA Fila 2',
+                        'BARRERA SOMBRA Fila 3',
+                        'BARRERA SOMBRA Fila 4',
+                        'BARRERA SOL Fila 1',
+                        'BARRERA SOL Fila 2',
+                        'BARRERA SOL Fila 3',
+                        'BARRERA SOL Fila 4',
+                        'BARRERA SOL Fila 1',
+                    ]
+                ],
+                [
+                    'grupo' => '1ER TENDIDO',
+                    'secciones' => [ 
+                        '1er TENDIDO SOMBRA Fila 1',
+                        '1er TENDIDO SOMBRA Fila 2',
+                        '1er TENDIDO SOMBRA Fila 3',
+                        '1er TENDIDO SOMBRA Fila 4',
+                        '1er TENDIDO SOMBRA Fila 5',
+                        '1er TENDIDO SOMBRA Fila 6',
+                        '1er TENDIDO SOL Fila 1',
+                        '1er TENDIDO SOL Fila 2',
+                        '1er TENDIDO SOL Fila 3',
+                        '1er TENDIDO SOL Fila 4',
+                        '1er TENDIDO SOL Fila 5',
+                        '1er TENDIDO SOL Fila 6',
+                    ]
+                ],
+                [
+                    'grupo' => '2DO TENDIDO',
+                    'secciones' => [ 
+                        'Segundo Tendido Sombra',
+                        'Segundo Tendido Sol',
+
+                        ]
+                ],
+                [
+                    'grupo' => 'GENERAL',
+                    'secciones' => [ 
+                        'General Sombra',
+                        'General Sol',
+                        ]
+                ],
+                [
+                    'grupo' => 'ALTO GENERAL',
+                    'secciones' => [ 
+                        'TENDIDO ALTO', 
+                    ]
+                ] 
             ];
             
             
-            foreach ($grupo as $key => $value) {
-                $tickets_all[$value][] =$event->tickets()->where('group_zone',$value)->orderBy('group_zone', 'desc')->get();
+            foreach ($grupo as $keygrupo => $valuegrupo) {
+                foreach ($valuegrupo['secciones'] as $key => $valuesecciones) {
+                    $tickets_all[$valuegrupo['grupo']][$valuesecciones][] =$event->tickets()->where('group_zone',$valuesecciones)->orderBy('group_zone', 'desc')->get();
+                }
             }
+
+
+
+
+
+
         }else{
         
             $tickets_all = [];

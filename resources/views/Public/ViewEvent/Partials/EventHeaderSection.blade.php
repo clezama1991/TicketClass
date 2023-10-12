@@ -1,54 +1,39 @@
-@if(!$event->is_live)
-<section id="goLiveBar">
-    <div class="container">
-        @if(!$event->is_live)
-
-        {{ @trans("ManageEvent.event_not_live") }}
-        <a href="{{ route('MakeEventLive' , ['event_id' => $event->id]) }}"
-           style="background-color: green; border-color: green;"
-        class="btn btn-success btn-xs">{{ @trans("ManageEvent.publish_it") }}</a>
-        @endif
-    </div>
-</section>
-@endif
-<section id="organiserHead" class="container-fluid">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div onclick="window.location='{{$event->event_url}}#organiser'" class="event_organizer">
-                    <b>{{$event->organiser->name}}</b> @lang("Public_ViewEvent.presents")
+<div id="copete" style="width:100%; text-align:center" class="azulfondo">
+    <div id="Copete_container" class="ancholimitado" style="text-align:center">
+        <div class="tb" style="width:100%;">
+            <div class="row">
+                <div id="logotipo" style="vertical-align:middle;">
+                    <div id="logotipo_container">
+                        <a href="http://www.eticket.mx/home.aspx">
+                            
+                            <img
+                                src="{{asset('assets/images/logo-dark.png')}}"
+                                alt="Venta de boletos en eticket" class="logotipo_principal_procesodecompra"
+                                border="0"></a>
+                    </div>
+                </div>
+                <div id="buscador" style="vertical-align:middle;">
+                    <div style="min-width: 320px; margin:0px auto" class="font22 blanco boldear">
+                        Proceso de Compra
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</section>
-<section id="intro" class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <h1 property="name">{{$event->title}}</h1>
-            <div class="event_venue">
-                <span property="startDate" content="{{ $event->start_date->toIso8601String() }}">
-                    {{ $event->startDateFormatted() }}
-                </span>
-                -
-                <span property="endDate" content="{{ $event->end_date->toIso8601String() }}">
-                     @if($event->start_date->diffInDays($event->end_date) == 0)
-                        {{ $event->end_date->format('H:i') }}
-                     @else
-                        {{ $event->endDateFormatted() }}
-                     @endif
-                </span>
-                @lang("Public_ViewEvent.at")
-                <span property="location" typeof="Place">
-                    <b property="name">{{$event->venue_name}}</b>
-                    <meta property="address" content="{{ urldecode($event->venue_name) }}">
-                </span>
-            </div>
+</div>
 
-            <div class="event_buttons">
-                <div class="row">
-                </div>
-            </div>
-        </div>
+<div id="MenuPrincipal" style="width:100%; text-align:center; position:relative; z-index:20"
+    class="azulmarinofondo div_i-Desplegada_o-SmartPhone">
+    <div class="ancholimitado font14" style="text-align:center; min-height:20px">
+
     </div>
-</section>
+</div>
+
+<div id="copetes_dinamicos" style="width:100%; text-align:center" class="azulmarinofondo">
+    <!-- InstanceBeginEditable name="Copete_home" -->
+
+    <!-- InstanceEndEditable -->
+</div>
+
+
+ 

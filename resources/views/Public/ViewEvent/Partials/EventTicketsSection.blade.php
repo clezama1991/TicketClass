@@ -206,21 +206,29 @@
                                         <div class="col-md-12">
 
                                             <div class="row m-5">
-                                                @if($ticket->select_seat==1)
-                                                <div class="col-md-12"
-                                                    style="display: flex;justify-content: center; margin-bottom: 15px; ">
-                                                    <img src="{{ asset('assets/images/select_seat/stage.jpg') }}"
-                                                        alt="selected" alt="">
 
-                                                    <br>
-                                                </div>
-                                                @else
+
+
+
+
+
+
+
+                                                @if($ticket->select_seat==1)
+                                                    <div class="col-md-12"
+                                                        style="display: flex;justify-content: center; margin-bottom: 15px; ">
+                                                        <img src="{{ asset('assets/images/select_seat/stage.jpg') }}"
+                                                            alt="selected" alt="">
+
+                                                        <br>
+                                                    </div>
+                                                    @else
                                                 <div class="col-md-12" style="padding: 50px">
                                                     @if($ticket->is_paused)
 
-                                                    <span class="text-danger">
-                                                        @lang("Public_ViewEvent.currently_not_on_sale")
-                                                    </span>
+                                                        <span class="text-danger">
+                                                            @lang("Public_ViewEvent.currently_not_on_sale")
+                                                        </span>
 
                                                     @else
 
@@ -242,23 +250,38 @@
                                                     </span>
                                                     @else
                                                     <label for="">Seleccione cantidad de asientos</label>
-                                                    <select name="ticket_{{$ticket->id}}" data-id="{{$ticket->id}}"
-                                                        data-seatzone="{{ $ticket_seat_zone }}"
-                                                        class="form-control select-nro-seat" style="text-align: center">
-                                                        @if ($tickets->count() > 1)
-                                                        <option value="0">0</option>
-                                                        @endif
-                                                        @for($i=$ticket->min_per_person; $i<=$ticket->max_per_person;
-                                                            $i++)
-                                                            <option value="{{$i}}">{{$i}}</option>
-                                                            @endfor
-                                                    </select>
+                                                        <select name="ticket_{{$ticket->id}}" data-id="{{$ticket->id}}"
+                                                            data-seatzone="{{ $ticket_seat_zone }}"
+                                                            class="form-control select-nro-seat" style="text-align: center">
+                                                            @if ($tickets->count() > 1)
+                                                            <option value="0">0</option>
+                                                            @endif
+                                                            @for($i=$ticket->min_per_person; $i<=$ticket->max_per_person;
+                                                                $i++)
+                                                                <option value="{{$i}}">{{$i}}</option>
+                                                                @endfor
+                                                        </select>
                                                     @endif
 
                                                     @endif
 
                                                 </div>
                                                 @endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                                                 @foreach ($ticket_seats as $key_file => $seats)
 
