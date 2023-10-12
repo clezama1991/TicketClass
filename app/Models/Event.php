@@ -167,6 +167,16 @@ class Event extends MyBaseModel
         return $total - $comision_deduccion;
     }
 
+    public function amout_commision_paypal()
+    {
+        $total = 0;
+        foreach ($this->orders->where('payment_gateway_id','!=',null) as $key => $value) {
+            $total += $value->getOrganiserAmountAttribute();
+        }
+        $comision_deduccion =  $total * 1.056  - $total;
+        return $comision_deduccion;
+    }
+
     /**
      * The access codes associated with the event.
      *
