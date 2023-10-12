@@ -163,7 +163,7 @@ class Event extends MyBaseModel
         foreach ($this->orders->where('payment_gateway_id','!=',null) as $key => $value) {
             $total += $value->getOrganiserAmountAttribute();
         }
-        $comision_deduccion =  $total * 1.056  - $total;
+        $comision_deduccion =  $total * 1.06  - $total;
         return round($total - $comision_deduccion, 0);
     }
 
@@ -173,7 +173,7 @@ class Event extends MyBaseModel
         foreach ($this->orders->where('payment_gateway_id','!=',null) as $key => $value) {
             $total += $value->getOrganiserAmountAttribute();
         }
-        $comision_deduccion =  $total * 1.056  - $total;
+        $comision_deduccion =  $total * 1.06  - $total;
         return round($comision_deduccion, 0);
     }
 
