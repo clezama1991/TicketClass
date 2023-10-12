@@ -164,7 +164,7 @@ class Event extends MyBaseModel
             $total += $value->getOrganiserAmountAttribute();
         }
         $comision_deduccion =  $total * 1.056  - $total;
-        return $total - $comision_deduccion;
+        return round($total - $comision_deduccion, 0);
     }
 
     public function amout_commision_paypal()
@@ -174,7 +174,7 @@ class Event extends MyBaseModel
             $total += $value->getOrganiserAmountAttribute();
         }
         $comision_deduccion =  $total * 1.056  - $total;
-        return $comision_deduccion;
+        return round($comision_deduccion, 0);
     }
 
     /**
