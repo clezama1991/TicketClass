@@ -57,7 +57,7 @@ class EventCheckoutController extends Controller
      */
     public function postValidateTickets(Request $request, $event_id)
     {
-        
+        // dd($request);
         /*
          * Order expires after X min
          */
@@ -542,7 +542,7 @@ class EventCheckoutController extends Controller
 
         try {
 
-            $seat_reserved = ReservedTickets::where('event_id', $event_id)->first()->seat_reserved;
+            $seat_reserved = ReservedTickets::where('session_id', '=', session()->getId())->where('event_id', $event_id)->first()->seat_reserved;
             $order = new Order();
             $order->seating = $seat_reserved;
             $seatings = explode(",",$seat_reserved);

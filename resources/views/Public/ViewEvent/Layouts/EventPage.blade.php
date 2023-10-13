@@ -32,7 +32,11 @@
         <![endif]-->
         @yield('head')
 
-       {!!HTML::style(config('attendize.cdn_url_static_assets').'/assets/stylesheet/frontend.css')!!}
+        {{-- {!!HTML::style(config('attendize.cdn_url_static_assets').'/assets/stylesheet/frontend.css')!!} --}}
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">    
+    
+    
 
         <!--Bootstrap placeholder fix-->
         <style>
@@ -109,6 +113,7 @@
        {!!HTML::script('assets/javascript/main.js')!!}
        {!!HTML::script('assets/javascript/jquery.bootstrap-touchspin.js')!!}
         /*  {!!HTML::script('assets/javascript/paso1a.js')!!} */
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
         
         @yield('scripts')
@@ -144,7 +149,8 @@
             
             if(seat!='sold'){
                 //$('#map-event').hide();
-                $('#zone-event-'+seat).show();
+ 
+                $('.zone-event-'+seat).show().removeClass('d-none');
             }
  
 
@@ -157,6 +163,23 @@
                 // $('#map-event').show();
                 $('.zone-events').hide(); 
 
+
+        });
+
+        $('.view-mapa').hide(); 
+        $(".show-boletos").on('click', function (e)
+        { 
+            alert('ah da');
+                $('.view-mapa').hide(); 
+                $('.view-boleto').show(); 
+
+        });
+
+        $(".show-mapa").on('click', function (e)
+        { 
+            alert('ah de');
+                $('.view-mapa').show(); 
+                $('.view-boleto').hide(); 
 
         });
 
@@ -175,7 +198,7 @@
         {
             e.preventDefault();
             
-            if($(this).hasClass("btns-danger"))
+            if($(this).hasClass("bg-info"))
             {
                 return false;
             }
@@ -193,26 +216,24 @@
             // var asientos_id = [$("input[name='asientos_"+ticket_id+"']").val()];
 
 
-            if($(this).hasClass("btns-info"))
+            if($(this).hasClass("bg-white"))
             {
-                remove = "btns-info";
-                add = "btns-warning";
+                remove = "bg-white";
+                add = "bg-warning";
                 status = 0;
                 asientos.push(asiento);
                 asientos_id.push(id);
                 nro_asientos++;
                 $("#"+id).removeClass(remove).addClass(add);
-                $(".asiento_"+id).attr('fill','#FFD66A');
             }
             else
             {
-                $(".asiento_"+id).attr('fill','#5495D2');
 
 
 
 
-                remove = "btns-warning";
-                add = "btns-info";
+                remove = "bg-warning";
+                add = "bg-white";
                 status = 1;
                 nro_asientos--;
                 $("#"+id).removeClass(remove).addClass(add);
