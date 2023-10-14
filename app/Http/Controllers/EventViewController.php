@@ -97,18 +97,22 @@ class EventViewController extends Controller
                     $tickets_all[$valuegrupo['grupo']][$valuesecciones][] =$event->tickets()->where('group_zone',$valuesecciones)->orderBy('group_zone', 'desc')->get();
                 }
             }
-
-
-
-
-
-
+ 
         }else{
-        
-            $tickets_all = [];
-            foreach ($tickets as $key => $value) {
-                $tickets_all[$value->group_zone][] = $value;
+             
+            $grupo = [
+                [
+                    'grupo' => 'GENERAL', 
+                    'secciones' => $event->tickets_group_zone()
+                ], 
+            ];
+             
+            foreach ($grupo as $keygrupo => $valuegrupo) {
+                foreach ($valuegrupo['secciones'] as $key => $valuesecciones) {
+                    $tickets_all[$valuegrupo['grupo']][$valuesecciones][] =$event->tickets()->where('group_zone',$valuesecciones)->orderBy('group_zone', 'desc')->get();
+                }
             }
+ 
         }
         
         $data = [

@@ -109,6 +109,19 @@ class Event extends MyBaseModel
         return $this->hasMany(\App\Models\Ticket::class);
     }
 
+    public function tickets_group_zone()
+    {   
+        $secciones = [];
+
+        foreach ($this->tickets as $key => $tickets) { 
+            if(!in_array($tickets->group_zone, $secciones)){
+                $secciones[] = $tickets->group_zone;
+            }  
+        }
+ 
+        return $secciones;
+    }
+
     /**
      * The stats associated with the event.
      *
