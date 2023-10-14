@@ -89,7 +89,7 @@
                                                                 <div class="seccion precio">
 
                                                                     @foreach ($sect as $ticketskey => $tickets)
-                                                                        {{ money($tickets[0]->price, $event->currency) }}
+                                                                        {{ money($tickets[0]->price ?? 0, $event->currency) }}
                                                                     @endforeach
                                                                 </div>
                                                                 <div class="seccion agotado" style="display: none;">AGOTADO</div>
