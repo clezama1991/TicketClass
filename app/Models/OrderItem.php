@@ -19,4 +19,10 @@ class OrderItem extends MyBaseModel
      * @var bool $timestamps
      */
     public $timestamps = false;
+
+    
+    public function ticket()
+    {
+        return $this->belongsTo(\App\Models\Ticket::class, 'title', 'title');
+    }
 }

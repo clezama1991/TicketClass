@@ -42,7 +42,7 @@
     <div class="row">
         <div class="col-sm-3">
             <div class="stat-box">
-                <h3>{{ money(($event->sales_volume - $event->amout_commision_paypal()) + $event->organiser_fees_volume , $event->currency) }}</h3>
+                <h3>{{ money(($event->sales_volume) + $event->organiser_fees_volume , $event->currency) }}</h3>
                 <span>@lang("Dashboard.sales_volume")</span>
             </div>
         </div>
@@ -183,25 +183,60 @@
                                 Ventas Por entradas
                             </h3>
                         </div>
-                        <div class="panel-body">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <td>Entrada</td>
-                                        <td>Plataforma</td>
-                                        <td>Online</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($tickets_data_totales as $totales)
-                                    <tr>
-                                        <td>{{{$totales['label']}}}</td> 
-                                        <td class="text-center">{{{$totales['value']['plata']}}}</td> 
-                                        <td class="text-center">{{{$totales['value']['online']}}}</td> 
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                        <div class="panel-body"> 
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#grupo" data-toggle="tab" id="Gen">Agrupada</a>
+                                </li>
+                                <li><a href="#detalle" data-toggle="tab" id="Det">Detallada</a>
+                                </li>
+                            </ul>
+                            
+                            <div class="tab-content panel">
+                                <div class="tab-pane active" id="grupo">
+                                         <table class="table DataTableAgrupacion">
+                                            <thead>
+                                                <tr>
+                                                    <td>Grupo</td>
+                                                    <td>Plataforma</td>
+                                                    <td>Online</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($tickets_data_totales_agrupadas as $totalesx)
+                                                <tr>
+                                                    <td>{{{$totalesx['label']}}}</td> 
+                                                    <td class="text-center">{{{$totalesx['value']['plata']}}}</td> 
+                                                    <td class="text-center">{{{$totalesx['value']['online']}}}</td> 
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table> 
+    
+                                </div>
+                                
+                                
+                                <div class="tab-pane active" id="detalle">
+                                    <table class="table DataTableDetalle w-100">
+                                        <thead>
+                                            <tr>
+                                                <td>Entrada</td>
+                                                <td>Plataforma</td>
+                                                <td>Online</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($tickets_data_totales as $totales)
+                                            <tr>
+                                                <td>{{{$totales['label']}}}</td> 
+                                                <td class="text-center">{{{$totales['value']['plata']}}}</td> 
+                                                <td class="text-center">{{{$totales['value']['online']}}}</td> 
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -401,8 +436,33 @@
             </div>
         </div>
     </div>
+    
+    @section('foot')
+        <script>
+            $('.DataTableAgrupacion').DataTable({
+                "order": [[ 1, "desc" ]],
+                "oLanguage": {
+                    "sInfo": "Showing _START_ to _END_ of _TOTAL_ items."
+                },
+                "lengthChange": false,  
+            });
 
-    <script>
+            $('.DataTableDetalle').DataTable({
+                "order": [[ 1, "desc" ]],
+                "oLanguage": {
+                    "sInfo": "Showing _START_ to _END_ of _TOTAL_ items."
+                },
+                "lengthChange": false, 
+            });
+
+            $(document).ready(function () {
+                $("#Det").trigger("click");
+                $("#Gen").trigger("click");
+            });
+        </script>
+    @endsection
+
+    <script> 
 
         var chartData = {!! $chartData  !!};
         var ticketData = {!! $ticketData  !!};
