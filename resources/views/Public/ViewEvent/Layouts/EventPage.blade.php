@@ -62,7 +62,11 @@
             .btn {
                 color: #fff !important;
             }
-
+            @media screen and (max-width: 1200px) {
+            .dded {
+                width: 100% !important;
+            }
+            }
         </style>
         @if ($event->bg_type == 'color' || Input::get('bg_color_preview'))
             <style>body {background-color: {{(Input::get('bg_color_preview') ? '#'.Input::get('bg_color_preview') : $event->bg_color)}} !important; }</style>
@@ -131,7 +135,6 @@
         {
             
             var seat = $(this).data("seat");
-            console.log("🚀 ~ file: EmbeddedEventPage.blade.php:97 ~ seat", seat)
             
             if(seat!='sold'){
                 //$('#map-event').hide();
@@ -145,7 +148,6 @@
         {
             
             var seat = $(this).data("seatzone");
-            console.log("🚀 ~ file: EmbeddedEventPage.blade.php:97 ~ seat", seat)
             
             if(seat!='sold'){
                 //$('#map-event').hide();
@@ -169,7 +171,6 @@
         $('.view-mapa').hide(); 
         $(".show-boletos").on('click', function (e)
         { 
-            alert('ah da');
                 $('.view-mapa').hide(); 
                 $('.view-boleto').show(); 
 
@@ -177,7 +178,6 @@
 
         $(".show-mapa").on('click', function (e)
         { 
-            alert('ah de');
                 $('.view-mapa').show(); 
                 $('.view-boleto').hide(); 
 
@@ -188,7 +188,6 @@
         $(".select-nro-seat").on('change', function (e)
         {
             var ticket_id = $(this).data("id");
-            console.log(ticket_id);
             var nro_asientos = $("select[name='ticket_"+ticket_id+"']").val();
             var seatzone = $(this).data("seatzone");
             $(".ver_asientos_marcados_seccion_comprar_zona_"+seatzone).html(nro_asientos);
@@ -203,12 +202,10 @@
                 return false;
             }
             var id = $(this).attr("id");
-            console.log("🚀 ~ file: EventTicketsSection.blade.php:218 ~ id", id)
             
             var asiento = $(this).data("asiento");
             var ticket_id = $(this).data("ticket");
             var seatzone = $(this).data("seatzone");
-            console.log("🚀 ~ file: EmbeddedEventPage.blade.php:128 ~ seatzone", seatzone)
             
             var remove, add, status, set_asientos;
 
@@ -277,13 +274,8 @@
             $('.view_zones').show();
             $('.view_sectiones').hide();    
             var gropu_section = $(this).data("gropu_section");  
-            console.log(gropu_section);             
             $('.'+gropu_section).show(); 
-
-
-
-
-
+ 
         });
         $(".back_sectiones").on('click', function (e)
         {            

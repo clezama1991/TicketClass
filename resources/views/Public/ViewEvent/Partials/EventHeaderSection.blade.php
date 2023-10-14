@@ -4,11 +4,11 @@
             <div class="row">
                 <div id="logotipo" style="vertical-align:middle;">
                     <div id="logotipo_container">
-                        <a href="http://www.eticket.mx/home.aspx">
+                        <a href="#">
                             
                             <img
                                 src="{{asset('assets/images/logo-dark.png')}}"
-                                alt="Venta de boletos en eticket" class="logotipo_principal_procesodecompra"
+                                alt="Venta de boletos" class="logotipo_principal_procesodecompra"
                                 border="0"></a>
                     </div>
                 </div>

@@ -65,7 +65,7 @@
                                                 @endforeach
                                             </div>
 
-                                            <div id="divHeaderSeccion" class="headerpaso">Selecciona tu
+                                            <div id="divHeaderSeccion" class="headerpaso IdDivZonasT d-none">Selecciona tu
                                                 SECCION&nbsp;<span id="spSeccionSeleccionado" class="headerseleccion"></span>
                                             </div>
                                             <div class="IdDivZonas">
@@ -103,7 +103,7 @@
 
 
 
-                                            <div id="divHeaderBloques" class="headerpaso">Selecciona tu
+                                            <div id="divHeaderBloques" class="headerpaso  divBloquesT d-none">Selecciona tu
                                                 BLOQUE&nbsp;<span id="spBloqueSeleccionado" class="headerseleccion"></span>
                                             </div>
                                             <div id="divBloques" style="">
@@ -174,7 +174,7 @@
                                 </div>
 
                                 
-                                <div id="divPrecios" style="">
+                                <div id="divPrecios" class="card mt-5" style="">
 
                                     {!! Form::open(['url' => route('postValidateTickets', ['event_id' => $event->id]), 'class' => 'ajax']) !!}
                                     <input type="hidden" name="asientos_marcados" id="asientos_marcados">
@@ -209,14 +209,24 @@
 
                                                     <div class="d-none zone-events zone-event-{{$ticket_seat_zone}}" id="{{ $ticket->id }}" >
 
+                                                        <div class="card-header">
+                                                            <h5 class="card-title">
+                                                                @if ($ticket->select_seat == 1)
+                                                                Selecciona los asientos del bloque:  {{$ticket->title}} 
 
+                                                                @else
+                                                                Selecciona la cantidad de boletos del bloque:  {{$ticket->title}} 
 
+                                                                @endif
+                                                            </h5>
+                                                        </div> 
+                                                        <div class="card-body">
                                                         <div class="row">
                                                             <div class="col-md-12">
 
                                                                 <div class="row d-fkex justify-content-end mb-5">
                                                                     <div class="col-1">
-                                                                        <a id="zoom-out" class="btn btn-primary">
+                                                                        <a data-ticketid="{{$ticket->id}}" class="btn btn-primary zoom-out">
                                                                             <?xml version="1.0" encoding="utf-8"?>
                                                                             <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
                                                                             <svg fill="#ffffff" width="20px" height="20px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -226,7 +236,7 @@
                                                                         </a>
                                                                     </div>                                                                                        
                                                                     <div class="col-1">
-                                                                        <a id="zoom-in" class="btn btn-primary">
+                                                                        <a data-ticketid="{{$ticket->id}}" class="btn btn-primary zoom-in">
                                                                             <?xml version="1.0" encoding="utf-8"?>
                                                                             <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
                                                                             <svg fill="#ffffff" width="20px" height="20px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -237,7 +247,7 @@
                                                                     </div>
                                                                 </div>
 
-                                                                <div class="row m-5 mapa">
+                                                                <div class="row m-5 mapa{{$ticket->id}}">
 
 
 
@@ -317,22 +327,7 @@
 
                                                                         </div>
                                                                     @endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 
                                                                     @foreach ($ticket_seats as $key_file => $seats)
                                                                         <div class="col-md-12">
 
@@ -396,7 +391,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
+                                                    </div>  
 
 
 
@@ -407,6 +402,7 @@
                                     @endforeach
 
 
+                                    <br> 
                                     {!! Form::submit(trans('Public_ViewEvent.register'), [
                                         'class' => 'btn btn-lg btn-primary
                                                                     pull-right',
@@ -415,7 +411,7 @@
 
                                     {!! Form::hidden('is_embedded', $is_embedded) !!}
                                     {!! Form::close() !!}
-
+                                                <br> 
 
                                 </div>
 
@@ -452,19 +448,19 @@
 
 
 <script>
-    $('#zoom-in').click(function() {
-        updtZoom(0.1);
+    $('.zoom-in').click(function() { 
+        updtZoom(0.1, $(this).data('ticketid'));
     });
     
-    $('#zoom-out').click(function() {
-        updtZoom(-0.1);
+    $('.zoom-out').click(function() {
+        updtZoom(-0.1, $(this).data('ticketid'));
     });
     
     zoomLvl = 1;
     
-    var updtZoom = function(zoom) {
+    var updtZoom = function(zoom, ticketid) {
         zoomLvl += zoom;
-        $('.mapa').css({ zoom: zoomLvl, '-moz-transform': 'scale(' + zoomLvl + ')' , transition: 'all 3s ease'});
+        $('.mapa'+ticketid).css({ zoom: zoomLvl, '-moz-transform': 'scale(' + zoomLvl + ')' , transition: 'all 3s ease'});
     }
 
 </script>
@@ -477,7 +473,6 @@
 
 
         $("#divHeaderZona").on('click', function(e) {
-            alert(zona);
             $('#spZonaSeleccionada').html('');
             $('.select-zona').removeClass('d-none');
             $('.select-zona').addClass('d-block');
@@ -487,7 +482,6 @@
 
 
         $(".select-zona").on('click', function(e) {
-            // alert('zona'); 
             var zonaid_display = $(this).data('zonaid');
             var zonaname_display = $(this).data('zonaname');
             zona = zonaname_display;
@@ -495,12 +489,12 @@
             $('#spZonaSeleccionada').html(zonaname_display);
             $('.select-zona').addClass('d-none');
             $('.' + zonaid_display).removeClass('d-none');
+            $('.IdDivZonasT').removeClass('d-none');
         });
 
 
 
         $("#divHeaderSeccion").on('click', function(e) {
-            alert(zona);
             $('#spSeccionSeleccionado').html('');
             $('.' + zona).removeClass('d-none');
             $('.' + zona).addClass('d-block');
@@ -509,7 +503,6 @@
 
 
         $(".select-section").on('click', function(e) {
-            // alert('section'); 
             var seccionname_display = $(this).data('seccionname');
 
             $('#spSeccionSeleccionado').html(seccionname_display);
@@ -517,6 +510,7 @@
             seccion = sectionid_display;
 
             $('.select-section').addClass('d-none');
+            $('.divBloquesT').removeClass('d-none');
             $('.' + sectionid_display).removeClass('d-none');
             $('.' + sectionid_display).addClass('d-block');
         });
@@ -525,7 +519,6 @@
 
 
         $("#divHeaderBloques").on('click', function(e) {
-            alert(seccion);
             $('#spBloqueSeleccionado').html('');
             $('.select-bloque').removeClass('d-none d-block');
             $('.' + seccion).removeClass('d-none');
@@ -533,7 +526,6 @@
         });
 
         $(".select-bloque").on('click', function(e) {
-            // alert('section'); 
             var bloquename_display = $(this).data('bloquename');
 
             $('#spBloqueSeleccionado').html(bloquename_display);
@@ -542,13 +534,12 @@
 
 
             var ticketid = $(this).data('ticketid');
-            console.log(ticketid,'ticketid');
 
             var bloqueid_display = $(this).data('bloqueid');
             $('#' + ticketid).removeClass('d-none');
             $('#' + ticketid).addClass('d-block');
              $('#ticketx_' + ticketid).TouchSpin({
-                
+                 
             buttondown_class: "btn btn-primary",
             buttonup_class: "btn btn-primary"
              });

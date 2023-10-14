@@ -1,5 +1,5 @@
 
-<div id="Evento_COMPRANDO" style="width:33.33%; vertical-align:top;">
+<div id="Evento_COMPRANDO" class="dded" style="width:33.33%; vertical-align:top;">
 
     <div class="espacio_margen_fondo_blanco_top lateral_Evento_COMPRANDO">
         <div>
@@ -19,10 +19,11 @@
 
                 <div class="font14">{{$event->venue_name}}</div>
 
-                <div class="font14">MoRIDA</div>
+                {{-- <div class="font14">MoRIDA</div> --}}
                 <div class="font12">  
                     
-                    {{ $event->start_date->format('l') }}, {{ $event->startDateFormatted() }}
+                    {{-- {{ $event->start_date->format('l') }},  --}}
+                    {{ $event->startDateFormatted() }}
                     
                     <span class="boldear800">@if($event->start_date->diffInDays($event->end_date) == 0)
                         {{ $event->end_date->format('H:i') }}
@@ -78,7 +79,7 @@
         <div>
             
             <div class="font11" style="text-align:left; margin:10px 0px">
-                Evento sujeto a cargo x servicio por el sistema eticket , los cuales están incluidos en el precio listado.
+                Evento sujeto a cargo x servicio , los cuales están incluidos en el precio listado.
             </div>    
             <div id="PreciosCompra" class="izquierdaText tb ancho_100">
                 

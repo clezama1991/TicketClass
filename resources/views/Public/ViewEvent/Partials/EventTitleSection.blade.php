@@ -14,7 +14,8 @@
                 <div class=" font font_i_16_12-SmartPhone boldear600  mayusculas_primera">
                     <!--style="margin-top:10px"-->
 
-                    {{ $event->start_date->format('l') }},  {{ $event->startDateFormatted() }}
+                    {{-- {{ $event->start_date->format('l') }},  --}}
+                     {{ $event->startDateFormatted() }}
                     <span class="boldear800">
                         @if($event->start_date->diffInDays($event->end_date) == 0)
                                 {{ $event->end_date->format('H:i') }}
