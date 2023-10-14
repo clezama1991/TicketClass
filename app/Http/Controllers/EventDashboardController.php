@@ -76,7 +76,9 @@ class EventDashboardController extends MyBaseController
 
         $tickets_data_id = [];
         $tickets_data_totales = [];
-        foreach ($event->orders as $key => $value) {
+        $tickets_data_agrupadas_id = [];
+        $tickets_data_totales_agrupadas = [];
+        foreach ($event->orders->where('is_cancelled',false) as $key => $value) {
             $plata = 0;
             $online = 0;
             if( is_null($value->payment_gateway_id)){
@@ -89,6 +91,7 @@ class EventDashboardController extends MyBaseController
                     $tickets_data_id[] = $orderItems->title;                    
                     $tickets_data_totales[$orderItems->title] = [
                         'label' => $orderItems->title,
+                        'group' => ($orderItems->ticket) ? $orderItems->ticket->group_zone : null,
                         'value' => [
                             'plata' => $plata,
                             'online' => $online
@@ -97,14 +100,43 @@ class EventDashboardController extends MyBaseController
                 }else{
                     $tickets_data_totales[$orderItems->title] = [
                         'label' => $orderItems->title,
+                        'group' => ($orderItems->ticket) ? $orderItems->ticket->group_zone : null,
                         'value' => [
                             'plata' => $tickets_data_totales[$orderItems->title]['value']['plata'] + $plata,
                             'online' => $tickets_data_totales[$orderItems->title]['value']['online'] + $online
                         ]
                     ];
-                }                
+                }    
             }
         }
+
+
+        foreach ($tickets_data_totales as $key => $value) {
+
+            $plata = $value['value']['plata'] ?? 0;
+            $online = $value['value']['online'] ?? 0; 
+
+            if(!in_array($value['group'], $tickets_data_agrupadas_id)){
+                $tickets_data_agrupadas_id[] = $value['group'];                    
+                $tickets_data_totales_agrupadas[$value['group']] = [
+                    'label' => $value['group'],
+                    'value' => [
+                        'plata' => $plata,
+                        'online' => $online
+                    ]
+                ];                    
+            }else{
+                $tickets_data_totales_agrupadas[$value['group']] = [
+                    'label' => $value['group'],
+                    'value' => [
+                        'plata' => $tickets_data_totales_agrupadas[$value['group']]['value']['plata'] + $plata,
+                        'online' => $tickets_data_totales_agrupadas[$value['group']]['value']['online'] + $online
+                    ]
+                ];
+            }   
+        }
+
+         
  
         foreach ($event->tickets as $ticket) {
             $tickets_data[] = [
@@ -116,6 +148,7 @@ class EventDashboardController extends MyBaseController
         $data = [
             'event'      => $event,
             'tickets_data_totales'      => $tickets_data_totales,
+            'tickets_data_totales_agrupadas'      => $tickets_data_totales_agrupadas,
             'chartData'  => json_encode($result),
             'ticketData' => json_encode($tickets_data),
         ];

@@ -89,13 +89,20 @@ class EventOrdersController extends MyBaseController
                 if($user_id!='linea'){ 
                     $orders_all->where('user_id', $user_id);
                 }else{ 
-                    $orders_all->where('user_id', null);
+                    $orders_all->where('payment_gateway_id','!=',null);
                 }
             }
             
             $orders = $orders_all->get();
             
-            $importes = $orders->sum('amount') +$orders->sum('services_fee'); 
+            $importes = $orders->sum('amount') + $orders->sum('services_fee'); 
+            
+            if($user_id=='linea'){ 
+                $importess =  $importes * 1.06  - $importes;
+                $importes = round($importes - $importess, 0);
+            }
+            
+
             $importes_cash = $orders->where('payment_method','cash')->sum('amount') + $orders->where('payment_method','cash')->sum('services_fee');
             $importes_card = $orders->where('payment_method','card')->sum('amount') + $orders->where('payment_method','card')->sum('services_fee');
             
@@ -402,6 +409,13 @@ class EventOrdersController extends MyBaseController
                 else if($attendees)
                     $msg = trans("Controllers.successfully_cancelled_attendees");
             }
+ 
+            if(count($order->attendees()->withoutCancelled()->get())==0){
+                $order->order_status_id = 4;
+                $order->is_cancelled = true; 
+                $order->save();
+            }  
+ 
             \Session::flash('message', $msg);
 
             DB::commit();
