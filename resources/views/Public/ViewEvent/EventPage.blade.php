@@ -426,7 +426,7 @@
                 </div>
                 
 
-                @include('Public.ViewEvent.Partials.EventShareSection')
+                {{-- @include('Public.ViewEvent.Partials.EventShareSection') --}}
             </div>
 
         </div>
