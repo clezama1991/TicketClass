@@ -96,7 +96,7 @@ class Event extends MyBaseModel
      */
     public function imageCover()
     {
-        return ($this->images) ? $this->images[0]->image_path : null;
+        return (count($this->images)>0) ? $this->images[0]->image_path : null;
     }
 
     /**
