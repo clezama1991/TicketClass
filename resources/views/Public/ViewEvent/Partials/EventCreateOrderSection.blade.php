@@ -29,8 +29,10 @@
                                 <div class="espacio_margen_fondo_blanco_top lateral_Evento_COMPRANDO d-block">
                                     <div>
                             
-                                        <img src="{{asset($event->images[0]->image_path)}}"
+                                        @if(!is_null($event->imageCover())) 
+                                        <img src="{{asset($event->imageCover())}}"
                                             class="imageneventocompra">
+                                        @endif
                             
                                     </div>
                                     <!-- inicia: Informacion Evento -->

@@ -1,7 +1,9 @@
 
 <div class="div_i-Oculta_d-SoloSmartPhone">
-    <img src="{{asset($event->images[0]->image_path)}}"
-        style="border: solid 5px #FFF; width:100%">
+    @if(!is_null($event->imageCover())) 
+    <img src="{{asset($event->imageCover())}}"
+        style="border: solid 5px #FFF; width:100%"> 
+    @endif
 </div>
 
 <div style="margin:0px 0px 10px 0px; padding:0px 10px">
@@ -33,8 +35,10 @@
                 </div>
             </div>
             <div class="divimageneventocompra alinearenmedio" style="width:310px; padding:10px 0px">
-                <img src="{{asset($event->images[0]->image_path)}}"
+                @if(!is_null($event->imageCover())) 
+                <img src="{{asset($event->imageCover())}}"
                     style="border: solid 5px #FFF; width:300px">
+                @endif
             </div>
         </div>
     </div>

@@ -90,6 +90,16 @@ class Event extends MyBaseModel
     }
 
     /**
+     * The images associated with the event.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function imageCover()
+    {
+        return ($this->images) ? $this->images[0]->image_path : null;
+    }
+
+    /**
      * The messages associated with the event.
      *
      * @return mixed
