@@ -50,11 +50,7 @@
                 <img src="{{asset($event->map->url)}}" >
 
             </div>
-        </div>
-
-        <!-- InstanceBeginEditable name="PreciosTemplateCompra" -->
-        <!-- InstanceEndEditable -->
-
+        </div> 
     </div>
     <div class="espacio_margen_fondo_blanco div_i-Oculta_d-SoloSmartPhone lateral_Evento_COMPRANDO mt-3 view-mapa">
                        
@@ -122,37 +118,7 @@
             @endforeach
 
             
-                </div>
-            <!--<div id="templatePricing" class="izquierdaText tb ancho_100" style="display:none;">
-                <div class='row zona' style='border-bottom:1px dashed #336699;'>
-                    <div class='col' style='width: 8px;'>
-                    </div>
-                    <div class='col font18 boldear600 alinearenmedio tipoBoleto' style='padding: 5px;'>
-                        Numerado
-                    </div>
-                    <div class='col preciosTemp'>
-                        <div  class='tb ancho_100 diaEvento' style='text-align:left; margin:10px 0px'>
-                            <div class='row font14'>
-                                <div class='col boldear600 azul font16 diaEventoValor'>
-                                    Día del Evento
-                                </div>
-                            </div>
-                            <div class='row font14'>
-                                <div  class='col ancho_50' style='padding:5px 0px 0px 0px'>
-                                    Adulto 
-                                </div>
-                                <div  class='col ancho_50'>
-                                    <div data-toggle='popover' data-trigger='hover' data-placement='top' data-html='true' data-content='Precio: <b>" + $(e2).attr("Price").formatMoney(_currencyMask, 2) + "</b><br>Cargos: <b>" + $(e2).attr("Charge").formatMoney(_currencyMask, 2) + "</b>' style='text-align:center; cursor:pointer' data-original-title='' title=''>
-                                        <strong>
-                                            $ 250.00
-                                        </strong>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>-->
+                </div> 
             <div style="display:none">
                 <!-- Plantilla para el nombre de bloque -->
                 <div id="templateBloque">

@@ -26,10 +26,10 @@
                     <div class="flexizq66a100compra" style="vertical-align:top;">
                         <ul class="nav nav-tabs " id="myTab" role="tablist">
                             <li class="nav-item w-50 show-boleto" role="presentation">
-                              <button class="nav-link active w-100" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Busqueda de Boletos</button>
+                              <button class="nav-link  w-100" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Busqueda de Boletos</button>
                             </li>
                             <li class="nav-item w-50 show-mapa" role="presentation">
-                              <button class="nav-link w-100" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Selecciona tus Asientos</button>
+                              <button class="nav-link active w-100" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Selecciona tus Asientos</button>
                             </li> 
                           </ul>
                           
@@ -43,7 +43,7 @@
                                 align="center">
 
                                 <div class="tab-content">
-                                    <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">  
+                                    <div class="tab-pane " id="home" role="tabpanel" aria-labelledby="home-tab">  
      
                                         <div style="padding-top:20px">
                                             <div id="divHeaderZona" class="headerpaso" style="">Selecciona tu
@@ -134,24 +134,36 @@
 
                                         </div>
                                     </div>
-                                    <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab"> 
+                                    <div class="tab-pane active" id="profile" role="tabpanel" aria-labelledby="profile-tab"> 
                                         
                                      
                                         <div class="row">
                                             <div class="col-md-12 p-5">
 
                                     
-                                        <img id="hall-seat-plan" src="{{ asset($event->image_map()) }}" alt="stage" usemap="#map" />
-                                        <map name="map" class="seatmap">
+                                        <img 
+                                        id="hall-seat-plan"  
+                                         src="{{ asset($event->image_map()) }}" 
+                                        alt="stage" 
+                                        usemap="#map" />
+
+                                        <map name="map" class="seatmap xxx">
                                             <!-- SEAT A --> 
                                             <?php                            
                                                 $zonas_disponibles = $tickets->where('is_hidden', false)->pluck('seat_zone')->toArray();                                
                                             ?>                      
                                             @foreach($event->sections_map() as $key => $map_section)
-                                            <area data-seat="{{ in_array($map_section->combine,$zonas_disponibles) ? 'sold' : "x".$map_section->combine }}"
-                                                data-seatzone="{{ strtoupper($map_section->combine)}}" class="selected_zone_map" alt="{{ $map_section->combine }}"
-                                                title="{{ $map_section->combine }}" href="#" shape="{{$map_section->shape}}" coords="{{$map_section->coords}}"
-                                                data-toggle="{{ in_array(strtoupper($map_section->combine),$zonas_disponibles) ? 'modal' : 'sold' }}" data-target="#myModal"
+                                            <area 
+                                                data-seat="{{ in_array($map_section->combine,$zonas_disponibles) ? 'sold' : "x".$map_section->combine }}"
+                                                data-seatzone="{{ strtoupper($map_section->combine)}}" 
+                                                class="selected_zone_map" 
+                                                alt="{{ $map_section->combine }}"
+                                                title="{{ $map_section->combine }}" 
+                                                data-toggle="{{ in_array(strtoupper($map_section->combine),$zonas_disponibles) ? 'modal' : 'sold' }}" 
+                                                data-target="#myModal"
+                                                href="#" 
+                                                shape="{{$map_section->shape}}" 
+                                                coords="{{$map_section->coords}}"
                                                 >
                                             @endforeach
                                         </map>
@@ -224,17 +236,15 @@
                                                         <div class="row">
                                                             <div class="col-md-12">
 
-                                                                <div class="row d-fkex justify-content-end mb-5">
-                                                                    <div class="col-1">
-                                                                        <a data-ticketid="{{$ticket->id}}" class="btn btn-primary zoom-out">
+                                                                <div class="row d-flex justify-content-end mb-5">
+                                                                    <div class="col-12 d-flex justify-content-end">
+                                                                        <a data-ticketid="{{$ticket->id}}" class="btn btn-primary zoom-out" style="margin-right: 5px;">
                                                                              <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
                                                                             <svg fill="#ffffff" width="20px" height="20px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
                                                                             <title>search-minus</title>
                                                                             <path d="M30.531 29.469l-10.451-10.451c1.645-1.874 2.649-4.346 2.649-7.053 0-5.917-4.797-10.714-10.714-10.714-0.005 0-0.011 0-0.016 0h0.001c-0 0-0.001 0-0.001 0-5.936 0-10.749 4.812-10.749 10.749 0 2.968 1.203 5.656 3.148 7.601v0c1.931 1.946 4.607 3.15 7.564 3.15 2.711 0 5.185-1.012 7.066-2.68l-0.011 0.010 10.451 10.451c0.136 0.136 0.324 0.22 0.531 0.22 0.415 0 0.751-0.336 0.751-0.751 0-0.207-0.084-0.395-0.22-0.531v0zM5.459 18.539c-1.688-1.676-2.733-3.998-2.733-6.564 0-5.108 4.141-9.249 9.249-9.249 2.566 0 4.888 1.045 6.564 2.733l0.001 0.001h0.002c1.674 1.674 2.709 3.986 2.709 6.54s-1.035 4.866-2.708 6.539v0l-0.002 0.001-0.001 0.003c-1.673 1.673-3.985 2.708-6.538 2.708-2.555 0-4.867-1.036-6.541-2.711l-0-0zM16 11.25h-8c-0.414 0-0.75 0.336-0.75 0.75s0.336 0.75 0.75 0.75v0h8c0.414 0 0.75-0.336 0.75-0.75s-0.336-0.75-0.75-0.75v0z"></path>
                                                                             </svg>
-                                                                        </a>
-                                                                    </div>                                                                                        
-                                                                    <div class="col-1">
+                                                                        </a> 
                                                                         <a data-ticketid="{{$ticket->id}}" class="btn btn-primary zoom-in">
                                                                              <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
                                                                             <svg fill="#ffffff" width="20px" height="20px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -260,7 +270,7 @@
                                                                             <br>
                                                                         </div> --}}
                                                                     @else
-                                                                        <div class="col-md-12" style="padding: 50px">
+                                                                        <div class="col-md-12">
                                                                             @if ($ticket->is_paused)
                                                                                 <span class="text-danger">
                                                                                     @lang('Public_ViewEvent.currently_not_on_sale')
@@ -306,6 +316,29 @@
                                                                                             </div>
                                                                                             <div
                                                                                                 class="precio cantidad col_i-Desplegada_block-SmartPhone centrarTexto ">
+                                                                                                <div class="input-group input-group-sm bootstrap-touchspin">
+                                                                                                    <span class="input-group-btn">
+                                                                                                        <button class="btn btn-primary bootstrap-touchspin-down" data-id="{{ $ticket->id }}" type="button">-</button>
+                                                                                                    </span>
+                                                                                                    <span class="input-group-addon bootstrap-touchspin-prefix" style="display: none;"></span>
+                                                                                                    <input 
+                                                                                                        id="ticketx_{{ $ticket->id }}"
+                                                                                                        type="text" 
+                                                                                                        value="0" 
+                                                                                                        name="ticket_{{ $ticket->id }}"
+                                                                                                        data-id="{{ $ticket->id }}"
+                                                                                                        data-seatzone="{{ $ticket_seat_zone }}"
+                                                                                                        class="form-control select-nro-seat"
+                                                                                                        style="display: block;">
+                                                                                                    <span class="input-group-addon bootstrap-touchspin-postfix" style="display: none;"></span>
+                                                                                                    <span class="input-group-btn">
+                                                                                                        <button class="btn btn-primary bootstrap-touchspin-up" data-id="{{ $ticket->id }}" type="button">+</button>
+                                                                                                    </span>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <!--
+                                                                                            <div
+                                                                                                class="precio cantidad col_i-Desplegada_block-SmartPhone centrarTexto ">
                                                                                                 <div
                                                                                                     class="spinbox_container">
                                                                                                     <input
@@ -318,6 +351,7 @@
                                                                                                         class="form-control select-nro-seat">
                                                                                                 </div>
                                                                                             </div>
+                                                                                        -->
                                                                                         </div>
                                                                                     </div>
                                                                                 @endif
@@ -445,7 +479,21 @@
 @section('scripts')
 
 
-<script>
+<script> 
+    
+    $('.bootstrap-touchspin-down').click(function(event) { 
+        var id = $(this).data('id');
+        var nro = $('#ticketx_'+id).val(); 
+        var nrotickets = parseInt(nro) - 1;
+        $('#ticketx_'+id).val( nrotickets<0 ? 0 : nrotickets ); 
+    });
+
+    $('.bootstrap-touchspin-up').click(function(event) {
+        var id = $(this).data('id');
+        var nro = $('#ticketx_'+id).val();
+        $('#ticketx_'+id).val( parseInt(nro) +1);
+    });
+    
     $('.zoom-in').click(function() { 
         updtZoom(0.1, $(this).data('ticketid'));
     });
@@ -462,6 +510,12 @@
     }
 
 </script>
+
+    <script>
+        $(document).ready(function(e) { 
+            $('img[usemap]').rwdImageMaps();  
+        });
+    </script>
 
     <script>
         var global = '';

@@ -67,6 +67,14 @@
                 width: 100% !important;
             }
             }
+
+            img[usemap] {
+                border:0;
+                height:auto;
+                max-width:100%;
+                width:auto;
+            }
+ 
         </style>
         @if ($event->bg_type == 'color' || Input::get('bg_color_preview'))
             <style>body {background-color: {{(Input::get('bg_color_preview') ? '#'.Input::get('bg_color_preview') : $event->bg_color)}} !important; }</style>
@@ -112,14 +120,16 @@
     
     {!!HTML::script('assets/javascript/bootstrap-slider.min.js')!!}
         {!!HTML::script('assets/javascript/jquery.flexslider-min.js')!!}
-        {!!HTML::script('assets/javascript/jquery.imagemapster.min.js')!!}
+ 
+ 
         {!!HTML::script('assets/javascript/tooltip.js')!!}
-       {!!HTML::script('assets/javascript/main.js')!!}
-       {!!HTML::script('assets/javascript/jquery.bootstrap-touchspin.js')!!}
-        /*  {!!HTML::script('assets/javascript/paso1a.js')!!} */
+        {!!HTML::script('assets/javascript/main.js')!!}
+        {!!HTML::script('assets/javascript/paso1a.js')!!} 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-
-        
+ 
+        <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
+        <script src="https://www.jqueryscript.net/demo/rwd-image-maps/jquery.rwdImageMaps.min.js"></script>
+ 
         @yield('scripts')
 
     <script>
@@ -168,8 +178,9 @@
 
         });
 
-        $('.view-mapa').hide(); 
-        $(".show-boletos").on('click', function (e)
+        $('.view-boleto').hide(); 
+        $('.view-mapa').show(); 
+        $(".show-boleto").on('click', function (e)
         { 
                 $('.view-mapa').hide(); 
                 $('.view-boleto').show(); 
