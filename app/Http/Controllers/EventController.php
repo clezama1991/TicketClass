@@ -306,6 +306,29 @@ class EventController extends MyBaseController
             $eventImage->save();
         }
 
+        if ($request->hasFile('front_image_path')) {
+            $path = public_path() . '/' . config('attendize.event_images_path');
+            $filename = 'event_image-' . md5(time() . $event->id) . '.' . strtolower($request->file('front_image_path')->getClientOriginalExtension());
+
+            $file_full_path = $path . '/' . $filename;
+
+            $request->file('front_image_path')->move($path, $filename);
+
+            $img = Image::make($file_full_path);
+
+            $img->resize(800, null, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+
+            $img->save($file_full_path);
+
+            \Storage::put(config('attendize.event_images_path') . '/' . $filename, file_get_contents($file_full_path));
+ 
+            $event->front_image_path = config('attendize.event_images_path') . '/' . $filename;
+            $event->save();
+        }
+
         return response()->json([
             'status'      => 'success',
             'id'          => $event->id,

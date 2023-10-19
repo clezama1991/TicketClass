@@ -182,8 +182,6 @@
                         </div>
                     </div>
                 @endif
-            </div>
-            <div class="col-md-6">
                 <div class="float-l">
                     @if($event->images->count())
                     <div class="thumbnail">
@@ -191,6 +189,20 @@
                     </div>
                     @endif
                 </div>
+            </div>
+            <div class="col-md-6">
+              
+                <div class="form-group">
+                    {!! Form::label('front_image_path', 'Imagen de Portada', array('class'=>'control-label ')) !!}
+                    {!! Form::styledFile('front_image_path', 1) !!}
+                 </div>
+                 <div class="float-l">
+                     @if($event->front_image_path)
+                     <div class="thumbnail">
+                        {!!HTML::image('/'.$event->front_image_path)!!}
+                     </div>
+                     @endif
+                 </div>
             </div>
         </div>
         <div class="row">

@@ -147,6 +147,22 @@
                                     {!! Form::open(['url' => route('postValidateTickets', ['event_id' => $event->id]), 'class' => 'ajax']) !!}
                                     <input type="hidden" name="asientos_marcados" id="asientos_marcados">
                                     <input type="hidden" name="asientos" id="asientos_id">
+                                                    <meta property="availability" content="http://schema.org/InStock">
+
+                                                @foreach ($event->tickets as $vite)     
+           
+                                                    <input type="hidden" name="tickets[]" value="{{$vite->id}}">
+
+                                                         <input type="hidden" name="ticket_{{ $vite->id }}"
+                                                            value="0" class="ticketx_{{ $vite->id }}">
+                                                        <input type="hidden" name="asientos_{{ $vite->id }}">
+                                                     
+                                                @endforeach
+
+
+
+
+
 
 
 
@@ -158,15 +174,9 @@
                                             @php
                                                 $name_section = str_replace(' ', '_', $sectkey);
                                             @endphp
-                                            @foreach ($sect as $ticketskey => $tickets)
-                                                @foreach ($tickets as $ticketkey => $ticket)
-                                                    {!! Form::hidden('tickets[]', $ticket->id) !!}
-                                                    <meta property="availability" content="http://schema.org/InStock">
-                                                    @if ($ticket->select_seat == 1)
-                                                        <input type="hidden" name="ticket_{{ $ticket->id }}"
-                                                            value="0">
-                                                        <input type="hidden" name="asientos_{{ $ticket->id }}">
-                                                    @endif
+                                            @foreach ($sect as $ticketskey => $tickets_scr)
+                                                @foreach ($tickets_scr as $ticketkey => $ticket)                                                      
+                                                    
                                                     
                                                     @php
                                                     $termina = 1;
@@ -278,13 +288,13 @@
                                                                                                     </span>
                                                                                                     <span class="input-group-addon bootstrap-touchspin-prefix" style="display: none;"></span>
                                                                                                     <input 
-                                                                                                        id="ticketx_{{ $ticket->id }}"
+                                                                                                        id=""
                                                                                                         type="text" 
                                                                                                         value="0" 
                                                                                                         name="ticket_{{ $ticket->id }}"
                                                                                                         data-id="{{ $ticket->id }}"
                                                                                                         data-seatzone="{{ $ticket_seat_zone }}"
-                                                                                                        class="form-control select-nro-seat"
+                                                                                                        class="form-control select-nro-seat ticketx_{{ $ticket->id }}"
                                                                                                         style="display: block;">
                                                                                                     <span class="input-group-addon bootstrap-touchspin-postfix" style="display: none;"></span>
                                                                                                     <span class="input-group-btn">
@@ -439,17 +449,16 @@
     
     $('.bootstrap-touchspin-down').click(function(event) { 
         var id = $(this).data('id');
-        var nro = $('#ticketx_'+id).val(); 
+        var nro = $('.ticketx_'+id).val(); 
         var nrotickets = parseInt(nro) - 1;
-        $('#ticketx_'+id).val( nrotickets<0 ? 0 : nrotickets ); 
+        $('.ticketx_'+id).val( nrotickets<0 ? 0 : nrotickets ); 
     });
 
     $('.bootstrap-touchspin-up').click(function(event) {
         var id = $(this).data('id');
-        var nro = $('#ticketx_'+id).val();
-        $('#ticketx_'+id).val( parseInt(nro) +1);
+        var nro = $('.ticketx_'+id).val();
+        $('.ticketx_'+id).val( parseInt(nro) +1);
     });
-    
     $('.zoom-in').click(function() { 
         updtZoom(0.1, $(this).data('ticketid'));
     });
@@ -540,11 +549,7 @@
             var bloqueid_display = $(this).data('bloqueid');
             $('#' + ticketid).removeClass('d-none');
             $('#' + ticketid).addClass('d-block');
-             $('#ticketx_' + ticketid).TouchSpin({
-                 
-            buttondown_class: "btn btn-primary",
-            buttonup_class: "btn btn-primary"
-             });
+           
 
         });
     </script>
