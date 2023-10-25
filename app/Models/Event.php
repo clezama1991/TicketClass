@@ -176,7 +176,7 @@ class Event extends MyBaseModel
     {
         $total = 0;
         foreach ($this->orders->where('payment_gateway_id','!=',null) as $key => $value) {
-            $total += $value->getOrganiserAmountAttribute();
+            $total += $value->getOrganiserAmountAmountAttribute();
         }
         return $total;
     }

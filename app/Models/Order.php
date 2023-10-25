@@ -120,6 +120,11 @@ class Order extends MyBaseModel
         return $this->amount + $this->organiser_booking_fee + $this->taxamt + $this->services_fee;
     }
 
+    public function getOrganiserAmountAmountAttribute()
+    {
+        return $this->amount;
+    }
+
     /**
      * Get the total amount of the order.
      *
@@ -128,6 +133,16 @@ class Order extends MyBaseModel
     public function getTotalAmountAttribute()
     {
         return $this->amount + $this->organiser_booking_fee + $this->booking_fee + $this->services_fee;
+    }
+
+    /**
+     * Get the total amount of the order.
+     *
+     * @return \Illuminate\Support\Collection|mixed|static
+     */
+    public function getTotalAmountOnlineAttribute()
+    {
+        return $this->amount_payment + $this->organiser_booking_fee + $this->booking_fee + $this->services_fee;
     }
 
     /**
