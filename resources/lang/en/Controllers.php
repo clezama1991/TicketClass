@@ -84,6 +84,7 @@ return array(
     'success_name_has_received_instruction'     => '¡Correcto! Se han enviado más instrucciones a <b>:name</b>.',
     'successfully_cancelled_attendee'           => '¡Asistente cancelado correctamente!',
     'successfully_cancelled_attendees'          => '¡Asistentes cancelados con correctamente!',
+    'successfully_reactivate_order'              => '¡Orden reactivada correctamente!',
     'successfully_created_organiser'            => '¡Organizador creado correctamente!',
     'successfully_created_question'             => 'Pregunta creada correctamente',
     'successfully_deleted_question'             => 'Pregunta borrada correctamente',
