@@ -571,6 +571,16 @@ Route::group(
                 'uses' => 'EventOrdersController@postCancelOrder',
             ]);
 
+            Route::get('order/{order_id}/reactivate', [
+                'as'   => 'showReactivateOrder',
+                'uses' => 'EventOrdersController@showReactivateOrder',
+            ]);
+
+            Route::post('order/{order_id}/reactivate', [
+                'as'   => 'postReactivateOrder',
+                'uses' => 'EventOrdersController@postReactivateOrder',
+            ]);
+
             Route::post('order/{order_id}/mark_payment_received', [
                 'as'   => 'postMarkPaymentReceived',
                 'uses' => 'EventOrdersController@postMarkPaymentReceived',

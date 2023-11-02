@@ -632,4 +632,102 @@ class EventOrdersController extends MyBaseController
             'status' => 'success',
         ]);
     }
+
+    /**
+     * Shows 'Reactivate Order' modal
+     *
+     * @param Request $request
+     * @param $order_id
+     * @return mixed
+     */
+    public function showReactivateOrder(Request $request, $order_id)
+    {
+        $order = Order::scope()->find($order_id);
+
+        $data = [
+            'order'     => $order,
+            'event'     => $order->event(),
+            'attendees' => $order->attendees()->withoutCancelled()->get(),
+            'modal_id'  => $request->get('modal_id'),
+        ];
+
+        return view('ManageEvent.Modals.ReactivateOrder', $data);
+    }
+
+    
+    /**
+     * Reactivate an order
+     *
+     * @param Request $request
+     * @param $order_id
+     * @return mixed
+     */
+    public function postReactivateOrder(Request $request, $order_id)
+    {
+        try {
+
+            DB::beginTransaction();
+
+
+            $order = Order::scope()->findOrFail($order_id);
+
+            $refund_order = ($request->get('refund_order') === 'on') ? true : false;
+            $refund_type = $request->get('refund_type');
+            $refund_amount = round(floatval($request->get('refund_amount')), 2);
+            $attendees = $request->get('attendees');
+            $error_message = false;
+
+
+                foreach ($order->attendees as $attendee) {
+                    //$attendee = Attendee::scope()->where('id', '=', $attendee_id)->first();
+                    $attendee->ticket->increment('quantity_sold');
+                    $attendee->ticket->increment('sales_volume', $attendee->ticket->price);
+                    $order->event->increment('sales_volume', $attendee->ticket->price);
+                    $order->increment('amount', $attendee->ticket->price);
+                    $attendee->is_cancelled = 0;
+                    $attendee->save();
+
+                    $eventStats = EventStats::where('event_id', $attendee->event_id)->where('date', $attendee->created_at->format('Y-m-d'))->first();
+                    if($eventStats){
+                        $eventStats->increment('tickets_sold',  1);
+                        $eventStats->increment('sales_volume',  $attendee->ticket->price);
+                    }
+
+                    // $seating = explode(",",$order->seating);
+                    // $new = \array_diff($seating, [$attendee->seat]);
+                    // $new_arr = implode(",",$new);
+
+                    // $order->seating = $new_arr;
+                    $order->save();
+
+                    // SeatTicket::whereId($attendee->seat)->update(['is_available'=>1]);
+            
+                }
+            
+ 
+                $msg = trans("Controllers.successfully_reactivate_order");
+             
+                $order->order_status_id = 1;
+                $order->is_cancelled = false; 
+                $order->save(); 
+ 
+            \Session::flash('message', $msg);
+
+            DB::commit();
+
+        } catch (\Throwable $th) {
+            
+            DB::rollback();
+
+            return response()->json([
+                'status'      => 'error',
+                'redirectUrl' => '',
+            ]);
+        }
+
+        return response()->json([
+            'status'      => 'success',
+            'redirectUrl' => '',
+        ]);
+    }
 }

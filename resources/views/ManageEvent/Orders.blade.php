@@ -211,9 +211,20 @@
                                     </span>
                                 </td>
                                 <td class="text-center">
-                                    <a href="javascript:void(0);" data-modal-id="cancel-order-{{ $order->id }}" data-href="{{route('showCancelOrder', ['order_id'=>$order->id])}}" title="@lang("Order.cancel_order")" class="btn btn-xs btn-danger loadModal">
-                                                    @lang("Order.refund/cancel")
-                                                </a>
+
+                                    @if ($order->is_cancelled)
+                                    
+                                        <a href="javascript:void(0);" data-modal-id="cancel-order-{{ $order->id }}" data-href="{{route('showReactivateOrder', ['order_id'=>$order->id])}}" title="@lang("Order.cancel_order")" class="btn btn-xs btn-warning loadModal">
+                                            Reactivar
+                                        </a>
+                                        
+                                    @else
+                                    
+                                        <a href="javascript:void(0);" data-modal-id="cancel-order-{{ $order->id }}" data-href="{{route('showCancelOrder', ['order_id'=>$order->id])}}" title="@lang("Order.cancel_order")" class="btn btn-xs btn-danger loadModal">
+                                            @lang("Order.refund/cancel")
+                                        </a>
+                                                
+                                    @endif
                                     <a data-modal-id="view-order-{{ $order->id }}" data-href="{{route('showManageOrder', ['order_id'=>$order->id])}}" title="@lang("Order.view_order")" class="btn btn-xs btn-primary loadModal">@lang("Order.details")</a>
                                 </td>
                             </tr>
