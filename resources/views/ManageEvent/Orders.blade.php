@@ -213,11 +213,7 @@
                                 <td class="text-center">
 
                                     @if ($order->is_cancelled)
-                                    
-                                        <a href="javascript:void(0);" data-modal-id="cancel-order-{{ $order->id }}" data-href="{{route('showReactivateOrder', ['order_id'=>$order->id])}}" title="@lang("Order.cancel_order")" class="btn btn-xs btn-warning loadModal">
-                                            Reactivar
-                                        </a>
-                                        
+                                                                        
                                     @else
                                     
                                         <a href="javascript:void(0);" data-modal-id="cancel-order-{{ $order->id }}" data-href="{{route('showCancelOrder', ['order_id'=>$order->id])}}" title="@lang("Order.cancel_order")" class="btn btn-xs btn-danger loadModal">

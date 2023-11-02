@@ -228,6 +228,10 @@
             </div> <!-- /end modal body-->
 
             <div class="modal-footer">
+                
+                <a href="javascript:void(0);" data-modal-id="cancel-order-{{ $order->id }}" data-href="{{route('showReactivateOrder', ['order_id'=>$order->id])}}" title="@lang("Order.cancel_order")" class="btn btn-warning loadModal">
+                    Reactivar Asistentes
+                </a>
                 <a href="javascript:void(0);" data-modal-id="edit-order-{{ $order->id }}" data-href="{{route('showEditOrder', ['order_id'=>$order->id])}}" title="Edit Order" class="btn btn-info loadModal">
                     @lang("Order.edit")
                 </a>
