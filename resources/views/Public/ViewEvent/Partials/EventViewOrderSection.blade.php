@@ -182,7 +182,7 @@
                                         </div>
 
                                         <div class="col-sm-4 col-xs-6">
-                                            <b>@lang("Public_ViewEvent.amount")</b><br> {{$order->event->currency_symbol}}{{number_format($order->total_amount, 2)}}
+                                            <b>@lang("Public_ViewEvent.amount")</b><br> {{$order->event->currency_symbol}}{{number_format($order->total_amount_online, 2)}}
                                             @if($event->organiser->charge_tax)
                                             <small>{{ $orderService->getVatFormattedInBrackets() }}</small>
                                             @endif
@@ -243,9 +243,15 @@
                                                 <th>
                                                     @lang("Public_ViewEvent.total")
                                                 </th>
+                                                <th style="5%"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @php
+                                                
+                                                $subtotal = 0;
+
+                                            @endphp
                                             @foreach($order->orderItems as $order_item)
                                                 <tr>
                                                     <td>
@@ -270,14 +276,19 @@
                                                         @endif
 
                                                     </td>
-                                                    <td>
+                                                    <td style="text-align: right;" colspan="2">
                                                         @if((int)ceil($order_item->unit_price) == 0)
                                                             @lang("Public_ViewEvent.free")
                                                         @else
                                                         {{money(($order_item->unit_price + $order_item->unit_booking_fee) * ($order_item->quantity), $order->event->currency)}}
                                                         @endif
 
-                                                    </td>
+
+                                                        @php
+                                                            $subtotal += ($order_item->unit_price + $order_item->unit_booking_fee) * ($order_item->quantity);
+
+                                                        @endphp
+                                                    </td> 
                                                 </tr>
                                             @endforeach
                                             <tr>
@@ -290,9 +301,31 @@
                                                 <td>
                                                     <b>@lang("Public_ViewEvent.sub_total")</b>
                                                 </td>
-                                                <td colspan="2">
-                                                    {{ $orderService->getOrderTotalWithBookingFee(true) }}
+                                                <td colspan="2" style="text-align: right;">
+                                                    {{money($subtotal, $order->event->currency)}}
+                                                        
+                                                   
+                                                    {{-- {{ $orderService->getOrderTotalWithBookingFee(true) }} --}}
                                                 </td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                </td>
+                                                <td>
+                                                </td>
+                                                <td>
+                                                </td>
+                                                <td>
+                                                    Comision Paypal
+                                                </td>
+                                                <td colspan="2" style="text-align: right;">
+                                                    {{$order->event->currency_symbol}}{{number_format($order->total_amount_online - $subtotal, 2)}}
+ 
+                                                   
+                                                    {{-- {{ $orderService->getOrderTotalWithBookingFee(true) }} --}}
+                                                </td>
+                                                <td></td>
                                             </tr>
                                             @if($event->organiser->charge_tax)
                                             <tr>
@@ -305,9 +338,10 @@
                                                 <td>
                                                     {{$event->organiser->tax_name}}
                                                 </td>
-                                                <td colspan="2">
+                                                <td colspan="2" style="text-align: right;">
                                                     {{ $orderService->getTaxAmount(true) }}
                                                 </td>
+                                                <td></td>
                                             </tr>
                                             @endif
                                             <tr>
@@ -320,9 +354,11 @@
                                                 <td>
                                                     <b>Total</b>
                                                 </td>
-                                                <td colspan="2">
-                                                {{ $orderService->getGrandTotal(true) }}
+                                                <td colspan="2" style="text-align: right;">
+                                                    {{$order->event->currency_symbol}}{{number_format($order->total_amount_online, 2)}}
+                                                {{-- {{ $orderService->getGrandTotal(true) }} --}}
                                                 </td>
+                                                <td></td>
                                             </tr>
                                             @if($order->is_refunded || $order->is_partially_refunded)
                                                 <tr>
@@ -335,9 +371,10 @@
                                                     <td>
                                                         <b>@lang("Public_ViewEvent.refunded_amount")</b>
                                                     </td>
-                                                    <td colspan="2">
+                                                    <td colspan="2"  right;">
                                                         {{money($order->amount_refunded, $order->event->currency)}}
                                                     </td>
+                                                    <td></td>
                                                 </tr>
                                                 <tr>
                                                     <td>
@@ -349,9 +386,10 @@
                                                     <td>
                                                         <b>@lang("Public_ViewEvent.total")</b>
                                                     </td>
-                                                    <td colspan="2">
+                                                    <td colspan="2" style="text-align: right;">
                                                         {{money($order->total_amount - $order->amount_refunded, $order->event->currency)}}
                                                     </td>
+                                                    <td></td>
                                                 </tr>
                                             @endif
                                         </tbody>
