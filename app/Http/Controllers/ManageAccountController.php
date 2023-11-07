@@ -173,13 +173,15 @@ class ManageAccountController extends MyBaseController
             'email.unique'   => trans("Controllers.error.email.unique"),
         ];
 
-        $validation = Validator::make(Input::all(), $rules, $messages);
+        if (env('APP_ENV')=='production') {
+            $validation = Validator::make(Input::all(), $rules, $messages);
 
-        if ($validation->fails()) {
-            return response()->json([
-                'status'   => 'error',
-                'messages' => $validation->messages()->toArray(),
-            ]);
+            if ($validation->fails()) {
+                return response()->json([
+                    'status'   => 'error',
+                    'messages' => $validation->messages()->toArray(),
+                ]);
+            }
         }
 
         $temp_password = str_random(8);

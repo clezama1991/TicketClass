@@ -59,13 +59,15 @@ class EventTicketsController extends MyBaseController
                 'quantity.min' => 'You must select at least ' . $ticket->min_per_person . ' tickets.',
             ];
 
-            $validator = Validator::make($request->all(), $rules);
+            if (env('APP_ENV')=='production') {
+                $validator = Validator::make($request->all(), $rules);
 
-            if ($validator->fails()) {
-                return response()->json([
-                    'status' => 'error',
-                    'messages' => $validator->messages()->toArray(),
-                ]);
+                if ($validator->fails()) {
+                    return response()->json([
+                        'status' => 'error',
+                        'messages' => $validator->messages()->toArray(),
+                    ]);
+                }
             }
 
             if ($cantidad == 0) {
@@ -263,12 +265,13 @@ class EventTicketsController extends MyBaseController
      */
     public function newSalesTickets(Request $request, $ticket_id, $price)
     {   
-        
+        $abecedario = range('A', 'Z'); 
         return view('ManageEvent.Modals.NewSaleTicket', [
             'ticket_id' => $ticket_id,
             'price' => $price,
             'seats' => SeatTicket::where("ticket_id", $ticket_id)->get(),
-            'detalles' => Ticket::find($ticket_id)
+            'detalles' => Ticket::find($ticket_id),
+            'abecedario' => $abecedario
         ]);
     }
 

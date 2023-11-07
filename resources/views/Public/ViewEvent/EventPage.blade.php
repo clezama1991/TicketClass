@@ -326,7 +326,21 @@
                                                                         </div>
                                                                     @endif
  
+                                                                    @php
+                                                                    $key_abecedario = 0;
+                                                                @endphp
+                                                                
+                                                                <div class="col-md-12"> 
+                                                                    <div class="row" style="text-align: justify;">
+                                                                    <div class="col-md-3" >
+                                                                        <h5>Filas</h5>
+                                                                    </div>
+                                                                    <div class="col-md-9">
+                                                                        <h5>Asientos</h5>
+                                                                    </div></div>
+                                                                </div>
                                                                     @foreach ($ticket_seats as $key_file => $seats)
+                                                                    
                                                                         <div class="col-md-12">
 
                                                                             <div class="seats__grid">
@@ -334,7 +348,7 @@
                                                                                     style="list-style:none;padding:0;margin:0;display: flex;justify-content: center;">
                                                                                     <li class="seat"
                                                                                         style="font-weight: bolder;width: 30px;position: absolute;left: 20px;">
-                                                                                        F{{ $key_file }}</li>
+                                                                                        {{ $abecedario[$key_abecedario]}}</li>
 
                                                                                     @foreach ($seats as $t => $seat)
                                                                                         @if ($key_file == $seat->row)
@@ -348,7 +362,7 @@
                                                                                                     data-asiento="{{ $seat->seat() }}"
                                                                                                     data-ticket="{{ $ticket->id }}"
                                                                                                     data-seatzone="{{ $ticket_seat_zone }}"
-                                                                                                    title="{{ $seat->is_available == 3 ? "Asiento Ocupado" : " Fila: " . $seat->row . ' - Asiento: ' . $seat->column }}"
+                                                                                                    title="{{ $seat->is_available == 3 ? "Asiento Ocupado" : " " . $seat->seat() }}"
                                                                                                     {{ $seat->is_available == 3 ? 'disabled' : '' }}>
                                                                                                     {{ $seat->column }}
                                                                                                 </li>
@@ -365,7 +379,7 @@
                                                                                                     data-asiento="{{ $seat->seat() }}"
                                                                                                     data-ticket="{{ $ticket->id }}"
                                                                                                     data-seatzone="{{ $ticket_seat_zone }}"
-                                                                                                    title="{{ $seat->is_available == 3 ? "Asiento Ocupado" : " Fila: " . ' - Asiento: ' . $seat->column }}"
+                                                                                                    title="{{ $seat->is_available == 3 ? "Asiento Ocupado" : " " . $seat->seat() }}"
                                                                                                     {{ $seat->is_available == 3 ? 'disabled' : '' }}>
                                                                                                    
                                                                                                     <span
@@ -385,6 +399,9 @@
 
                                                                         </div>
                                                                         <br><br>
+                                                                        @php
+                                                                            $key_abecedario++;
+                                                                        @endphp
                                                                     @endforeach
                                                                 </div>
                                                             </div>

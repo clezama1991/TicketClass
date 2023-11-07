@@ -119,15 +119,22 @@ class Event extends MyBaseModel
     {
         return $this->hasMany(\App\Models\Ticket::class);
     }
-
-    public function tickets_group_zone()
+    
+    public function tickets_group_zone($is_hidden = false)
     {   
         $secciones = [];
-
-        foreach ($this->tickets as $key => $tickets) { 
-            if(!in_array($tickets->group_zone, $secciones)){
-                $secciones[] = $tickets->group_zone;
-            }  
+        if($is_hidden){
+            foreach ($this->tickets->where('is_hidden',false) as $key => $tickets) { 
+                if(!in_array($tickets->group_zone, $secciones)){
+                    $secciones[] = $tickets->group_zone;
+                }  
+            }
+        }else{
+            foreach ($this->tickets as $key => $tickets) { 
+                if(!in_array($tickets->group_zone, $secciones)){
+                    $secciones[] = $tickets->group_zone;
+                }  
+            }
         }
  
         return $secciones;

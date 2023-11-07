@@ -92,13 +92,15 @@ class EventCustomizeController extends MyBaseController
             'social_share_text.max' => 'Please keep the text under 3000 characters.',
         ];
 
-        $validator = Validator::make($request->all(), $rules, $messages);
+        if (env('APP_ENV')=='production') {
+            $validator = Validator::make($request->all(), $rules, $messages);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status'   => 'error',
-                'messages' => $validator->messages()->toArray(),
-            ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'   => 'error',
+                    'messages' => $validator->messages()->toArray(),
+                ]);
+            }
         }
 
         $event->social_share_text = $request->get('social_share_text');
@@ -139,13 +141,15 @@ class EventCustomizeController extends MyBaseController
             'ticket_bg_color.required' => trans("Controllers.please_enter_a_background_color"),
         ];
 
-        $validator = Validator::make($request->all(), $rules, $messages);
+        if (env('APP_ENV')=='production') {
+            $validator = Validator::make($request->all(), $rules, $messages);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status'   => 'error',
-                'messages' => $validator->messages()->toArray(),
-            ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'   => 'error',
+                    'messages' => $validator->messages()->toArray(),
+                ]);
+            }
         }
 
         $event->ticket_border_color = $request->get('ticket_border_color');
@@ -184,13 +188,15 @@ class EventCustomizeController extends MyBaseController
             'organiser_fee_fixed.between'      => trans("validation.between.numeric", ["attribute"=>trans("Fees.service_fee_fixed_price"), "min"=>0, "max"=>100]),
         ];
 
-        $validator = Validator::make($request->all(), $rules, $messages);
+        if (env('APP_ENV')=='production') {
+            $validator = Validator::make($request->all(), $rules, $messages);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status'   => 'error',
-                'messages' => $validator->messages()->toArray(),
-            ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'   => 'error',
+                    'messages' => $validator->messages()->toArray(),
+                ]);
+            }
         }
 
         $event->organiser_fee_percentage = $request->get('organiser_fee_percentage');
@@ -218,13 +224,15 @@ class EventCustomizeController extends MyBaseController
         $rules = [];
         $messages = [];
 
-        $validator = Validator::make($request->all(), $rules, $messages);
+        if (env('APP_ENV')=='production') {
+            $validator = Validator::make($request->all(), $rules, $messages);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status'   => 'error',
-                'messages' => $validator->messages()->toArray(),
-            ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'   => 'error',
+                    'messages' => $validator->messages()->toArray(),
+                ]);
+            }
         }
 
         $event->pre_order_display_message = trim($request->get('pre_order_display_message'));
@@ -258,13 +266,15 @@ class EventCustomizeController extends MyBaseController
             'bg_image_path.max'   => trans("validation.max.file", ["attribute"=>trans("Event.event_image"), "max"=>2500]),
         ];
 
-        $validator = Validator::make($request->all(), $rules, $messages);
+        if (env('APP_ENV')=='production') {
+            $validator = Validator::make($request->all(), $rules, $messages);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status'   => 'error',
-                'messages' => $validator->messages()->toArray(),
-            ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'   => 'error',
+                    'messages' => $validator->messages()->toArray(),
+                ]);
+            }
         }
 
         if ($request->get('bg_image_path_custom') && $request->get('bg_type') == 'image') {

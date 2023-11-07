@@ -124,13 +124,15 @@ class EventAttendeesController extends MyBaseController
             'ticket_id.required' => trans("Controllers.ticket_field_required_error"),
         ];
 
-        $validator = Validator::make($request->all(), $rules, $messages);
+        if (env('APP_ENV')=='production') {
+            $validator = Validator::make($request->all(), $rules, $messages);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status'   => 'error',
-                'messages' => $validator->messages()->toArray(),
-            ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'   => 'error',
+                    'messages' => $validator->messages()->toArray(),
+                ]);
+            }
         }
 
         $ticket_id = $request->get('ticket_id');
@@ -288,13 +290,15 @@ class EventAttendeesController extends MyBaseController
             'ticket_id.exists' => trans("Controllers.ticket_not_exists_error"),
         ];
 
-        $validator = Validator::make($request->all(), $rules, $messages);
-        if ($validator->fails()) {
-            return response()->json([
-                'status'   => 'error',
-                'messages' => $validator->messages()->toArray(),
-            ]);
+        if (env('APP_ENV')=='production') {
+            $validator = Validator::make($request->all(), $rules, $messages);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'   => 'error',
+                    'messages' => $validator->messages()->toArray(),
+                ]);
 
+            }
         }
 
         $ticket_id = $request->get('ticket_id');
@@ -446,13 +450,15 @@ class EventAttendeesController extends MyBaseController
                 'message' => 'required',
             ];
 
-            $validator = Validator::make($request->all(), $rules);
+            if (env('APP_ENV')=='production') {
+                $validator = Validator::make($request->all(), $rules);
 
-            if ($validator->fails()) {
-                return response()->json([
-                    'status'   => 'error',
-                    'messages' => $validator->messages()->toArray(),
-                ]);
+                if ($validator->fails()) {
+                    return response()->json([
+                        'status'   => 'error',
+                        'messages' => $validator->messages()->toArray(),
+                    ]);
+                }
             }
 
             $attendee = Attendee::scope()->findOrFail($attendee_id);
@@ -529,12 +535,15 @@ class EventAttendeesController extends MyBaseController
                 'message'    => 'required',
                 'recipients' => 'required',
             ];
-            $validator = Validator::make($request->all(), $rules);
-            if ($validator->fails()) {
-                return response()->json([
-                    'status'   => 'error',
-                    'messages' => $validator->messages()->toArray(),
-                ]);
+            
+            if (env('APP_ENV')=='production') {
+                $validator = Validator::make($request->all(), $rules);
+                if ($validator->fails()) {
+                    return response()->json([
+                        'status'   => 'error',
+                        'messages' => $validator->messages()->toArray(),
+                    ]);
+                }
             }
             $message = Message::createNew();
             $message->message = $request->get('message');
@@ -688,13 +697,15 @@ class EventAttendeesController extends MyBaseController
             'ticket_id.required' => trans("Controllers.ticket_field_required_error"),
         ];
 
-        $validator = Validator::make($request->all(), $rules, $messages);
+        if (env('APP_ENV')=='production') {
+            $validator = Validator::make($request->all(), $rules, $messages);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status'   => 'error',
-                'messages' => $validator->messages()->toArray(),
-            ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'   => 'error',
+                    'messages' => $validator->messages()->toArray(),
+                ]);
+            }
         }
 
         $attendee = Attendee::scope()->findOrFail($attendee_id);

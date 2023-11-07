@@ -101,13 +101,15 @@ class OrganiserCustomizeController extends MyBaseController
             'page_bg_color.required'        => trans("Controllers.error.page_bg_color.required"),
         ];
 
-        $validator = Validator::make($request->all(), $rules, $messages);
+        if (env('APP_ENV')=='production') {
+            $validator = Validator::make($request->all(), $rules, $messages);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'messages' => $validator->messages()->toArray(),
-            ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'messages' => $validator->messages()->toArray(),
+                ]);
+            }
         }
 
         $organiser->page_bg_color        = $request->get('page_bg_color');
