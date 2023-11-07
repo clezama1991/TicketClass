@@ -274,13 +274,15 @@ class EventOrdersController extends MyBaseController
             'email' => ['required', 'email'],
         ];
 
-        $validator = Validator::make($request->all(), $rules);
+        if (env('APP_ENV')=='production') {
+            $validator = Validator::make($request->all(), $rules);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status'   => 'error',
-                'messages' => $validator->messages()->toArray(),
-            ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'   => 'error',
+                    'messages' => $validator->messages()->toArray(),
+                ]);
+            }
         }
 
         $order = Order::scope()->findOrFail($order_id);
@@ -321,14 +323,16 @@ class EventOrdersController extends MyBaseController
                 'refund_amount.integer' => trans("Controllers.refund_only_numbers_error"),
             ];
 
-            // $validator = Validator::make($request->all(), $rules, $messages);
+            if (env('APP_ENV')=='production') {
+                $validator = Validator::make($request->all(), $rules, $messages);
 
-            // if ($validator->fails()) {
-            //     return response()->json([
-            //         'status'   => 'error',
-            //         'messages' => $validator->messages()->toArray(),
-            //     ]);
-            // }
+                if ($validator->fails()) {
+                    return response()->json([
+                        'status'   => 'error',
+                        'messages' => $validator->messages()->toArray(),
+                    ]);
+                }
+            }
 
             $order = Order::scope()->findOrFail($order_id);
 
@@ -568,13 +572,15 @@ class EventOrdersController extends MyBaseController
             'message' => 'required|max:5000',
         ];
 
-        $validator = Validator::make($request->all(), $rules);
+        if (env('APP_ENV')=='production') {
+            $validator = Validator::make($request->all(), $rules);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status'   => 'error',
-                'messages' => $validator->messages()->toArray(),
-            ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'   => 'error',
+                    'messages' => $validator->messages()->toArray(),
+                ]);
+            }
         }
 
         $order = Order::scope()->findOrFail($order_id);

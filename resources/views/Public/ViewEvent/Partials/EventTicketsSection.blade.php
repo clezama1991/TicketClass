@@ -268,21 +268,9 @@
                                                 </div>
                                                 @endif
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                                @php
+                                                    $key_abecedario = 0;
+                                                @endphp
                                                 @foreach ($ticket_seats as $key_file => $seats)
 
                                                 <div class="col-md-12">
@@ -292,7 +280,7 @@
                                                             style="list-style:none;padding:0;margin:0;display: flex;justify-content: center;">
                                                             <li class="seat"
                                                                 style="font-weight: bolder;width: 30px;position: absolute;left: 20px;">
-                                                                F{{$key_file}}</li>
+                                                                {{ $abecedario[$key_abecedario]}}</li>
 
                                                             @foreach ($seats as $t => $seat)
                                                             @if ($key_file == $seat->row)

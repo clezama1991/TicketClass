@@ -33,7 +33,8 @@ class SeatTicket extends Model
     }
 
     public function seat(){
-        return 'F'.$this->row.'-A'.$this->column;
+        $abecedario = range('A', 'Z');         
+        return  $abecedario[$this->row-1].''.$this->column;
     }
     
 }
