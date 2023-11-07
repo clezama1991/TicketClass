@@ -47,7 +47,40 @@ class EventOrdersController extends MyBaseController
         $event = Event::scope()->find($event_id);
 
         
+        /*
+        $orders_all = Order::
+            where('event_id',$event_id)
+            ->where('is_active',true)
+            ->where('payment_gateway_id','!=',null)
+            ->get();
         
+        foreach ($orders_all as $key => $orders) { 
+
+            $quitar_paypal = 0;
+        
+            $amount = $orders->amount;
+
+            $orders->amount_payment = $amount;
+
+            foreach ($orders->attendees as $key => $attendees) { 
+                $quitar_paypal += $attendees->ticket->price_paypal;
+                $attendees->ticket->decrement('sales_volume', $attendees->ticket->price_paypal);
+                $attendees->ticket->save();
+            }
+            
+            $orders->amount = $amount - $quitar_paypal;
+
+            $orders->event->decrement('sales_volume', $quitar_paypal);
+            $orders->save();
+        }
+
+
+        dd($orders_all, $orders->attendees,  $orders->event);
+*/
+
+
+
+
         $orders_all = Order::where('event_id',$event_id)->where('is_active',true);
 
 
@@ -97,10 +130,10 @@ class EventOrdersController extends MyBaseController
             
             $importes = $orders->sum('amount') + $orders->sum('services_fee'); 
             
-            if($user_id=='linea'){ 
-                $importess =  $importes * 1.06  - $importes;
-                $importes = round($importes - $importess, 0);
-            }
+            // if($user_id=='linea'){ 
+            //     $importess =  $importes * 1.06  - $importes;
+            //     $importes = round($importes - $importess, 0);
+            // }
             
 
             $importes_cash = $orders->where('payment_method','cash')->sum('amount') + $orders->where('payment_method','cash')->sum('services_fee');
