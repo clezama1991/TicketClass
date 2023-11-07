@@ -149,6 +149,15 @@
                             ) !!}
                         </div>
                     </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="custom-checkbox">
+                                {!! Form::checkbox('is_hidden', null, null, ['id' => 'is_hidden']) !!}
+                                {!! Form::label('is_hidden', trans("ManageEvent.hide_this_ticket"), array('class'=>'
+                                control-label')) !!}
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="" style="color: #fff">.</label>
@@ -249,15 +258,6 @@
                     </div>
                 </div>
                 <div class="row more-options">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <div class="custom-checkbox">
-                                {!! Form::checkbox('is_hidden', null, null, ['id' => 'is_hidden']) !!}
-                                {!! Form::label('is_hidden', trans("ManageEvent.hide_this_ticket"), array('class'=>'
-                                control-label')) !!}
-                            </div>
-                        </div>
-                    </div>
                     @if ($ticket->is_hidden)
                     <div class="col-md-12">
                         <h4>{{ __('AccessCodes.select_access_code') }}</h4>

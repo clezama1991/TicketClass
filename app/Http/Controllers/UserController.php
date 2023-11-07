@@ -52,13 +52,15 @@ class UserController extends Controller
             'last_name.required'  => trans("Controllers.error.last_name.required"),
         ];
 
-        $validation = Validator::make($request->all(), $rules, $messages);
+        if (env('APP_ENV')=='production') {
+            $validation = Validator::make($request->all(), $rules, $messages);
 
-        if ($validation->fails()) {
-            return response()->json([
-                'status'   => 'error',
-                'messages' => $validation->messages()->toArray(),
-            ]);
+            if ($validation->fails()) {
+                return response()->json([
+                    'status'   => 'error',
+                    'messages' => $validation->messages()->toArray(),
+                ]);
+            }
         }
 
         $user = Auth::user();

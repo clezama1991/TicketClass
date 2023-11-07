@@ -107,13 +107,15 @@ class EventController extends MyBaseController
                 'organiser_name.required' => trans("Controllers.no_organiser_name_error"),
             ];
 
-            $validator = Validator::make($request->all(), $rules, $messages);
+            if (env('APP_ENV')=='production') {
+                $validator = Validator::make($request->all(), $rules, $messages);
 
-            if ($validator->fails()) {
-                return response()->json([
-                    'status'   => 'error',
-                    'messages' => $validator->messages()->toArray(),
-                ]);
+                if ($validator->fails()) {
+                    return response()->json([
+                        'status'   => 'error',
+                        'messages' => $validator->messages()->toArray(),
+                    ]);
+                }
             }
 
             $organiser->name = $request->get('organiser_name');

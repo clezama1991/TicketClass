@@ -38,7 +38,7 @@ return array(
     'event_tools'                             => 'Herramientas del evento',
     'export'                                  => 'Exportar',
     'go_to_attendee_name'                     => 'Ir a asistente :name',
-    'hide_this_ticket'                        => 'Ocultar este entrada',
+    'hide_this_ticket'                        => 'Ocultar esta entrada para la Venta en Online',
     'import_file'                             => 'Importar archivo',
     'invite_attendee'                         => 'Invitar al asistente',
     'invite_attendees'                        => 'Invitar a los asistentes',

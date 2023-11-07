@@ -36,13 +36,13 @@
     <div class="col-md-2">
         <div class="form-group">
             <label for="date_start">F. Inicio</label>
-            <input id='date_start' name='date_start' value="{{$date_start}}" placeholder="@lang('Order.search_placeholder')" type="date" class="form-control">
+            <input id='date_start' name='date_start' value="{{$date_start}}" placeholder="@lang('Controllers.start_date')" type="date" class="form-control">
         </div>
     </div>
     <div class="col-md-2">
         <div class="form-group">
             <label for="date_end">F. Fin</label>
-            <input id='date_end' name='date_end' value="{{$date_end}}" placeholder="@lang('Order.search_placeholder')" type="date" class="form-control">
+            <input id='date_end' name='date_end' value="{{$date_end}}" placeholder="@lang('Controllers.start_end')" type="date" class="form-control">
         </div>
     </div>
     <div class="col-md-2">
@@ -213,11 +213,7 @@
                                 <td class="text-center">
 
                                     @if ($order->is_cancelled)
-                                    
-                                        <a href="javascript:void(0);" data-modal-id="cancel-order-{{ $order->id }}" data-href="{{route('showReactivateOrder', ['order_id'=>$order->id])}}" title="@lang("Order.cancel_order")" class="btn btn-xs btn-warning loadModal">
-                                            Reactivar
-                                        </a>
-                                        
+                                                                        
                                     @else
                                     
                                         <a href="javascript:void(0);" data-modal-id="cancel-order-{{ $order->id }}" data-href="{{route('showCancelOrder', ['order_id'=>$order->id])}}" title="@lang("Order.cancel_order")" class="btn btn-xs btn-danger loadModal">

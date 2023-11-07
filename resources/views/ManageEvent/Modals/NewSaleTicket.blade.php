@@ -1,21 +1,3 @@
-{{-- @if ($detalles->select_seat == 1)
-    <style>
-        .modal-dialog {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-        }
-
-        .modal-content {
-        height: auto;
-        min-height: 100%;
-        border-radius: 0;
-        }
-    </style>
-@endif --}}
-
-
 <div role="dialog"  class="modal fade " style="display: none; ">
    {!! Form::open(array('url' => route('postSalesTickets', array('ticket_id' => $ticket_id)), 'class' => 'ajax', 'id' => 'FormpostSalesTickets')) !!}
     <div class="modal-dialog modal-lg ">
@@ -85,65 +67,80 @@
 
                                     @php
                                     $termina = 1;
+                                    $key_abecedario = 0;
                                     $ticket_seats = $detalles->seats->groupBy('row');
                                     
                                     @endphp
+                                    
+                                    <div class="col-md-12"> 
+                                        <div class="row"> 
+                                            <div class="col-md-3">
+                                                <h5>Filas</h5>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <h5>Asientos</h5>
+                                            </div>
+                                        </div>
+                                    </div>
                                     @foreach ($ticket_seats as $key_file => $seats)
-                                               
+                                        @php
+                                            $titulo_fila = $abecedario[$key_abecedario];
+                                        @endphp
                                         <div class="col-md-12">
                                             
                                             <div class="seats__grid">
                                                 <ul class="nostyle seats__row " style="list-style:none;padding:0;margin:0;display: flex;justify-content: center;">
-                                                    <li class="seat" style="font-weight: bolder;width: 30px;position: absolute;left: 20px;">F{{$key_file}}</li>
+                                                    <li class="seat" style="font-weight: bolder;width: 30px;position: absolute;left: 20px;">{{ $titulo_fila }}</li>
 
-                                            @foreach ($seats as $t => $seat)
-                                            @if ($key_file == $seat->row)
+                                                    @foreach ($seats as $t => $seat)
+                                                        @if ($key_file == $seat->row)
 
-                                            @if ($seat->is_available != 2)
+                                                            @if ($seat->is_available != 2) 
+                                                                <li class="seat seatSelect {{ $seat->is_available == 3 ? "btns-danger": ($seat->is_available == 0 ? "btns-warning" : "btns-info") }}" style="width: 25px; padding-left: 1px;"
+                                                                    id="{{ $seat->id }}" 
+                                                                            data-asiento="{{ $seat->seat() }}"
+                                                                            data-ticket="{{ $detalles->id }}" 
+                                                                            data-seatzone="{{ $detalles->seat_zone }}"
+                                                                            title="{{ $seat->seat() }}"
+                                                                            {{ $seat->is_available == 3 ? "disabled": "" }}
+                                                                        >
+                                                                            <svg class="icon-seat" viewBox="0 0 24 20">
+                                                                                <path fill="{{ $seat->is_available == 3 ? "#eb2727": ($seat->is_available == 0 ? "#FFD66A": "#5495D2")  }}" class="st0 asiento_{{$seat->id}}" d="M22.7,0H21c-0.7,0-1.3,0.6-1.3,1.4v0.4v2.6c0-2-1.6-3.7-3.6-3.7H8c-2,0-3.6,1.7-3.6,3.7V1.8V1.4 C4.4,0.6,3.8,0,3,0H1.3C0.6,0,0,0.6,0,1.4v0.4v11.3v0.5c0,1,0.8,1.8,1.8,1.8h0.1c0.1,0,0.2,0,0.3,0h0.2l0,0H3v2.7 C3,19.1,3.8,20,4.9,20h14.3c1.1,0,1.9-0.9,1.9-1.9v-2.7h0.6l0,0h0.8c0.9-0.1,1.5-0.9,1.5-1.8v-0.5V1.8V1.4C24,0.6,23.4,0,22.7,0z"></path>
+                                                                            </svg>
+                                                                            <span class="seat__num" aria-label="C10">{{$seat->column}}</span>
+                                                                </li>
+                                                                <input type="hidden" name="sillas[]" id="silla{{ $seat->id }}">
+                                                            @else
+                                                            
+                                                                <li class="seat seatSelect {{ $seat->is_available == 3 ? "btns-danger": ($seat->is_available == 0 ? "btns-warning" : "btns-info") }}" style="width: 25px; padding-left: 1px;"
+                                                                    id="{{ $seat->id }}" 
+                                                                    data-asiento="{{ $seat->seat() }}"
+                                                                    data-ticket="{{ $detalles->id }}" 
+                                                                    data-seatzone="{{ $detalles->seat_zone }}"
+                                                                    title="{{ $seat->seat() }}"
+                                                                    {{ $seat->is_available == 3 ? "disabled": "" }}
+                                                                    >
+                                                                    <svg class="icon-seat" viewBox="0 0 24 20">
+                                                                        <path fill="{{ $seat->is_available == 3 ? "#eb2727": ($seat->is_available == 0 ? "#FFD66A": "#5495D2")  }}" class="st0 asiento_{{$seat->id}}" d="M22.7,0H21c-0.7,0-1.3,0.6-1.3,1.4v0.4v2.6c0-2-1.6-3.7-3.6-3.7H8c-2,0-3.6,1.7-3.6,3.7V1.8V1.4 C4.4,0.6,3.8,0,3,0H1.3C0.6,0,0,0.6,0,1.4v0.4v11.3v0.5c0,1,0.8,1.8,1.8,1.8h0.1c0.1,0,0.2,0,0.3,0h0.2l0,0H3v2.7 C3,19.1,3.8,20,4.9,20h14.3c1.1,0,1.9-0.9,1.9-1.9v-2.7h0.6l0,0h0.8c0.9-0.1,1.5-0.9,1.5-1.8v-0.5V1.8V1.4C24,0.6,23.4,0,22.7,0z"></path>
+                                                                    </svg>
+                                                                    <span class="seat__num" aria-label="C10">{{$seat->column}}</span>
+                                                                </li> 
+                                                            @endif
+                                                            @php
+                                                            $termina = $seat->row;
+                                                            @endphp
 
-                                                    
-                                            <li class="seat seatSelect {{ $seat->is_available == 3 ? "btns-danger": ($seat->is_available == 0 ? "btns-warning" : "btns-info") }}" style="width: 25px; padding-left: 1px;"
-                                                id="{{ $seat->id }}" 
-                                                        data-asiento="{{ $seat->seat() }}"
-                                                        data-ticket="{{ $detalles->id }}" 
-                                                        data-seatzone="{{ $detalles->seat_zone }}"
-                                                        title="{{ "Fila: ".$seat->row." - Asiento: ".$seat->column }}"
-                                                        {{ $seat->is_available == 3 ? "disabled": "" }}
-                                                    >
-                                                        <svg class="icon-seat" viewBox="0 0 24 20">
-                                                            <path fill="{{ $seat->is_available == 3 ? "#eb2727": ($seat->is_available == 0 ? "#FFD66A": "#5495D2")  }}" class="st0 asiento_{{$seat->id}}" d="M22.7,0H21c-0.7,0-1.3,0.6-1.3,1.4v0.4v2.6c0-2-1.6-3.7-3.6-3.7H8c-2,0-3.6,1.7-3.6,3.7V1.8V1.4 C4.4,0.6,3.8,0,3,0H1.3C0.6,0,0,0.6,0,1.4v0.4v11.3v0.5c0,1,0.8,1.8,1.8,1.8h0.1c0.1,0,0.2,0,0.3,0h0.2l0,0H3v2.7 C3,19.1,3.8,20,4.9,20h14.3c1.1,0,1.9-0.9,1.9-1.9v-2.7h0.6l0,0h0.8c0.9-0.1,1.5-0.9,1.5-1.8v-0.5V1.8V1.4C24,0.6,23.4,0,22.7,0z"></path>
-                                                        </svg>
-                                                        <span class="seat__num" aria-label="C10">{{$seat->column}}</span>
-                                            </li>
-                                            <input type="hidden" name="sillas[]" id="silla{{ $seat->id }}">
-                                            @else
+                                                        @endif
+                                                    @endforeach
                                             
-                                            <li class="seat seatSelect {{ $seat->is_available == 3 ? "btns-danger": ($seat->is_available == 0 ? "btns-warning" : "btns-info") }}" style="width: 25px; padding-left: 1px;"
-                                            id="{{ $seat->id }}" 
-                                            data-asiento="{{ $seat->seat() }}"
-                                            data-ticket="{{ $detalles->id }}" 
-                                            data-seatzone="{{ $detalles->seat_zone }}"
-                                            title="{{ "Fila: ".$seat->row." - Asiento: ".$seat->column }}"
-                                            {{ $seat->is_available == 3 ? "disabled": "" }}
-                                        >
-                                            <svg class="icon-seat" viewBox="0 0 24 20">
-                                                <path fill="{{ $seat->is_available == 3 ? "#eb2727": ($seat->is_available == 0 ? "#FFD66A": "#5495D2")  }}" class="st0 asiento_{{$seat->id}}" d="M22.7,0H21c-0.7,0-1.3,0.6-1.3,1.4v0.4v2.6c0-2-1.6-3.7-3.6-3.7H8c-2,0-3.6,1.7-3.6,3.7V1.8V1.4 C4.4,0.6,3.8,0,3,0H1.3C0.6,0,0,0.6,0,1.4v0.4v11.3v0.5c0,1,0.8,1.8,1.8,1.8h0.1c0.1,0,0.2,0,0.3,0h0.2l0,0H3v2.7 C3,19.1,3.8,20,4.9,20h14.3c1.1,0,1.9-0.9,1.9-1.9v-2.7h0.6l0,0h0.8c0.9-0.1,1.5-0.9,1.5-1.8v-0.5V1.8V1.4C24,0.6,23.4,0,22.7,0z"></path>
-                                            </svg>
-                                            <span class="seat__num" aria-label="C10">{{$seat->column}}</span>
-                                        </li> 
-                                            @endif
-                                            @php
-                                            $termina = $seat->row;
-                                            @endphp
-
-                                            @endif
-                                            @endforeach
-                                            
-                                        </ul>
-                                    </div>
+                                                </ul>
+                                            </div>
 
                                         </div>
                                         <br><br>
+                                        @php
+                                            $key_abecedario++;
+                                        @endphp
                                     @endforeach
                                 </div>     
                             </div>     

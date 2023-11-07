@@ -108,4 +108,6 @@ return array(
     'tickets_for_event'                         => 'Sus entradas para el evento :event.',
     'whoops'                                    => '¡Ups! Parece que algo salió mal. Por favor, inténtalo de nuevo.',
     'your_password_reset_link'                  => 'Enlace de restablecimiento de contraseña',
+    'start_date'    => 'Fecha de inicio',
+    'start_end'    => 'Fecha de Fin',
 );

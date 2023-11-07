@@ -26,14 +26,15 @@ class EventViewController extends Controller
      */
     public function showEventHome(Request $request, $event_id, $slug = '', $preview = false)
     {
-        $event = Event::findOrFail($event_id);
+        $event = Event::findOrFail($event_id); 
+        $abecedario = range('A', 'Z'); 
 
         if (!Utils::userOwns($event) && !$event->is_live) {
             return view('Public.ViewEvent.EventNotLivePage');
         }
 
         $tickets_all = [];
-        $tickets = $event->tickets()->orderBy('group_zone', 'desc')->get();
+        $tickets = $event->tickets()->where('is_hidden',false)->orderBy('group_zone', 'desc')->get();
          
         if($event_id==52){
             $grupo = [
@@ -94,7 +95,7 @@ class EventViewController extends Controller
             
             foreach ($grupo as $keygrupo => $valuegrupo) {
                 foreach ($valuegrupo['secciones'] as $key => $valuesecciones) {
-                    $tickets_all[$valuegrupo['grupo']][$valuesecciones][] =$event->tickets()->where('group_zone',$valuesecciones)->orderBy('group_zone', 'desc')->get();
+                    $tickets_all[$valuegrupo['grupo']][$valuesecciones][] =$event->tickets()->where('is_hidden',false)->where('group_zone',$valuesecciones)->orderBy('group_zone', 'desc')->get();
                 }
             }
  
@@ -103,13 +104,13 @@ class EventViewController extends Controller
             $grupo = [
                 [
                     'grupo' => 'GENERAL', 
-                    'secciones' => $event->tickets_group_zone()
+                    'secciones' => $event->tickets_group_zone(true)
                 ], 
             ];
              
             foreach ($grupo as $keygrupo => $valuegrupo) {
                 foreach ($valuegrupo['secciones'] as $key => $valuesecciones) {
-                    $tickets_all[$valuegrupo['grupo']][$valuesecciones][] =$event->tickets()->where('group_zone',$valuesecciones)->orderBy('group_zone', 'desc')->get();
+                    $tickets_all[$valuegrupo['grupo']][$valuesecciones][] =$event->tickets()->where('is_hidden',false)->where('group_zone',$valuesecciones)->orderBy('group_zone', 'desc')->get();
                 }
             }
  
@@ -120,6 +121,7 @@ class EventViewController extends Controller
             'tickets' => $tickets,
             'tickets_all' => $tickets_all,
             'is_embedded' => 0,
+            'abecedario' => $abecedario
         ];
         /*
          * Don't record stats if we're previewing the event page from the backend or if we own the event.
@@ -179,13 +181,15 @@ class EventViewController extends Controller
             'message' => ['required'],
         ];
 
-        $validator = Validator::make($request->all(), $rules);
+        if (env('APP_ENV')=='production') {
+            $validator = Validator::make($request->all(), $rules);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status'   => 'error',
-                'messages' => $validator->messages()->toArray(),
-            ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'   => 'error',
+                    'messages' => $validator->messages()->toArray(),
+                ]);
+            }
         }
 
         $event = Event::findOrFail($event_id);
