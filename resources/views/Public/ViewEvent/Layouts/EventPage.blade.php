@@ -130,9 +130,11 @@
         @yield('scripts')
 
     <script>
-
-        
-
+ 
+        var grupos = $("#cantidad_grupos").val();
+         if(grupos=='1'){ 
+             document.getElementById('grupo1').click();
+        } 
 
         var asientos = [];
         var asientos_id = [];
