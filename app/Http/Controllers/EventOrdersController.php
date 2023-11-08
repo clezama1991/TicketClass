@@ -46,41 +46,6 @@ class EventOrdersController extends MyBaseController
         $sort_order = $request->get('sort_order') == 'asc' ? 'asc' : 'desc';
         $event = Event::scope()->find($event_id);
 
-        
-        /*
-        $orders_all = Order::
-            where('event_id',$event_id)
-            ->where('is_active',true)
-            ->where('payment_gateway_id','!=',null)
-            ->get();
-        
-        foreach ($orders_all as $key => $orders) { 
-
-            $quitar_paypal = 0;
-        
-            $amount = $orders->amount;
-
-            $orders->amount_payment = $amount;
-
-            foreach ($orders->attendees as $key => $attendees) { 
-                $quitar_paypal += $attendees->ticket->price_paypal;
-                $attendees->ticket->decrement('sales_volume', $attendees->ticket->price_paypal);
-                $attendees->ticket->save();
-            }
-            
-            $orders->amount = $amount - $quitar_paypal;
-
-            $orders->event->decrement('sales_volume', $quitar_paypal);
-            $orders->save();
-        }
-
-
-        dd($orders_all, $orders->attendees,  $orders->event);
-*/
-
-
-
-
         $orders_all = Order::where('event_id',$event_id)->where('is_active',true);
 
 
