@@ -367,12 +367,6 @@ class EventTicketsController extends MyBaseController
 
         $ticket = SeatTicket::find($id_seat);
 
-        // Esta Apartado y pasa a disponible
-        if ($ticket->is_available == 0) {
-            $ticket->is_available = 1;
-            $ticket->save();            
-        }
-
         // Asiento ya vendido 
         if ($ticket->is_available == 3) {
             return response()->json([
@@ -381,15 +375,25 @@ class EventTicketsController extends MyBaseController
             ]);
         }
 
-        $ticket->is_available = $status;
+        if ($ticket->is_available == 0) {
+            $ticket->is_available = 1;
+         }else{
+            $ticket->is_available = 0;
+         }
+         $ticket->save();
 
-        if ($ticket->save()) {
+        if($ticket->is_available){
+            return response()->json([
+                'status' => 'error1',
+                'message' => "Asiento Liberado con Éxito"
+            ]);
+        }else{                
             return response()->json([
                 'status' => 'success',
-                'message' => "Asiento Apartado o Liberado con Exito"
+                'message' => "Asiento Reservado con Éxito"
             ]);
         }
-
+    
         return response()->json([
             'status' => 'error',
             'message' => "Hay un error, vuelva a intentarlo",

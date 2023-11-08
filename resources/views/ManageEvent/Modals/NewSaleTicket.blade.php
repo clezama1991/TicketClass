@@ -283,6 +283,7 @@
             var id_saved = $(this).attr("id");
             asientos.push(asiento_saved);
             asientos_id.push(id_saved);
+             $("#silla"+id_saved).val(id_saved);
         }); 
         $("#set_asiento").html(asientos.toString());
     }, 500);
