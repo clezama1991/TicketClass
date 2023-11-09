@@ -52,8 +52,7 @@ class OrderMailer
             'orderService' => $orderService
         ];
 
-        //$file_name = $order->order_reference;
-        $file_name = 1;
+        $file_name = $order->order_reference;
         $file_path = public_path(config('attendize.event_pdf_tickets_path')) . '/' . $file_name . '.pdf';
         if (!file_exists($file_path)) {
             Log::error("Cannot send actual ticket to : " . $order->email . " as ticket file does not exist on disk");

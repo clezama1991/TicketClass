@@ -735,7 +735,7 @@ class EventCheckoutController extends Controller
         ReservedTickets::where('session_id', '=', session()->getId())->delete();
 
         // Queue up some tasks - Emails to be sent, PDFs etc.
-        Log::info('Firing the event');    
+        Log::info('Firing the event');
         event(new OrderCompletedEvent($order));
 
         if ($return_json) {
