@@ -26,10 +26,10 @@
                     <div class="flexizq66a100compra" style="vertical-align:top;">
                         <ul class="nav nav-tabs " id="myTab" role="tablist">
                             <li class="nav-item w-50 show-boleto" role="presentation">
-                              <button class="nav-link  w-100" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Busqueda de Boletos</button>
+                              <button class="nav-link active w-100" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Busqueda de Boletos</button>
                             </li>
                             <li class="nav-item w-50 show-mapa" role="presentation">
-                              <button class="nav-link active w-100" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Selecciona tus Asientos</button>
+                              <button class="nav-link w-100" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Selecciona tus Asientos</button>
                             </li> 
                           </ul>
                           
@@ -43,25 +43,32 @@
                                 align="center">
 
                                 <div class="tab-content">
-                                    <div class="tab-pane " id="home" role="tabpanel" aria-labelledby="home-tab">  
+                                    <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">  
      
                                         <div style="padding-top:20px">
+
+
                                             <div id="divHeaderZona" class="headerpaso" style="">Selecciona tu
                                                 Zona&nbsp;<span id="spZonaSeleccionada" class="headerseleccion"></span>
                                             </div>
 
                                             <div id="divSecciones" style="">
+                                                @php
+                                                    $grupo_zona = 1;
+                                                @endphp
                                                 @foreach ($tickets_all as $keygrup => $item)
                                                     @php
                                                         $name_grup = str_replace(' ', '_', $keygrup);
                                                     @endphp
 
-                                                    <div class="seccion contenedor select-zona d-block"
+                                                    <div class="seccion contenedor select-zona d-block" id="grupo{{ $grupo_zona }}"
                                                         data-zonaid="{{ $name_grup }}" data-zonaname="{{ $keygrup }}"
                                                         style="display: block;">
                                                         <div class="seccion titulo">{{ $keygrup }}</div>
-                                                        <div class="seccion agotado" style="display: none;">AGOTADO</div>
-                                                    </div>
+                                                     </div>
+                                                     @php
+                                                         $grupo_zona++;
+                                                     @endphp
                                                 @endforeach
                                             </div>
 
@@ -134,7 +141,7 @@
 
                                         </div>
                                     </div>
-                                    <div class="tab-pane active" id="profile" role="tabpanel" aria-labelledby="profile-tab"> 
+                                    <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab"> 
                                         
                                         @include('Public.ViewEvent.Partials.MapaSalesArea')
                                     
@@ -158,14 +165,7 @@
                                                         <input type="hidden" name="asientos_{{ $vite->id }}">
                                                      
                                                 @endforeach
-
-
-
-
-
-
-
-
+ 
                                     @foreach ($tickets_all as $key_tickets_all => $ticket_all)
                                         @php
                                             $name_grup = str_replace(' ', '_', $key_tickets_all);
@@ -222,11 +222,7 @@
                                                                 </div>
 
                                                                 <div class="row m-5 mapa{{$ticket->id}}">
-
-
-
-
-
+ 
                                                                     @if ($ticket->select_seat == 1)
                                                                         {{-- <div class="col-md-12"
                                                                             style="display: flex;justify-content: center; margin-bottom: 15px; ">
@@ -330,15 +326,17 @@
                                                                     $key_abecedario = 0;
                                                                 @endphp
                                                                 
-                                                                <div class="col-md-12"> 
-                                                                    <div class="row" style="text-align: justify;">
-                                                                    <div class="col-md-3" >
-                                                                        <h5>Filas</h5>
-                                                                    </div>
-                                                                    <div class="col-md-9">
-                                                                        <h5>Asientos</h5>
-                                                                    </div></div>
-                                                                </div>
+                                                                    @if ($ticket->select_seat == 1)
+                                                                        <div class="col-md-12"> 
+                                                                            <div class="row" style="text-align: justify;">
+                                                                            <div class="col-md-3" >
+                                                                                <h5>Filas</h5>
+                                                                            </div>
+                                                                            <div class="col-md-9">
+                                                                                <h5>Asientos</h5>
+                                                                            </div></div>
+                                                                        </div>
+                                                                    @endif
                                                                     @foreach ($ticket_seats as $key_file => $seats)
                                                                     
                                                                         <div class="col-md-12">
@@ -450,7 +448,7 @@
     </div>
 
     </div>
-
+    <input type="hidden" id="cantidad_grupos" value="{{count($tickets_all)}}">
 
     {{-- 
     @include('Public.ViewEvent.Partials.EventTicketsSection')
@@ -505,6 +503,7 @@
             $('.select-zona').removeClass('d-none');
             $('.select-zona').addClass('d-block');
             $('.select-section').addClass('d-none');
+            $('.zone-events').addClass('d-none').removeClass('d-block');
         });
 
 
@@ -515,9 +514,10 @@
             zona = zonaname_display;
 
             $('#spZonaSeleccionada').html(zonaname_display);
-            $('.select-zona').addClass('d-none');
+            $('.select-zona').addClass('d-none'); 
             $('.' + zonaid_display).removeClass('d-none');
-            $('.IdDivZonasT').removeClass('d-none');
+            $('.IdDivZonasT').removeClass('d-none');            
+            $('.zone-events').addClass('d-none').removeClass('d-block');
         });
 
 
@@ -526,7 +526,9 @@
             $('#spSeccionSeleccionado').html('');
             $('.' + zona).removeClass('d-none');
             $('.' + zona).addClass('d-block');
-            $('.select-bloque').addClass('d-none');
+            $('.select-bloque').addClass('d-none');            
+            $('#divHeaderBloques').addClass('d-none').removeClass('d-block');
+            $('.zone-events').addClass('d-none').removeClass('d-block');
         });
 
 
@@ -541,6 +543,7 @@
             $('.divBloquesT').removeClass('d-none');
             $('.' + sectionid_display).removeClass('d-none');
             $('.' + sectionid_display).addClass('d-block');
+            $('.zone-events').addClass('d-none').removeClass('d-block');
         });
 
 
