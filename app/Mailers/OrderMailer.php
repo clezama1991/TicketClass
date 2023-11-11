@@ -71,11 +71,11 @@ class OrderMailer
             
             if (count(Mail::failures()) > 0) {
                 
-                Log::info("Error ticket in OrderMailer to: " . $attendee->email);
+                Log::info("Error ticket in OrderMailer to: " . $order->email);
 
             }else{
                 
-                Log::info("Success ticket in OrderMailer to: " . $attendee->email);
+                Log::info("Success ticket in OrderMailer to: " . $order->email);
 
             }
             
