@@ -306,11 +306,11 @@ class EventCheckoutController extends Controller
 
         if($activeAccountPaymentGateway->config['production_mode']=='0'){
             $OPENPAY_ID = $activeAccountPaymentGateway->config['apiId0'];
-            $OPENPAY_SK = $activeAccountPaymentGateway->config['apiPublishableKey0'];            
+            $OPENPAY_SK = $activeAccountPaymentGateway->config['apiKey0'];            
             $OPENPAY_PRODUCTION_MODE = false;            
         }else{
             $OPENPAY_ID = $activeAccountPaymentGateway->config['apiId1'];
-            $OPENPAY_SK = $activeAccountPaymentGateway->config['apiPublishableKey1'];            
+            $OPENPAY_SK = $activeAccountPaymentGateway->config['apiKey1'];            
             $OPENPAY_PRODUCTION_MODE = true;            
         }
 
@@ -918,11 +918,11 @@ class EventCheckoutController extends Controller
         
         if($activeAccountPaymentGateway->config['production_mode']=='0'){
             $OPENPAY_ID = $activeAccountPaymentGateway->config['apiId0'];
-            $OPENPAY_SK = $activeAccountPaymentGateway->config['apiPublishableKey0'];            
+            $OPENPAY_SK = $activeAccountPaymentGateway->config['apiKey0'];            
             $OPENPAY_PRODUCTION_MODE = false;            
         }else{
             $OPENPAY_ID = $activeAccountPaymentGateway->config['apiId1'];
-            $OPENPAY_SK = $activeAccountPaymentGateway->config['apiPublishableKey1'];            
+            $OPENPAY_SK = $activeAccountPaymentGateway->config['apiKey1'];            
             $OPENPAY_PRODUCTION_MODE = true;            
         }
 
