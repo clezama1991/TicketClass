@@ -31,7 +31,7 @@
             </div>
         </div>
         <div class="col-md-12">
-        <h4>Datos Ambiente Producción</h4>
+        <h4>Datos Ambiente Produccion</h4>
         </div>
         <div class="col-md-6">
             <div class="form-group">
@@ -47,14 +47,14 @@
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                {!! Form::label('openpay[apiKey1]', trans("ManageAccount.openpay_secret_key"), array('class'=>'control-label ')) !!}
-                {!! Form::text('openpay[apiKey1]', $account->getGatewayConfigVal(config('attendize.payment_gateway_openpay'), 'apiKey1'),[ 'class'=>'form-control'])  !!}
+                {!! Form::label('openpay[apiKeyPivate1]', trans("ManageAccount.openpay_secret_key"), array('class'=>'control-label ')) !!}
+                {!! Form::text('openpay[apiKeyPivate1]', $account->getGatewayConfigVal(config('attendize.payment_gateway_openpay'), 'apiKeyPivate1'),[ 'class'=>'form-control'])  !!}
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                {!! Form::label('apiPublishableKey1', trans("ManageAccount.openpay_publishable_key"), array('class'=>'control-label ')) !!}
-                {!! Form::text('openpay[apiPublishableKey1]', $account->getGatewayConfigVal(config('attendize.payment_gateway_openpay'), 'apiPublishableKey1'),[ 'class'=>'form-control'])  !!}
+                {!! Form::label('apiKeyPublic1', trans("ManageAccount.openpay_publishable_key"), array('class'=>'control-label ')) !!}
+                {!! Form::text('openpay[apiKeyPublic1]', $account->getGatewayConfigVal(config('attendize.payment_gateway_openpay'), 'apiKeyPublic1'),[ 'class'=>'form-control'])  !!}
             </div>
         </div>
         <div class="col-md-12">
@@ -74,14 +74,14 @@
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                {!! Form::label('openpay[apiKey0]', trans("ManageAccount.openpay_secret_key"), array('class'=>'control-label ')) !!}
-                {!! Form::text('openpay[apiKey0]', $account->getGatewayConfigVal(config('attendize.payment_gateway_openpay'), 'apiKey0'),[ 'class'=>'form-control'])  !!}
+                {!! Form::label('openpay[apiKeyPivate0]', trans("ManageAccount.openpay_secret_key"), array('class'=>'control-label ')) !!}
+                {!! Form::text('openpay[apiKeyPivate0]', $account->getGatewayConfigVal(config('attendize.payment_gateway_openpay'), 'apiKeyPivate0'),[ 'class'=>'form-control'])  !!}
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                {!! Form::label('apiPublishableKey0', trans("ManageAccount.openpay_publishable_key"), array('class'=>'control-label ')) !!}
-                {!! Form::text('openpay[apiPublishableKey0]', $account->getGatewayConfigVal(config('attendize.payment_gateway_openpay'), 'apiPublishableKey0'),[ 'class'=>'form-control'])  !!}
+                {!! Form::label('apiKeyPublic0', trans("ManageAccount.openpay_publishable_key"), array('class'=>'control-label ')) !!}
+                {!! Form::text('openpay[apiKeyPublic0]', $account->getGatewayConfigVal(config('attendize.payment_gateway_openpay'), 'apiKeyPublic0'),[ 'class'=>'form-control'])  !!}
             </div>
         </div>
     </div>
