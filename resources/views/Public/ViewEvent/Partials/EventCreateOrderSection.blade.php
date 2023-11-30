@@ -166,19 +166,19 @@
                                 <div class="col-md-4 col-12">
                                     <div class="form-group">
                                         {!! Form::label("order_first_name", trans("Public_ViewEvent.first_name")) !!}
-                                        {!! Form::text("order_first_name", 'Carlos', ['required' => 'required', 'class' => 'form-control']) !!}
+                                        {!! Form::text("order_first_name", null, ['required' => 'required', 'class' => 'form-control']) !!}
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-12">
                                     <div class="form-group">
                                         {!! Form::label("order_last_name", trans("Public_ViewEvent.last_name")) !!}
-                                        {!! Form::text("order_last_name", 'Lezama', ['required' => 'required', 'class' => 'form-control']) !!}
+                                        {!! Form::text("order_last_name", null, ['required' => 'required', 'class' => 'form-control']) !!}
                                     </div>
                                 </div> 
                                 <div class="col-md-4 col-12">
                                     <div class="form-group">
                                         {!! Form::label("order_email", trans("Public_ViewEvent.email_address")) !!}
-                                        {!! Form::text("order_email", 'clezama1991@gamil.com', ['required' => 'required', 'class' => 'form-control']) !!}
+                                        {!! Form::text("order_email", null, ['required' => 'required', 'class' => 'form-control']) !!}
                                     </div>
                                 </div>
                             </div>
