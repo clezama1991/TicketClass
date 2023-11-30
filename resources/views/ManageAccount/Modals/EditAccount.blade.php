@@ -139,7 +139,7 @@
                                 </div>
                                 {!! Form::close() !!}
                             </div>
-                            <div class="tab-pane " id="about">
+                            {{-- <div class="tab-pane " id="about">
                                 <h4>
                                     @lang("ManageAccount.version_info")
                                 </h4>
@@ -162,7 +162,7 @@
                                 <p>
                                     {!! @trans("ManageAccount.open_source_soft_description") !!}
                                 </p>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
