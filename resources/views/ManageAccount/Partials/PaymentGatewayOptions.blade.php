@@ -25,8 +25,8 @@
             <div class="form-group">
                 <label for="openpay[production_mode]">Ambiente</label>
                 <select name="openpay[production_mode]" id="openpay[production_mode]" class="form-control">
-                    <option value="1" {{ ($account->getGatewayConfigVal(config('attendize.payment_gateway_openpay'), 'production_mode') == '1') : 'selected' : null}}> Producción</option>                    
-                    <option value="0" {{ ($account->getGatewayConfigVal(config('attendize.payment_gateway_openpay'), 'production_mode') == '0') : 'selected' : null}}> Sandbox</option>                    
+                    <option value="1" {{ ($account->getGatewayConfigVal(config('attendize.payment_gateway_openpay'), 'production_mode') == '1') ? 'selected' : null}}> Producción</option>                    
+                    <option value="0" {{ ($account->getGatewayConfigVal(config('attendize.payment_gateway_openpay'), 'production_mode') == '0') ? 'selected' : null}}> Sandbox</option>                    
                 </select>
             </div>
         </div>
