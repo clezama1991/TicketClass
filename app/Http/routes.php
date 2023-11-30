@@ -780,5 +780,10 @@ Route::group(
         'as'   => 'index',
         'uses' => 'IndexController@showIndex',
     ]);
+
+    Route::post('charge', 'OpenPayController@store');
+    
+    Route::get('/hola', 'OpenPayController@form');
+    
 });
 

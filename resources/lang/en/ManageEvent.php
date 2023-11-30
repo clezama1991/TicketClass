@@ -93,7 +93,7 @@ return array(
     'ticket_description'                      => 'Descripción de la entrada',
     'ticket_price_neto'                            => 'Precio Neto',
     'ticket_price_service'                            => 'Tarifa por servicio',
-    'ticket_price_paypal'                            => 'Comisión Paypal',
+    'ticket_price_paypal'                            => 'Comisión Online',
     'ticket_price'                            => 'Precio de la entrada',
     'ticket_title'                            => 'Título de la entrada',
     'ticket_section'                            => 'Sección',

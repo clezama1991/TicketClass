@@ -15,24 +15,40 @@ class AttendeeMailer extends Mailer
     public function sendAttendeeTicket($attendee)
     {
 
-        Log::info("Sending ticket to: " . $attendee->email);
+        Log::info("Sending ticket in AttendeeMailer to: " . $attendee->email);
 
         $data = [
             'attendee' => $attendee,
         ];
 
-        Mail::send('Mailers.TicketMailer.SendAttendeeTicket', $data, function ($message) use ($attendee) {
-            $message->to($attendee->email);
-            $message->subject(trans("Email.your_ticket_for_event", ["event" => $attendee->order->event->title]));
+        try {
+            Mail::send('Mailers.TicketMailer.SendAttendeeTicket', $data, function ($message) use ($attendee) {
+                $message->to($attendee->email);
+                $message->subject(trans("Email.your_ticket_for_event", ["event" => $attendee->order->event->title]));
+    
+                $file_name = $attendee->reference;
+    
+                if (file_exists(public_path(config('attendize.event_pdf_tickets_path')) . '/' . $file_name . '.pdf')) {
+                    $file_path = public_path(config('attendize.event_pdf_tickets_path')) . '/' . $file_name . '.pdf';
+                    $message->attach($file_path);
+                }
+    
+            });
+            
+            if (count(Mail::failures()) > 0) {
+                
+                Log::info("Error ticket in AttendeeMailer to: " . $attendee->email);
 
-            $file_name = $attendee->reference;
+            }else{
+                
+                Log::info("Success ticket in AttendeeMailer to: " . $attendee->email);
 
-            if (file_exists(public_path(config('attendize.event_pdf_tickets_path')) . '/' . $file_name . '.pdf')) {
-                $file_path = public_path(config('attendize.event_pdf_tickets_path')) . '/' . $file_name . '.pdf';
-                $message->attach($file_path);
             }
+            
+        } catch (\Exception $th) { 
+            Log::info("Error Message ticket in AttendeeMailer: " . $th->getMessage()); 
+        }
 
-        });
 
     }
 

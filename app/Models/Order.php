@@ -99,6 +99,11 @@ class Order extends MyBaseModel
         return $this->belongsTo(\App\Models\PaymentGateway::class);
     }
 
+    public function paymentMethodName()
+    {
+        return $this->payment_gateway->name ?? null;
+    }
+
     /**
      * The status associated with the order.
      *
