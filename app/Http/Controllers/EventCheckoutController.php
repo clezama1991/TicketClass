@@ -27,6 +27,15 @@ use PhpSpec\Exception\Exception;
 use Validator;
 use App\Models\SeatTicket;
 use Mail;
+
+use Openpay;
+use OpenpayApiError;
+use OpenpayApiAuthError;
+use OpenpayApiRequestError;
+use OpenpayApiConnectionError;
+use OpenpayApiTransactionError;
+use Illuminate\Http\JsonResponse;
+ 
 class EventCheckoutController extends Controller
 {
     /**
@@ -279,6 +288,8 @@ class EventCheckoutController extends Controller
      */
     public function showEventCheckout(Request $request, $event_id)
     {
+
+
         $order_session = session()->get('ticket_order_' . $event_id);
 
         if (!$order_session || $order_session['expires'] < Carbon::now()) {
@@ -290,6 +301,20 @@ class EventCheckoutController extends Controller
 
         $event = Event::findorFail($order_session['event_id']);
 
+        
+        $activeAccountPaymentGateway = $event->account->getGateway($event->account->payment_gateway_id);
+
+        if($activeAccountPaymentGateway->config['production_mode']=='0'){
+            $OPENPAY_ID = $activeAccountPaymentGateway->config['apiId0'];
+            $OPENPAY_SK = $activeAccountPaymentGateway->config['apiKey0'];            
+            $OPENPAY_PRODUCTION_MODE = false;            
+        }else{
+            $OPENPAY_ID = $activeAccountPaymentGateway->config['apiId1'];
+            $OPENPAY_SK = $activeAccountPaymentGateway->config['apiKey1'];            
+            $OPENPAY_PRODUCTION_MODE = true;            
+        }
+
+
         $orderService = new OrderService($order_session['order_total'], $order_session['total_booking_fee'], $event);
         $orderService->calculateFinalCosts();
 
@@ -297,7 +322,10 @@ class EventCheckoutController extends Controller
                 'event'           => $event,
                 'secondsToExpire' => $secondsToExpire,
                 'is_embedded'     => $this->is_embedded,
-                'orderService'    => $orderService
+                'orderService'    => $orderService,
+                'OPENPAY_ID'    => $OPENPAY_ID,
+                'OPENPAY_SK'    => $OPENPAY_SK,
+                'OPENPAY_PRODUCTION_MODE'    => $OPENPAY_PRODUCTION_MODE
                 ];
 
         if ($this->is_embedded) {
@@ -352,7 +380,7 @@ class EventCheckoutController extends Controller
         $orderRequiresPayment = $ticket_order['order_requires_payment'];
 
         if (env('APP_ENV')=='local') {
-            return $this->completeOrder($event_id);
+            // return $this->completeOrder($event_id);
         }
          
         if ($orderRequiresPayment && $request->get('pay_offline') && $event->enable_offline_payments) {
@@ -363,25 +391,14 @@ class EventCheckoutController extends Controller
             return $this->completeOrder($event_id);
         }
 
+                
+
+
         try {
             //more transation data being put in here.
             $transaction_data = [];
-            if (config('attendize.enable_dummy_payment_gateway') == TRUE) {
-                $formData = config('attendize.fake_card_data');
-                $transaction_data = [
-                    'card' => $formData
-                ];
 
-                $gateway = Omnipay::create('Dummy');
-                $gateway->initialize();
-
-            } else {
-                $gateway = Omnipay::create($ticket_order['payment_gateway']->name);
-                $gateway->initialize($ticket_order['account_payment_gateway']->config + [
-                        'testMode' => config('attendize.enable_test_payments'),
-                    ]);
-            }
-
+            
             $orderService = new OrderService($ticket_order['order_total'], $ticket_order['total_booking_fee'], $event);
             $orderService->calculateFinalCosts();
 
@@ -391,88 +408,130 @@ class EventCheckoutController extends Controller
                     'description' => 'Order for customer: ' . $request->get('order_email'),
             ];
 
-            //TODO: class with an interface that builds the transaction data.
-            switch ($ticket_order['payment_gateway']->id) {
-                case config('attendize.payment_gateway_dummy'):
-                    $token = uniqid();
-                    $transaction_data += [
-                        'token'         => $token,
-                        'receipt_email' => $request->get('order_email'),
-                        'card' => $formData
-                    ];
-                    break;
-                case config('attendize.payment_gateway_paypal'):
 
-                    $transaction_data += [
-                        'cancelUrl' => route('showEventCheckoutPaymentReturn', [
-                            'event_id'             => $event_id,
-                            'is_payment_cancelled' => 1
-                        ]),
-                        'returnUrl' => route('showEventCheckoutPaymentReturn', [
-                            'event_id'              => $event_id,
-                            'is_payment_successful' => 1
-                        ]),
-                        'brandName' => isset($ticket_order['account_payment_gateway']->config['brandingName'])
-                            ? $ticket_order['account_payment_gateway']->config['brandingName']
-                            : $event->organiser->name
-                    ];
-                    break;
-                case config('attendize.payment_gateway_stripe'):
-                    $token = $request->get('stripeToken');
-                    $transaction_data += [
-                        'token'         => $token,
-                        'receipt_email' => $request->get('order_email'),
-                    ];
-                    break;
-                default:
-                    Log::error('No payment gateway configured.');
+            if($ticket_order['payment_gateway']->id == config('attendize.payment_gateway_openpay')){
+
+                $payment = $this->ProccessPaymentOpenpay($request, $event, $transaction_data);
+                
+                if($payment['error_code']!='200'){
+
                     return response()->json([
-                        'status'  => 'error',
-                        'message' => 'No payment gateway configured.'
+                        'status'   => 'error',
+                        'messages' => $payment['description'],
                     ]);
-                    break;
-            }
 
-            $transaction = $gateway->purchase($transaction_data);
+                }else{
 
-            $response = $transaction->send();
-
-            if ($response->isSuccessful()) {
-
-                session()->push('ticket_order_' . $event_id . '.transaction_id',
-                    $response->getTransactionReference());
-
-                return $this->completeOrder($event_id);
-
-            } elseif ($response->isRedirect()) {
-
-                /*
-                 * As we're going off-site for payment we need to store some data in a session so it's available
-                 * when we return
-                 */
-                session()->push('ticket_order_' . $event_id . '.transaction_data', $transaction_data);
-                Log::info("Redirect url: " . $response->getRedirectUrl());
-
-                $return = [
-                    'status'       => 'success',
-                    'redirectUrl'  => $response->getRedirectUrl(),
-                    'message'      => 'Redirecting to ' . $ticket_order['payment_gateway']->provider_name
-                ];
-
-                // GET method requests should not have redirectData on the JSON return string
-                if($response->getRedirectMethod() == 'POST') {
-                    $return['redirectData'] = $response->getRedirectData();
+                    session()->push('ticket_order_' . $event_id . '.transaction_id',
+                    $payment['data']);
+    
+                     return $this->completeOrder($event_id);
                 }
 
-                return response()->json($return);
+ 
+            }else{
+                
 
-            } else {
-                // display error to customer
-                return response()->json([
-                    'status'  => 'error',
-                    'message' => $response->getMessage(),
-                ]);
+                if (config('attendize.enable_dummy_payment_gateway') == TRUE) {
+                    $formData = config('attendize.fake_card_data');
+                    $transaction_data = [
+                        'card' => $formData
+                    ];
+
+                    $gateway = Omnipay::create('Dummy');
+                    $gateway->initialize();
+
+                } else {
+                    $gateway = Omnipay::create($ticket_order['payment_gateway']->name);
+                    $gateway->initialize($ticket_order['account_payment_gateway']->config + [
+                            'testMode' => config('attendize.enable_test_payments'),
+                        ]);
+                }
+
+                //TODO: class with an interface that builds the transaction data.
+                switch ($ticket_order['payment_gateway']->id) {
+                    case config('attendize.payment_gateway_dummy'):
+                        $token = uniqid();
+                        $transaction_data += [
+                            'token'         => $token,
+                            'receipt_email' => $request->get('order_email'),
+                            'card' => $formData
+                        ];
+                        break;
+                    case config('attendize.payment_gateway_paypal'):
+
+                        $transaction_data += [
+                            'cancelUrl' => route('showEventCheckoutPaymentReturn', [
+                                'event_id'             => $event_id,
+                                'is_payment_cancelled' => 1
+                            ]),
+                            'returnUrl' => route('showEventCheckoutPaymentReturn', [
+                                'event_id'              => $event_id,
+                                'is_payment_successful' => 1
+                            ]),
+                            'brandName' => isset($ticket_order['account_payment_gateway']->config['brandingName'])
+                                ? $ticket_order['account_payment_gateway']->config['brandingName']
+                                : $event->organiser->name
+                        ];
+                        break;
+                    case config('attendize.payment_gateway_stripe'):
+                        $token = $request->get('stripeToken');
+                        $transaction_data += [
+                            'token'         => $token,
+                            'receipt_email' => $request->get('order_email'),
+                        ];
+                        break;
+                    default:
+                        Log::error('No payment gateway configured.');
+                        return response()->json([
+                            'status'  => 'error',
+                            'message' => 'No payment gateway configured.'
+                        ]);
+                        break;
+                }
+
+                $transaction = $gateway->purchase($transaction_data);
+
+                $response = $transaction->send();
+
+                if ($response->isSuccessful()) {
+
+                    session()->push('ticket_order_' . $event_id . '.transaction_id',
+                        $response->getTransactionReference());
+
+                    return $this->completeOrder($event_id);
+
+                } elseif ($response->isRedirect()) {
+
+                    /*
+                    * As we're going off-site for payment we need to store some data in a session so it's available
+                    * when we return
+                    */
+                    session()->push('ticket_order_' . $event_id . '.transaction_data', $transaction_data);
+                    Log::info("Redirect url: " . $response->getRedirectUrl());
+
+                    $return = [
+                        'status'       => 'success',
+                        'redirectUrl'  => $response->getRedirectUrl(),
+                        'message'      => 'Redirecting to ' . $ticket_order['payment_gateway']->provider_name
+                    ];
+
+                    // GET method requests should not have redirectData on the JSON return string
+                    if($response->getRedirectMethod() == 'POST') {
+                        $return['redirectData'] = $response->getRedirectData();
+                    }
+
+                    return response()->json($return);
+
+                } else {
+                    // display error to customer
+                    return response()->json([
+                        'status'  => 'error',
+                        'message' => $response->getMessage(),
+                    ]);
+                }
             }
+
         } catch (\Exeption $e) {
             Log::error($e);
             $error = 'Sorry, there was an error processing your payment. Please try again.';
@@ -851,5 +910,108 @@ class EventCheckoutController extends Controller
 
     }
 
+    public function ProccessPaymentOpenpay($request, $event, $transaction_data)
+    {
+  
+        $COUNTRY_CODE = 'MX';
+        $activeAccountPaymentGateway = $event->account->getGateway($event->account->payment_gateway_id);
+        
+        if($activeAccountPaymentGateway->config['production_mode']=='0'){
+            $OPENPAY_ID = $activeAccountPaymentGateway->config['apiId0'];
+            $OPENPAY_SK = $activeAccountPaymentGateway->config['apiKey0'];            
+            $OPENPAY_PRODUCTION_MODE = false;            
+        }else{
+            $OPENPAY_ID = $activeAccountPaymentGateway->config['apiId1'];
+            $OPENPAY_SK = $activeAccountPaymentGateway->config['apiKey1'];            
+            $OPENPAY_PRODUCTION_MODE = true;            
+        }
+
+        
+        // dd($activeAccountPaymentGateway, $OPENPAY_ID, $COUNTRY_CODE);
+
+        try {
+            // create instance OpenPay
+            $openpay = Openpay::getInstance($OPENPAY_ID, $OPENPAY_SK, $COUNTRY_CODE); //Openpay::getInstance(env('OPENPAY_ID'), env('OPENPAY_SK'));
+            
+            Openpay::setProductionMode($OPENPAY_PRODUCTION_MODE); //Openpay::setProductionMode(env('OPENPAY_PRODUCTION_MODE'));
+            
+            // create object customer
+            $customer = array(
+                'name' => $request->holder_name,
+                // 'last_name' => $request->last_name,
+                'email' => 'test@gmail.com'
+            );
+
+            // create object charge
+            $chargeRequest =  array(
+                "method" => "card",
+                'source_id' => $request->token_id,
+                'device_session_id' => $request->deviceIdHiddenFieldName,
+                'amount' => $transaction_data['amount'],
+                'description' => $transaction_data['description'],
+                'customer' => $customer,
+                'send_email' => false,
+                'confirm' => false,
+                'redirect_url' => 'http://www.openpay.mx/index.html'
+            );
+
+            $charge = $openpay->charges->create($chargeRequest);
+
+            return [
+                'data' => $charge->id,
+                'error_code' => '200',
+                'description' => 'success'
+            ];
+
+        } catch (OpenpayApiTransactionError $e) {
+            return [ 
+                    'category' => $e->getCategory(),
+                    'error_code' => $e->getErrorCode(),
+                    'description' => $e->getMessage(),
+                    'http_code' => $e->getHttpCode(),
+                    'request_id' => $e->getRequestId() 
+            ];
+        } catch (OpenpayApiRequestError $e) {
+            return [
+                    'category' => $e->getCategory(),
+                    'error_code' => $e->getErrorCode(),
+                    'description' => $e->getMessage(),
+                    'http_code' => $e->getHttpCode(),
+                    'request_id' => $e->getRequestId()
+                   ];
+        } catch (OpenpayApiConnectionError $e) {
+            return [
+                    'category' => $e->getCategory(),
+                    'error_code' => $e->getErrorCode(),
+                    'description' => $e->getMessage(),
+                    'http_code' => $e->getHttpCode(),
+                    'request_id' => $e->getRequestId()
+                   ];
+        } catch (OpenpayApiAuthError $e) {
+            return [
+                    'category' => $e->getCategory(),
+                    'error_code' => $e->getErrorCode(),
+                    'description' => $e->getMessage(),
+                    'http_code' => $e->getHttpCode(),
+                    'request_id' => $e->getRequestId()
+                   ];
+        } catch (OpenpayApiError $e) {
+            return [
+                    'category' => $e->getCategory(),
+                    'error_code' => $e->getErrorCode(),
+                    'description' => $e->getMessage(),
+                    'http_code' => $e->getHttpCode(),
+                    'request_id' => $e->getRequestId()
+                   ];
+        } catch (Exception $e) {
+            return [
+                    'category' => $e->getCategory(),
+                    'error_code' => $e->getErrorCode(),
+                    'description' => $e->getMessage(),
+                    'http_code' => $e->getHttpCode(),
+                    'request_id' => $e->getRequestId()
+                   ];
+        }
+    }
 }
 

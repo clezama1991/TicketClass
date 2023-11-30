@@ -317,7 +317,7 @@
                                                 <td>
                                                 </td>
                                                 <td>
-                                                    Comision Paypal
+                                                    Comisión {{$order->paymentMethodName()}}
                                                 </td>
                                                 <td colspan="2" style="text-align: right;">
                                                     {{$order->event->currency_symbol}}{{number_format($order->total_amount_online - $subtotal, 2)}}

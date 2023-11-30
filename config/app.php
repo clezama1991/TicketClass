@@ -110,6 +110,8 @@ return [
     */
 
     'log' => env('LOG', 'errorlog'),
+    
+    'OPENPAY_PRODUCTION_MODE' => env('OPENPAY_PRODUCTION_MODE', false),
 
     /*
     |--------------------------------------------------------------------------
