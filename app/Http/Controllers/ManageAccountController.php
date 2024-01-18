@@ -133,6 +133,9 @@ class ManageAccountController extends MyBaseController
             case config('attendize.payment_gateway_paypal') : //PayPal
                 $config = $request->get('paypal');
                 break;
+            case config('attendize.payment_gateway_openpay') : //PayPal
+                $config = $request->get('openpay');
+                break;
         }
 
         $account_payment_gateway = AccountPaymentGateway::firstOrNew(

@@ -17,6 +17,76 @@
     {!! Form::select('payment_gateway_id', $payment_gateways, $account->payment_gateway_id, ['class' => 'form-control gateway_selector']) !!}
 </div>
 
+{{--OpenPay--}}
+<section class="payment_gateway_options" id="gateway_{{config('attendize.payment_gateway_openpay')}}">
+    <h4>@lang("ManageAccount.openpay_settings")</h4>
+    <div class="row">        
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="openpay[production_mode]">Ambiente</label>
+                <select name="openpay[production_mode]" id="openpay[production_mode]" class="form-control">
+                    <option value="1" {{ ($account->getGatewayConfigVal(config('attendize.payment_gateway_openpay'), 'production_mode') == '1') ? 'selected' : null}}> Producción</option>                    
+                    <option value="0" {{ ($account->getGatewayConfigVal(config('attendize.payment_gateway_openpay'), 'production_mode') == '0') ? 'selected' : null}}> Sandbox</option>                    
+                </select>
+            </div>
+        </div>
+        <div class="col-md-12">
+        <h4>Datos Ambiente Produccion</h4>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {!! Form::label('openpay[apiId1]', trans("ManageAccount.openpay_id"), array('class'=>'control-label ')) !!}
+                {!! Form::text('openpay[apiId1]', $account->getGatewayConfigVal(config('attendize.payment_gateway_openpay'), 'apiId1'),[ 'class'=>'form-control'])  !!}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {!! Form::label('apiUrl1', trans("ManageAccount.openpay_url"), array('class'=>'control-label ')) !!}
+                {!! Form::text('openpay[apiUrl1]', $account->getGatewayConfigVal(config('attendize.payment_gateway_openpay'), 'apiUrl1'),[ 'class'=>'form-control'])  !!}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {!! Form::label('openpay[apiKeyPivate1]', trans("ManageAccount.openpay_secret_key"), array('class'=>'control-label ')) !!}
+                {!! Form::text('openpay[apiKeyPivate1]', $account->getGatewayConfigVal(config('attendize.payment_gateway_openpay'), 'apiKeyPivate1'),[ 'class'=>'form-control'])  !!}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {!! Form::label('apiKeyPublic1', trans("ManageAccount.openpay_publishable_key"), array('class'=>'control-label ')) !!}
+                {!! Form::text('openpay[apiKeyPublic1]', $account->getGatewayConfigVal(config('attendize.payment_gateway_openpay'), 'apiKeyPublic1'),[ 'class'=>'form-control'])  !!}
+            </div>
+        </div>
+        <div class="col-md-12">
+        <h4>Datos Ambiente Sandbox</h4>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {!! Form::label('openpay[apiId0]', trans("ManageAccount.openpay_id"), array('class'=>'control-label ')) !!}
+                {!! Form::text('openpay[apiId0]', $account->getGatewayConfigVal(config('attendize.payment_gateway_openpay'), 'apiId0'),[ 'class'=>'form-control'])  !!}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {!! Form::label('apiUrl0', trans("ManageAccount.openpay_url"), array('class'=>'control-label ')) !!}
+                {!! Form::text('openpay[apiUrl0]', $account->getGatewayConfigVal(config('attendize.payment_gateway_openpay'), 'apiUrl0'),[ 'class'=>'form-control'])  !!}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {!! Form::label('openpay[apiKeyPivate0]', trans("ManageAccount.openpay_secret_key"), array('class'=>'control-label ')) !!}
+                {!! Form::text('openpay[apiKeyPivate0]', $account->getGatewayConfigVal(config('attendize.payment_gateway_openpay'), 'apiKeyPivate0'),[ 'class'=>'form-control'])  !!}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {!! Form::label('apiKeyPublic0', trans("ManageAccount.openpay_publishable_key"), array('class'=>'control-label ')) !!}
+                {!! Form::text('openpay[apiKeyPublic0]', $account->getGatewayConfigVal(config('attendize.payment_gateway_openpay'), 'apiKeyPublic0'),[ 'class'=>'form-control'])  !!}
+            </div>
+        </div>
+    </div>
+</section>
+
 {{--Stripe--}}
 <section class="payment_gateway_options" id="gateway_{{config('attendize.payment_gateway_stripe')}}">
     <h4>@lang("ManageAccount.stripe_settings")</h4>
