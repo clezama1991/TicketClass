@@ -11,7 +11,6 @@
 .ticket {
   display: flex;
   font-family: Roboto;
-  margin: 16px;
   border: 1px solid #E0E0E0;
   position: relative;
       border-radius: 10px;
@@ -258,91 +257,7 @@ table{
 </head>
 
 <body translate="no">
-  <div class="" style="display: none">
 
-    @foreach($attendees as $key_order_item => $attendee)
-        @if(!$attendee->is_cancelled)
-
-            <div class="ticket">
-
-                    <div class="codigo ">
-                        {!! DNS2D::getBarcodeSVG($attendee->private_reference_number, "QRCODE", 4, 4) !!}
-                        <h4>@lang("Ticket.attendee_ref")</h4>
-                        <h4>  {{$attendee->reference}} </h4> 
-                    </div>
-
-                    @if($event->is_1d_barcode_enabled)
-                        <div class="barcode_vertical">
-                            {!! DNS1D::getBarcodeSVG($attendee->private_reference_number, "C39+", 1, 50) !!}
-                        </div>
-                    @endif
-
-                    {{-- <div class="etiqueta "></div> --}}
-
-                    <div class="imagen ">
-                        {{--<img alt="{{$event->organiser->full_logo_path}}" src="data:image/png;base64, {{$image}}" />--}}
-                        @if(isset($images) && count($images) > 0)
-                            @foreach($images as $img)
-                                <BR><img src="data:image/png;base64, {{$img}}" />
-                            @endforeach
-                        @endif
-                    </div>
-                    <div class="info1 ">
-                        <h4>@lang("Ticket.event")</h4>
-                            {{$event->title}}
-                        <h4>@lang("Ticket.start_date_time")</h4>
-                            {{$event->startDateFormatted()}}
-                            {{$event->venue_name}}
-                          </div>
-
-                          <div class="info2 ">
-                          <h4>@lang("Ticket.ticket_type")</h4>
-                              {{$attendee->ticket->title}} 
-                              @if($attendee->seats)
-                                    <h4>
-                                        {{{$attendee->seats->seat()}}}
-                                    </h4>
-                                @endif 
-                              <h4>@lang("Ticket.price")</h4>
-                              @php
-                                  // Calculating grand total including tax
-                                  $grand_total = $attendee->ticket->total_price;
-                                  $tax_amt = ($grand_total * $event->organiser->tax_value) / 100;
-                                  $grand_total = $attendee->ticket->price_neto;
-                              @endphp
-                              {{money($grand_total, $order->event->currency)}} @if ($attendee->ticket->price_service) ( Mas {{money($attendee->ticket->price_service, $order->event->currency)}} @lang("Public_ViewEvent.inc_fees")) @endif @if ($event->organiser->tax_name) (inc. {{money($tax_amt, $order->event->currency)}} {{$event->organiser->tax_name}})
-                              <br><br>{{$event->organiser->tax_name}} ID: {{ $event->organiser->tax_id }}
-                              @endif
-                                </div>
-
-                          {{--<div class="info2 " >
-
-                      <h4>@lang("Ticket.ticket_type")</h4>
-                          {{$attendee->ticket->title}}
-                      <h4>@lang("Ticket.price")</h4>
-                          @php
-                              // Calculating grand total including tax
-                              $grand_total = $attendee->ticket->total_price;
-                              $tax_amt = ($grand_total * $event->organiser->tax_value) / 100;
-                              $grand_total = $tax_amt + $grand_total;
-                          @endphp
-                          {{money($grand_total, $order->event->currency)}} @if ($attendee->ticket->total_booking_fee) (inc. {{money($attendee->ticket->total_booking_fee, $order->event->currency)}} @lang("Public_ViewEvent.inc_fees")) @endif @if ($event->organiser->tax_name) (inc. {{money($tax_amt, $order->event->currency)}} {{$event->organiser->tax_name}})
-                          <br><br>{{$event->organiser->tax_name}} ID: {{ $event->organiser->tax_id }}
-                          @endif--}}
-
-                          {{--<h4>@lang("Ticket.order_ref")</h4>
-                          {{$order->order_reference}}
-                      <h4>@lang("Ticket.attendee_ref")</h4>
-                          {{$attendee->reference}}
-                      <h4>@lang("Ticket.name")</h4>
-                          {{$attendee->first_name.' '.$attendee->last_name}}--}}
-                          {{--</div>--}}
-
-          </div>
-      @endif
-    @endforeach
-
-</div>
           @foreach($attendees as $key_order_item => $attendee)
                 @if(!$attendee->is_cancelled)
   <div class="ticket" style="padding:10px; padding-bottom:20px">
@@ -439,12 +354,13 @@ table{
                                                   <td>        
                                                     <span class="ticket--info--subtitle" style="text-transform: uppercase !important;"> 
                                                       {{$attendee->ticket->title}} 
-                                                      
+                                                      - Silla:
                                                       @if($attendee->seats)
-                                                            <h4>
+                                                            <span class="ticket--info--subtitle">
                                                                 {{{$attendee->seats->seat()}}}
-                                                            </h4>
+                                                            </span>
                                                         @endif  
+                                                        
                                                     </span> 
                                                   </td>
                                                 </tr> 
@@ -547,8 +463,8 @@ table{
                           <h4>@lang("Ticket.ticket_type")</h4>
                               {{$attendee->ticket->title}} 
                               @if($attendee->seats)
-                                    <h4>
-                                        {{{$attendee->seats->seat()}}}
+                                    <h4 class="ticket--info--subtitle">
+                                      Silla: {{{$attendee->seats->seat()}}}
                                     </h4>
                                 @endif 
                               <h4>@lang("Ticket.price")</h4>

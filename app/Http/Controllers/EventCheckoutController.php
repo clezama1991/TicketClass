@@ -289,6 +289,9 @@ class EventCheckoutController extends Controller
     public function showEventCheckout(Request $request, $event_id)
     {
 
+        $OPENPAY_ID = null;
+        $OPENPAY_SK = null;            
+        $OPENPAY_PRODUCTION_MODE = false;
 
         $order_session = session()->get('ticket_order_' . $event_id);
 
@@ -304,14 +307,16 @@ class EventCheckoutController extends Controller
         
         $activeAccountPaymentGateway = $event->account->getGateway($event->account->payment_gateway_id);
 
-        if($activeAccountPaymentGateway->config['production_mode']=='0'){
-            $OPENPAY_ID = $activeAccountPaymentGateway->config['apiId0'];
-            $OPENPAY_SK = $activeAccountPaymentGateway->config['apiKeyPublic0'];            
-            $OPENPAY_PRODUCTION_MODE = false;            
-        }else{
-            $OPENPAY_ID = $activeAccountPaymentGateway->config['apiId1'];
-            $OPENPAY_SK = $activeAccountPaymentGateway->config['apiKeyPublic1'];            
-            $OPENPAY_PRODUCTION_MODE = true;            
+        if(isset($activeAccountPaymentGateway->config['production_mode'])){
+            if($activeAccountPaymentGateway->config['production_mode']=='0'){
+                $OPENPAY_ID = $activeAccountPaymentGateway->config['apiId0'];
+                $OPENPAY_SK = $activeAccountPaymentGateway->config['apiKeyPublic0'];            
+                $OPENPAY_PRODUCTION_MODE = false;            
+            }else{
+                $OPENPAY_ID = $activeAccountPaymentGateway->config['apiId1'];
+                $OPENPAY_SK = $activeAccountPaymentGateway->config['apiKeyPublic1'];            
+                $OPENPAY_PRODUCTION_MODE = true;            
+            }
         }
 
 
@@ -911,6 +916,108 @@ class EventCheckoutController extends Controller
     }
 
     public function ProccessPaymentOpenpay($request, $event, $transaction_data)
+    {
+  
+        $COUNTRY_CODE = 'MX';
+        $activeAccountPaymentGateway = $event->account->getGateway($event->account->payment_gateway_id);
+        
+        if($activeAccountPaymentGateway->config['production_mode']=='0'){
+            $OPENPAY_ID = $activeAccountPaymentGateway->config['apiId0'];
+            $OPENPAY_SK = $activeAccountPaymentGateway->config['apiKeyPivate0'];            
+            $OPENPAY_PRODUCTION_MODE = false;            
+        }else{
+            $OPENPAY_ID = $activeAccountPaymentGateway->config['apiId1'];
+            $OPENPAY_SK = $activeAccountPaymentGateway->config['apiKeyPivate1'];            
+            $OPENPAY_PRODUCTION_MODE = true;            
+        }
+
+        
+        // dd($activeAccountPaymentGateway, $OPENPAY_ID, $COUNTRY_CODE);
+
+        try {
+            // create instance OpenPay
+            $openpay = Openpay::getInstance($OPENPAY_ID, $OPENPAY_SK, $COUNTRY_CODE); //Openpay::getInstance(env('OPENPAY_ID'), env('OPENPAY_SK'));
+            
+            Openpay::setProductionMode($OPENPAY_PRODUCTION_MODE); //Openpay::setProductionMode(env('OPENPAY_PRODUCTION_MODE'));
+
+            $openpay = Openpay::getInstance('mzdtln0bmtms6o3kck8f', 'sk_e568c42a6c384b7ab02cd47d2e407cab');
+            
+            $customer = array(
+                'name' => $request->holder_name,
+                'last_name' => null,
+                'phone_number' => null,
+                'email' => 'test@gmail.com');
+
+            $chargeRequest = array(
+                'method' => 'card',
+                'source_id' => $request->token_id,
+                'amount' => $transaction_data['amount'],
+                'currency' => 'MXN',
+                'description' => $transaction_data['description'],
+                'order_id' => 'evt-'.$event->id,
+                'device_session_id' => $request->deviceIdHiddenFieldName,
+                'customer' => $customer);
+
+            $charge = $openpay->charges->create($chargeRequest);
+
+            return [
+                'data' => $charge->id,
+                'error_code' => '200',
+                'description' => 'success'
+            ];
+
+        } catch (OpenpayApiTransactionError $e) {
+            return [ 
+                    'category' => $e->getCategory(),
+                    'error_code' => $e->getErrorCode(),
+                    'description' => $e->getMessage(),
+                    'http_code' => $e->getHttpCode(),
+                    'request_id' => $e->getRequestId() 
+            ];
+        } catch (OpenpayApiRequestError $e) {
+            return [
+                    'category' => $e->getCategory(),
+                    'error_code' => $e->getErrorCode(),
+                    'description' => $e->getMessage(),
+                    'http_code' => $e->getHttpCode(),
+                    'request_id' => $e->getRequestId()
+                   ];
+        } catch (OpenpayApiConnectionError $e) {
+            return [
+                    'category' => $e->getCategory(),
+                    'error_code' => $e->getErrorCode(),
+                    'description' => $e->getMessage(),
+                    'http_code' => $e->getHttpCode(),
+                    'request_id' => $e->getRequestId()
+                   ];
+        } catch (OpenpayApiAuthError $e) {
+            return [
+                    'category' => $e->getCategory(),
+                    'error_code' => $e->getErrorCode(),
+                    'description' => $e->getMessage(),
+                    'http_code' => $e->getHttpCode(),
+                    'request_id' => $e->getRequestId()
+                   ];
+        } catch (OpenpayApiError $e) {
+            return [
+                    'category' => $e->getCategory(),
+                    'error_code' => $e->getErrorCode(),
+                    'description' => $e->getMessage(),
+                    'http_code' => $e->getHttpCode(),
+                    'request_id' => $e->getRequestId()
+                   ];
+        } catch (Exception $e) {
+            return [
+                    'category' => $e->getCategory(),
+                    'error_code' => $e->getErrorCode(),
+                    'description' => $e->getMessage(),
+                    'http_code' => $e->getHttpCode(),
+                    'request_id' => $e->getRequestId()
+                   ];
+        }
+    }
+
+    public function ProccessPaymentOpenpayOld($request, $event, $transaction_data)
     {
   
         $COUNTRY_CODE = 'MX';
