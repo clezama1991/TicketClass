@@ -940,8 +940,6 @@ class EventCheckoutController extends Controller
             
             Openpay::setProductionMode($OPENPAY_PRODUCTION_MODE); //Openpay::setProductionMode(env('OPENPAY_PRODUCTION_MODE'));
 
-            $openpay = Openpay::getInstance('mzdtln0bmtms6o3kck8f', 'sk_e568c42a6c384b7ab02cd47d2e407cab');
-            
             $customer = array(
                 'name' => $request->holder_name,
                 'last_name' => null,
