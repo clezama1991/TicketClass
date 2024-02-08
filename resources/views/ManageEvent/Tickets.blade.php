@@ -139,6 +139,7 @@
                     <th>Total Tickets</th>
                     <th>Precio</th>
                     <th>Vendido</th>
+                    <th>Cortesia</th>    
                     <th>Ingresos</th>
                     <th>Restante</th>
                  </tr>
@@ -150,6 +151,7 @@
                     <th>Total Tickets</th>
                     <th>$ Precio</th>
                     <th>Vendido</th>
+                    <th>Cortesia</th>
                     <th>$ Ingresos</th>
                     <th>Restante</th>
                     <th>Opciones</th>
@@ -164,6 +166,7 @@
                     <th>Total Tickets</th>
                     <th>$ Precio</th>
                     <th>Vendido</th>
+                    <th>Cortesia</th>
                     <th>$ Ingresos</th>
                     <th>Restante</th>
                     <th>Opciones</th>
@@ -198,7 +201,8 @@
                         <td>{{ $ticket->seat_zone ?? 'S/I' }}</td>
                         <td class="text-right">{{ $ticket->quantity_available === null ? '∞' : $ticket->quantity_available }}</td>
                         <td class="text-right">{{ $ticket->is_free ? trans('Order.free') : $ticket->price }}</td> 
-                        <td class="text-right">{{ $ticket->quantity_sold }}</td>
+                        <td class="text-right">{{ $ticket->quantity_without_free }}</td>
+                        <td class="text-right">{{ $ticket->quantity_free }}</td>
                         <td class="text-right">{{ money($ticket->sales_volume + $ticket->organiser_fees_volume, $event->currency) }}</td>
                         <td class="text-right">{{ $ticket->quantity_available === null ? '∞' : $ticket->quantity_remaining }}</td>
                         <td>
@@ -263,9 +267,14 @@
                                                     <ul class="nav nav-section nav-justified mt5 mb5">
                                                         <li>
                                                             <div class="section">
-                                                                <h4 class="nm">{{ $ticket->quantity_sold }}</h4>
-
+                                                                <h4 class="nm">{{ $ticket->quantity_without_free }} </h4> 
                                                                 <p class="nm text-muted">@lang('Ticket.sold')</p>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div class="section">
+                                                                <h4 class="nm">{{ $ticket->quantity_free }} </h4> 
+                                                                <p class="nm text-muted">Cortesia</p>
                                                             </div>
                                                         </li>
                                                         <li>

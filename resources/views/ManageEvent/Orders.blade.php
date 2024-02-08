@@ -69,23 +69,29 @@
         </div>
     </div>
     <div class="col-md-2">
+        <div class="form-group">
+            <label for="payment_method">Metodo Pago</label>
+            <select name="payment_method" id="payment_method" class="form-control">
+                <option value="" {{$payment_method=='' ? 'selected' : ''}}>Todos</option>
+                @foreach (payment_methods() as $item)
+                    <option value="{{$item['id']}}" {{$payment_method==$item['id'] ? 'selected' : ''}}> {{$item['name']}}</option>                    
+                @endforeach
+            </select>
+        </div>
+    </div>
+    <div class="col-md-2">
         <div class="input-group">
             <label for="">Buscar</label>
             <input name='q' value="{{$q}}" placeholder="Buscar" type="text" class="form-control">
-            <span class="input-group-btn">
+            <span class="input-group-btn"> 
+                <button class="btn btn-default" style='
+                margin-top: 25px;
+                margin-left: 5px;   '  type="submit"><i class="ico-search" style="margin-right: 5px"></i>Filtrar</button>
+           
             </span>
         </div>
     </div>
-
-    <div class="col-md-2">
-         <div class="form-group"> 
-            <label class="text-white">0</label>
-             <span class="input-group-btn">
-                 <button class="btn btn-default btn-block" type="submit"><i class="ico-search" style="margin-right: 5px"></i>Filtrar</button>
-             </span>
-         </div>
-     </div>
-
+ 
     {!! Form::close() !!}
 </div>
 </div>
@@ -118,8 +124,8 @@
         </div>
         <div class="col-sm-2">
             <div class="stat-box">
-                <h3>{{$entradas}}</h3>
-                <span>Entradas</span>
+                <h3>{{$entradas}} / {{$cortesia}}</h3>
+                <span>Vendidas / Cortesia</span>
             </div>
         </div>
         <div class="col-sm-2">
@@ -181,6 +187,11 @@
                             @foreach($orders as $order)
                             <tr>
                                 <td>
+                                    @if ($order->name_payment_method=='Cortesia')
+                                        
+                                    <i class="fa fa-gift" aria-hidden="true" title="Entrada De Cortesia"></i>
+                                    @endif
+
                                     <a href='javascript:void(0);' data-modal-id='view-order-{{ $order->id }}' data-href="{{route('showManageOrder', ['order_id'=>$order->id])}}" title="@lang("Order.view_order_num", ["num"=>$order->order_reference])" class="loadModal">
                                         {{$order->order_reference}}
                                     </a>
@@ -215,10 +226,16 @@
                                     @if ($order->is_cancelled)
                                                                         
                                     @else
-                                    
-                                        <a href="javascript:void(0);" data-modal-id="cancel-order-{{ $order->id }}" data-href="{{route('showCancelOrder', ['order_id'=>$order->id])}}" title="@lang("Order.cancel_order")" class="btn btn-xs btn-danger loadModal">
-                                            @lang("Order.refund/cancel")
-                                        </a>
+
+                                        @if ($order->payment_method!='free')
+                                            <a href="javascript:void(0);" data-modal-id="cancel-order-{{ $order->id }}" data-href="{{route('showCancelOrder', ['order_id'=>$order->id])}}" title="@lang("Order.cancel_order")" class="btn btn-xs btn-danger loadModal">
+                                                @lang("Order.refund/cancel")
+                                            </a>
+                                        @else
+                                            <a href="javascript:void(0);" data-modal-id="cancel-order-{{ $order->id }}" data-href="{{route('showCancelOrder', ['order_id'=>$order->id])}}" title="@lang("Order.cancel_order")" class="btn btn-xs btn-danger loadModal">
+                                                @lang("Order.cancel")
+                                            </a>
+                                        @endif
                                                 
                                     @endif
                                     <a data-modal-id="view-order-{{ $order->id }}" data-href="{{route('showManageOrder', ['order_id'=>$order->id])}}" title="@lang("Order.view_order")" class="btn btn-xs btn-primary loadModal">@lang("Order.details")</a>

@@ -1,6 +1,10 @@
 <div role="dialog" class="modal fade " style="display: none;">
-    {!! Form::open(array('url' => route('postCancelOrder', array('order_id' => $order->id)), 'class' => 'closeModalAfter
-    ajax')) !!}
+    @if ($order->payment_method!='free')
+        {!! Form::open(array('url' => route('postCancelOrder', array('order_id' => $order->id)), 'class' => 'closeModalAfter ajax')) !!}
+    @else
+        {!! Form::open(array('url' => route('postCancelOrderFree', array('order_id' => $order->id)), 'class' => 'closeModalAfter ajax')) !!}
+    @endif
+    
     <script>
         $(function () {
             $('input[name=refund_order]').on('change', function () {

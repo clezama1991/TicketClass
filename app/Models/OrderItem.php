@@ -25,4 +25,14 @@ class OrderItem extends MyBaseModel
     {
         return $this->belongsTo(\App\Models\Ticket::class, 'title', 'title');
     }
+    
+    public function tickets()
+    {
+        return $this->belongsTo(\App\Models\Ticket::class, 'ticket_id', 'id');
+    }
+    
+    public function order()
+    {
+        return $this->belongsTo(\App\Models\Order::class, 'order_id', 'id');
+    }
 }

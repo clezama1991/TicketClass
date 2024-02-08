@@ -54,16 +54,22 @@
         </div>
         <div class="col-sm-3">
             <div class="stat-box">
-                <h3>{{ $event->tickets->sum('quantity_sold') }}</h3>
+                <h3>{{ $event->quantity_without_free }}</h3>
                 <span>@lang("Dashboard.tickets_sold")</span>
             </div>
         </div>
         <div class="col-sm-3">
             <div class="stat-box">
+                <h3>{{ $event->quantity_free  }}</h3>
+                <span>Entradas de Cortesia</span>
+            </div>
+        </div>
+        {{-- <div class="col-sm-3">
+            <div class="stat-box">
                 <h3>{{ $event->stats->sum('views') }}</h3>
                 <span>Visitas en la Web</span>
             </div>
-        </div>
+        </div> --}}
 
 
         <div class="col-sm-3">
@@ -196,17 +202,21 @@
                                          <table class="table DataTableAgrupacion">
                                             <thead>
                                                 <tr>
-                                                    <td>Grupo</td>
-                                                    <td>Plataforma</td>
-                                                    <td>Online</td>
+                                                    <th>Grupo</th>
+                                                    <th style="    text-align-last: center;">Plataforma
+                                                        <br>
+                                                        Venta / Cortesia
+
+                                                    </th>
+                                                    <th>Online</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach($tickets_data_totales_agrupadas as $totalesx)
                                                 <tr>
-                                                    <td>{{{$totalesx['label']}}}</td> 
-                                                    <td class="text-center">{{{$totalesx['value']['plata']}}}</td> 
-                                                    <td class="text-center">{{{$totalesx['value']['online']}}}</td> 
+                                                    <td>{{$totalesx['label']}}</td> 
+                                                    <td class="text-center">{{$totalesx['value']['plata']}} / {{$totalesx['value']['cortesia']}}</td> 
+                                                    <td class="text-center">{{$totalesx['value']['online']}}</td> 
                                                 </tr>
                                                 @endforeach
                                             </tbody>
@@ -219,17 +229,21 @@
                                     <table class="table DataTableDetalle w-100">
                                         <thead>
                                             <tr>
-                                                <td>Entrada</td>
-                                                <td>Plataforma</td>
-                                                <td>Online</td>
+                                                <th>Entrada</th>
+                                                <th style="    text-align-last: center;">Plataforma
+                                                    <br>
+                                                    Venta / Cortesia
+
+                                                </th>
+                                                <th>Online</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach($tickets_data_totales as $totales)
                                             <tr>
-                                                <td>{{{$totales['label']}}}</td> 
-                                                <td class="text-center">{{{$totales['value']['plata']}}}</td> 
-                                                <td class="text-center">{{{$totales['value']['online']}}}</td> 
+                                                <td>{{$totales['label']}}</td> 
+                                                <td class="text-center">{{$totales['value']['plata']}} / {{$totales['value']['cortesia']}}</td> 
+                                                <td class="text-center">{{$totales['value']['online']}}</td> 
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -460,7 +474,6 @@
                 $("#Gen").trigger("click");
             });
         </script>
-    @endsection
 
     <script> 
 
@@ -563,4 +576,5 @@
         }
 
     </script>
+    @endsection
 @stop

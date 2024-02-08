@@ -36,6 +36,7 @@ return array(
     'recent_orders'                => 'Pedidos recientes',
     'reference'                    => 'Referencia',
     'refund/cancel'                => 'Reembolso / Cancelar',
+    'cancel'                => 'Cancelar',
     'registered'                   => 'inscrito',
     'status'                       => 'Estado',
     'sub_total'                    => 'Sub Total',
