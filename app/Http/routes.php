@@ -571,6 +571,12 @@ Route::group(
                 'uses' => 'EventOrdersController@postCancelOrder',
             ]);
 
+
+            Route::post('order/{order_id}/cancelfree', [
+                'as'   => 'postCancelOrderFree',
+                'uses' => 'EventOrdersController@postCancelOrderFree',
+            ]);
+
             Route::get('order/{order_id}/reactivate', [
                 'as'   => 'showReactivateOrder',
                 'uses' => 'EventOrdersController@showReactivateOrder',

@@ -378,24 +378,30 @@ table{
                                                 <tr> 
                                                     <td align="center">
                                                       <span class="ticket--info--subtitle"> 
-                                                        @php
-                                                          // Calculating grand total including tax
-                                                          $grand_total = $attendee->ticket->total_price;
-                                                          $tax_amt = ($grand_total * $event->organiser->tax_value) / 100;
-                                                          $grand_total = $attendee->ticket->price_neto;
-                                                        @endphp
-                                                        
-                                                        {{money($grand_total, $order->event->currency)}} <br> 
-                                                        
-                                                        @if ($attendee->ticket->price_service && $attendee->ticket->price_service>0) 
-                                                          ( Mas {{money($attendee->ticket->price_service, $order->event->currency)}} @lang("Public_ViewEvent.inc_fees"))
-                                                        @endif 
 
-                                                        @if ($event->organiser->tax_name && $tax_amt>0) 
-                                                          (inc. {{money($tax_amt, $order->event->currency)}} {{$event->organiser->tax_name}})
-                                                          <br><br>{{$event->organiser->tax_name}} ID: {{ $event->organiser->tax_id }}
-                                                        @endif 
+                                                        @if ($order->payment_method=='free')
+                                                            Cortesia
+                                                        @else
+                                                            
+                                                          @php
+                                                            // Calculating grand total including tax
+                                                            $grand_total = $attendee->ticket->total_price;
+                                                            $tax_amt = ($grand_total * $event->organiser->tax_value) / 100;
+                                                            $grand_total = $attendee->ticket->price_neto;
+                                                          @endphp
+                                                          
+                                                          {{money($grand_total, $order->event->currency)}} <br> 
+                                                          
+                                                          @if ($attendee->ticket->price_service && $attendee->ticket->price_service>0) 
+                                                            ( Mas {{money($attendee->ticket->price_service, $order->event->currency)}} @lang("Public_ViewEvent.inc_fees"))
+                                                          @endif 
 
+                                                          @if ($event->organiser->tax_name && $tax_amt>0) 
+                                                            (inc. {{money($tax_amt, $order->event->currency)}} {{$event->organiser->tax_name}})
+                                                            <br><br>{{$event->organiser->tax_name}} ID: {{ $event->organiser->tax_id }}
+                                                          @endif 
+
+                                                        @endif
                                                       </span>
                                                     </td>
                                                 </tr>  
@@ -460,24 +466,28 @@ table{
                           </div>
 
                           <div class="info2 ">
-                          <h4>@lang("Ticket.ticket_type")</h4>
+                            <h4>@lang("Ticket.ticket_type")</h4>
                               {{$attendee->ticket->title}} 
                               @if($attendee->seats)
                                     <h4 class="ticket--info--subtitle">
                                       Silla: {{{$attendee->seats->seat()}}}
                                     </h4>
                                 @endif 
-                              <h4>@lang("Ticket.price")</h4>
-                              @php
-                                  // Calculating grand total including tax
-                                  $grand_total = $attendee->ticket->total_price;
-                                  $tax_amt = ($grand_total * $event->organiser->tax_value) / 100;
-                                  $grand_total = $attendee->ticket->price_neto;
-                              @endphp
-                              {{money($grand_total, $order->event->currency)}} @if ($attendee->ticket->price_service) ( Mas {{money($attendee->ticket->price_service, $order->event->currency)}} @lang("Public_ViewEvent.inc_fees")) @endif @if ($event->organiser->tax_name) (inc. {{money($tax_amt, $order->event->currency)}} {{$event->organiser->tax_name}})
-                              <br><br>{{$event->organiser->tax_name}} ID: {{ $event->organiser->tax_id }}
-                              @endif
-                                </div>
+                              <h4>@lang("Ticket.price")</h4> 
+                                @if ($order->payment_method=='free')
+                                  Cortesia
+                                @else 
+                                  @php
+                                      // Calculating grand total including tax
+                                      $grand_total = $attendee->ticket->total_price;
+                                      $tax_amt = ($grand_total * $event->organiser->tax_value) / 100;
+                                      $grand_total = $attendee->ticket->price_neto;
+                                  @endphp
+                                  {{money($grand_total, $order->event->currency)}} @if ($attendee->ticket->price_service) ( Mas {{money($attendee->ticket->price_service, $order->event->currency)}} @lang("Public_ViewEvent.inc_fees")) @endif @if ($event->organiser->tax_name) (inc. {{money($tax_amt, $order->event->currency)}} {{$event->organiser->tax_name}})
+                                  <br><br>{{$event->organiser->tax_name}} ID: {{ $event->organiser->tax_id }}
+                                  @endif
+                                @endif
+                            </div>
 
   </div>
   

@@ -165,9 +165,10 @@
                                     <h5>Asientos Apartados: </h5>
                                     <div class="h5">
                                         <div class="form-group">
-                                            <select class="form-control payment_method" name="payment_method" id="payment_method">
-                                              <option value="cash" selected>Efectivo</option> 
-                                              <option value="card">Tarjeta</option> 
+                                            <select class="form-control payment_method" name="payment_method" id="payment_method"> 
+                                                @foreach (payment_methods() as $item)
+                                                    <option value="{{$item['id']}}" {{'cash'==$item['id'] ? 'selected' : ''}}> {{$item['name']}}</option>                    
+                                                @endforeach 
                                             </select>
                                         </div>
                                     </div>
@@ -196,8 +197,9 @@
                                     <div class="h5">
                                         <div class="form-group"> 
                                           <select class="form-control payment_method" name="payment_method" id="payment_method">
-                                            <option value="cash" selected>Efectivo</option> 
-                                            <option value="card">Tarjeta</option> 
+                                            @foreach (payment_methods() as $item)
+                                                <option value="{{$item['id']}}" {{'cash'==$item['id'] ? 'selected' : ''}}> {{$item['name']}}</option>                    
+                                            @endforeach  
                                           </select>
                                         </div>
                                     </div>
@@ -402,6 +404,9 @@
         if(payment_method=='card'){ 
             total_pay = (total_pay) * 1.045;
         }
+        if(payment_method=='free'){ 
+            total_pay = (total_pay) * 0;
+        }
   
         total_pay = parseFloat(total_pay).toFixed(2);
         $("#total_pagar").html(total_pay);
@@ -419,6 +424,10 @@
         if(payment_method=='card'){ 
             total_pay = (total_pay) * 1.045;
         }
+        if(payment_method=='free'){ 
+            total_pay = (total_pay) * 0;
+        }
+  
   
         total_pay = parseFloat(total_pay).toFixed(2);
         $("#total_pagar").html(total_pay);

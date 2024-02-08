@@ -70,7 +70,7 @@
                         </div>
                         @endif
                          <div class="col-sm-6 col-xs-6">
-                            <b>Metodo de Pago</b><br> {{$order->payment_method  == 'card' ? 'Tarjeta' : 'Efectivo'}}
+                            <b>Metodo de Pago</b><br> {{$order->name_payment_method}}
                         </div>
  
                     </div>

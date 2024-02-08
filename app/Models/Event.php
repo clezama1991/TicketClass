@@ -13,6 +13,28 @@ class Event extends MyBaseModel
 
     protected $dates = ['start_date', 'end_date', 'on_sale_date'];
 
+    protected $appends = ['quantity_sold','quantity_free','quantity_without_free'];
+  
+    public function getQuantitySoldAttribute(){
+        return $this->tickets->sum('quantity_sold');
+    }
+
+    public function getQuantityFreeAttribute(){
+        
+        $cortesia=0;
+        $orders = $this->orders->where('payment_method','free')->where('is_cancelled',false);
+
+        foreach ($orders as $key => $order) { 
+            $cortesia += $order->SumQuantyorderItems(); 
+        }
+
+        return $cortesia;
+    }
+
+    public function getQuantityWithoutFreeAttribute(){
+        return $this->quantity_sold - $this->quantity_free;
+    }
+
     /**
      * The validation rules.
      *

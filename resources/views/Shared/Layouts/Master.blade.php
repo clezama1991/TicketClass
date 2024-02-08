@@ -1,15 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ Lang::locale() }}">
 <head>
-    <!--
-              _   _                 _ _
-         /\  | | | |               | (_)
-        /  \ | |_| |_ ___ _ __   __| |_ _______   ___ ___  _ __ ___
-       / /\ \| __| __/ _ \ '_ \ / _` | |_  / _ \ / __/ _ \| '_ ` _ \
-      / ____ \ |_| ||  __/ | | | (_| | |/ /  __/| (_| (_) | | | | | |
-     /_/    \_\__|\__\___|_| |_|\__,_|_/___\___(_)___\___/|_| |_| |_|
 
-    -->
     <title>
         @section('title')
             {{config('app.name')}} -
@@ -29,6 +21,8 @@
     <!--Style-->
     {!! HTML::style(config('attendize.cdn_url_static_assets').'/assets/stylesheet/application.css') !!}
     <!--/Style-->
+    
+    <script src="https://kit.fontawesome.com/b9a310c037.js" crossorigin="anonymous"></script>
 
     @yield('head')
 </head>
@@ -110,10 +104,8 @@
         </div>
         <!--/  header -->
         @endif
-
-        <!--Content-->
-        @yield('content')
-        <!--/Content-->
+ 
+        @yield('content') 
     </div>
 
     <!--To The Top-->
@@ -128,8 +120,8 @@
 {!! HTML::script('assets/javascript/backend.js') !!}
 
 
-{{-- <script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script> --}}
-<script src="//datatables.net/download/build/nightly/jquery.dataTables.js"></script>
+<script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+{{-- <script src="//datatables.net/download/build/nightly/jquery.dataTables.js"></script> --}}
 
 <script>
 

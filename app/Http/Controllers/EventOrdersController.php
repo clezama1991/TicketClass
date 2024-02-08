@@ -35,12 +35,13 @@ class EventOrdersController extends MyBaseController
     {
         $allowed_sorts = ['first_name', 'email', 'order_reference', 'order_status_id', 'created_at'];
 
-        $importes = $pedidos = $entradas = $completados = $otros = 0;
+        $importes = $pedidos = $cortesia= $entradas = $completados = $otros = 0;
 
         $searchQuery = $request->get('q');
         $dateStartQuery = $request->get('date_start');
         $dateEndQuery = $request->get('date_end');
         $statusQuery = $request->get('status');
+        $payment_methodQuery = $request->get('payment_method');
         $user_id = $request->get('user_id');
         $sort_by = (in_array($request->get('sort_by'), $allowed_sorts) ? $request->get('sort_by') : 'created_at');
         $sort_order = $request->get('sort_order') == 'asc' ? 'asc' : 'desc';
@@ -79,6 +80,10 @@ class EventOrdersController extends MyBaseController
                 $orders_all->where('order_status_id', $statusQuery);
             }
             
+            if($payment_methodQuery){
+                $orders_all->where('payment_method', $payment_methodQuery);
+            }
+            
 
             $user_ids = $orders_all->pluck('user_id')->toArray();
             $users = User::whereIn('id',$user_ids)->get();
@@ -107,7 +112,11 @@ class EventOrdersController extends MyBaseController
             $pedidos = $orders->count();
 
             foreach ($orders as $key => $value) {
-                $entradas += $value->SumQuantyorderItems();
+                if($value->payment_method != 'free'){
+                    $entradas += $value->SumQuantyorderItems();
+                }else{
+                    $cortesia += $value->SumQuantyorderItems();
+                }
             }
             
             $completados = $orders->where('order_status_id',1)->count();
@@ -127,6 +136,7 @@ class EventOrdersController extends MyBaseController
                 'date_start'          => $dateStartQuery,
                 'date_end'          => $dateEndQuery,
                 'status'          => $statusQuery,
+                'payment_method'          => $payment_methodQuery,
                 'user_id'          => $user_id,
                 'users'          => $users,
                 'importes'          => $importes,
@@ -134,6 +144,7 @@ class EventOrdersController extends MyBaseController
                 'importes_card'          => $importes_card,
                 'pedidos'          => $pedidos,
                 'entradas'          => $entradas,
+                'cortesia'          => $cortesia,
                 'completados'          => $completados,
                 'otros'          => $otros,
             ];
@@ -412,6 +423,98 @@ class EventOrdersController extends MyBaseController
                     $msg = trans("Controllers.successfully_cancelled_attendees");
             }
  
+            if(count($order->attendees()->withoutCancelled()->get())==0){
+                $order->order_status_id = 4;
+                $order->is_cancelled = true; 
+                $order->save();
+            }  
+ 
+            \Session::flash('message', $msg);
+
+            DB::commit();
+
+        } catch (\Throwable $th) {
+            
+            DB::rollback();
+
+            return response()->json([
+                'status'      => 'error',
+                'redirectUrl' => '',
+            ]);
+        }
+
+        return response()->json([
+            'status'      => 'success',
+            'redirectUrl' => '',
+        ]);
+    }
+    /**
+     * Cancels an order
+     *
+     * @param Request $request
+     * @param $order_id
+     * @return mixed
+     */
+    public function postCancelOrderFree(Request $request, $order_id)
+    {
+        try {
+
+            DB::beginTransaction();
+ 
+            $rules = [
+                'refund_amount' => ['numeric'],
+            ];
+            $messages = [
+                'refund_amount.integer' => trans("Controllers.refund_only_numbers_error"),
+            ];
+
+            if (env('APP_ENV')=='production') {
+                $validator = Validator::make($request->all(), $rules, $messages);
+
+                if ($validator->fails()) {
+                    return response()->json([
+                        'status'   => 'error',
+                        'messages' => $validator->messages()->toArray(),
+                    ]);
+                }
+            }
+
+            $order = Order::scope()->findOrFail($order_id);
+            $attendees = $request->get('attendees');
+            $error_message = false;
+
+            $order->order_status_id = config('attendize.order_refunded');
+
+
+            /*
+            * Cancel the attendees
+            */
+            if ($attendees) {
+                foreach ($attendees as $attendee_id) {
+                    $attendee = Attendee::scope()->where('id', '=', $attendee_id)->first();
+                    $attendee->ticket->decrement('quantity_sold');
+                    $attendee->is_cancelled = 1;
+                    $attendee->save();
+
+                    $eventStats = EventStats::where('event_id', $attendee->event_id)->where('date', $attendee->created_at->format('Y-m-d'))->first();
+                    if($eventStats){
+                        $eventStats->decrement('tickets_sold',  1);
+                    }
+
+                    $seating = explode(",",$order->seating);
+                    $new = \array_diff($seating, [$attendee->seat]);
+                    $new_arr = implode(",",$new);
+
+                    $order->seating = $new_arr;
+                    $order->save();
+
+                    SeatTicket::whereId($attendee->seat)->update(['is_available'=>1]);
+            
+                }
+            } 
+            
+            $msg = trans("Controllers.successfully_cancelled_attendees");
+            
             if(count($order->attendees()->withoutCancelled()->get())==0){
                 $order->order_status_id = 4;
                 $order->is_cancelled = true; 

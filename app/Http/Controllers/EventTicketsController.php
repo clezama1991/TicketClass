@@ -77,13 +77,22 @@ class EventTicketsController extends MyBaseController
                 ]);
             }
 
-            $order_total = $cantidad * $ticket->price_neto;
-            $booking_fee = $cantidad * $ticket->booking_fee;
-            $organiser_booking_fee = $cantidad * $ticket->organiser_booking_fee;
-            $services_fee = $cantidad * $ticket->price_service;
-            $services_fee_neto = $ticket->price_service;
-            $price_neto = $ticket->price_neto;
+            $order_total = 0;
+            $booking_fee = 0;
+            $organiser_booking_fee = 0;
+            $services_fee = 0;
+            $services_fee_neto = 0;
+            $price_neto = 0;
 
+            if($payment_method!='free'){                
+                $order_total = $cantidad * $ticket->price_neto;
+                $booking_fee = $cantidad * $ticket->booking_fee;
+                $organiser_booking_fee = $cantidad * $ticket->organiser_booking_fee;
+                $services_fee = $cantidad * $ticket->price_service;
+                $services_fee_neto = $ticket->price_service;
+                $price_neto = $ticket->price_neto;
+            }
+            
             $event_id = $ticket->event_id;
 
             $order = new Order();
@@ -198,6 +207,7 @@ class EventTicketsController extends MyBaseController
             $orderItem->title = $ticket->title;
             $orderItem->quantity = $cantidad;
             $orderItem->order_id = $order->id;
+            $orderItem->ticket_id = $ticket_id;
             $orderItem->unit_price = $price_neto;
             $orderItem->unit_booking_fee = $booking_fee + $organiser_booking_fee + $services_fee_neto;
             $orderItem->save();

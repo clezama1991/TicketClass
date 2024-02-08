@@ -80,10 +80,17 @@ class EventDashboardController extends MyBaseController
         $tickets_data_totales_agrupadas = [];
         foreach ($event->orders->where('is_cancelled',false) as $key => $value) {
             $plata = 0;
+            $cortesia = 0;
             $online = 0;
             if( is_null($value->payment_gateway_id)){
-                $plata = $value->SumQuantyorderItems();
-            }else{
+                
+                if($value->payment_method != 'free'){
+                    $plata += $value->SumQuantyorderItems();
+                }else{
+                    $cortesia += $value->SumQuantyorderItems();
+                }
+
+             }else{
                 $online = $value->SumQuantyorderItems();
             }
             foreach ($value->orderItems as $key => $orderItems) {
@@ -94,6 +101,7 @@ class EventDashboardController extends MyBaseController
                         'group' => ($orderItems->ticket) ? $orderItems->ticket->group_zone : null,
                         'value' => [
                             'plata' => $plata,
+                            'cortesia' => $cortesia,
                             'online' => $online
                         ]
                     ];                    
@@ -103,6 +111,7 @@ class EventDashboardController extends MyBaseController
                         'group' => ($orderItems->ticket) ? $orderItems->ticket->group_zone : null,
                         'value' => [
                             'plata' => $tickets_data_totales[$orderItems->title]['value']['plata'] + $plata,
+                            'cortesia' => $tickets_data_totales[$orderItems->title]['value']['cortesia'] + $cortesia,
                             'online' => $tickets_data_totales[$orderItems->title]['value']['online'] + $online
                         ]
                     ];
@@ -114,6 +123,7 @@ class EventDashboardController extends MyBaseController
         foreach ($tickets_data_totales as $key => $value) {
 
             $plata = $value['value']['plata'] ?? 0;
+            $cortesia = $value['value']['cortesia'] ?? 0;
             $online = $value['value']['online'] ?? 0; 
 
             if(!in_array($value['group'], $tickets_data_agrupadas_id)){
@@ -122,6 +132,7 @@ class EventDashboardController extends MyBaseController
                     'label' => $value['group'],
                     'value' => [
                         'plata' => $plata,
+                        'cortesia' => $cortesia,
                         'online' => $online
                     ]
                 ];                    
@@ -130,6 +141,7 @@ class EventDashboardController extends MyBaseController
                     'label' => $value['group'],
                     'value' => [
                         'plata' => $tickets_data_totales_agrupadas[$value['group']]['value']['plata'] + $plata,
+                        'cortesia' => $tickets_data_totales_agrupadas[$value['group']]['value']['cortesia'] + $cortesia,
                         'online' => $tickets_data_totales_agrupadas[$value['group']]['value']['online'] + $online
                     ]
                 ];

@@ -12,6 +12,38 @@ class Ticket extends MyBaseModel
 
     protected $dates = ['start_sale_date', 'end_sale_date'];
 
+    
+    protected $appends = ['quantity_free','quantity_without_free'];
+  
+    public function getQuantityFrexeAttribute(){
+        $cortesia = 0;
+        $orders = $this->orders;
+        foreach ($orders as $key => $order) {
+            if ($order->order->payment_method == 'free' && $order->order->is_cancelled == false) {
+                $cortesia += $order->SumQuantyorderItems();
+             }
+        }
+        
+        return $cortesia;
+    }
+
+    public function getQuantityFreeAttribute(){
+        $free = 0;
+        $orders = $this->orders->where('is_cancelled',false);
+        foreach ($orders as $key => $order) {
+            if ($order->order->payment_method == 'free'  && $order->order->is_cancelled == false) {
+                $free+= $order->quantity;
+            }
+        }
+        
+        return $free;
+    }
+
+    public function getQuantityWithoutFreeAttribute(){
+        return $this->quantity_sold - $this->quantity_free;
+    }
+
+    
     /**
      * The rules to validate the model.
      *
@@ -86,6 +118,16 @@ class Ticket extends MyBaseModel
     public function order()
     {
         return $this->belongsToMany(\App\Models\Order::class);
+    }
+
+    /**
+     * The order associated with the ticket.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function orders()
+    {
+        return $this->hasMany(\App\Models\OrderItem::class);
     }
 
     /**

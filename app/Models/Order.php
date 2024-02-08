@@ -84,6 +84,32 @@ class Order extends MyBaseModel
     }
 
     /**
+     * The event associated with the order.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function GetNamePaymentMethodAttribute()
+    {
+        $name = '';
+        switch ($this->payment_method) {
+            case 'card':
+                $name = 'Tarjeta';
+                break;
+            case 'cash':
+                $name = 'Efectivo';
+                break; 
+            case 'free':
+                $name = 'Cortesia';
+                break; 
+            default:
+                # code...
+                break;
+        }
+
+        return $name;
+    }
+
+    /**
      * The tickets associated with the order.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

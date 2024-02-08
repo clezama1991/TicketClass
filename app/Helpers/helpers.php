@@ -15,4 +15,26 @@ if (!function_exists('money')) {
     }
 }
 
+if (!function_exists('payment_methods')) {
+
+    function payment_methods()
+    {
+        $methods = [
+            [
+                'id' => 'cash',
+                'name' => 'Efectivo',
+            ],
+            [
+                'id' => 'card',
+                'name' => 'Tarjeta',
+            ],
+            [
+                'id' => 'free',
+                'name' => 'Cortesia',
+            ]
+        ];
+        return $methods;
+    }
+}
+
 
