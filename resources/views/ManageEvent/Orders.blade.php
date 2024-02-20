@@ -176,8 +176,10 @@
                             <tr>
                                 <th>{{ trans("Order.order_ref") }}</th>
                                 <th>{{ trans("Order.order_date") }}</th>
-                                <th>{{ trans("Attendee.name") }}</th>
+                                <th>{{ trans("Attendee.first_name") }}</th>
                                 <th>{{ trans("Attendee.email") }}</th>
+                                <th>{{ trans("Attendee.last_name") }}</th>
+                                <th>{{ trans("Attendee.phone") }}</th>
                                 <th>{{ trans("Order.amount") }}</th>
                                 <th>{{ trans("Order.status") }}</th> 
                                 <th>Opciones</th>
@@ -200,13 +202,19 @@
                                     {{ $order->created_at->format(config('attendize.default_datetime_format')) }}
                                 </td>
                                 <td>
-                                    {{$order->first_name.' '.$order->last_name}}
+                                    {{$order->fullname}}
                                 </td>
                                 <td>
                                     <a href="javascript:void(0);" class="loadModal"
                                         data-modal-id="MessageOrder"
                                         data-href="{{route('showMessageOrder', ['order_id'=>$order->id])}}"
                                     > {{$order->email}}</a>
+                                </td>
+                                <td>
+                                    {{$order->last_name}}
+                                </td>
+                                <td>
+                                    {{$order->phone}}
                                 </td>
                                 <td>
                                     <a href="#" class="hint--top" data-hint="{{money($order->amount, $event->currency)}} +{{money($order->services_fee, $event->currency)}} + {{money($order->organiser_booking_fee, $event->currency)}} @lang("Order.organiser_booking_fees")">

@@ -80,10 +80,16 @@
                     <thead>
                         <tr>
                             <th>
-                               {!!Html::sortable_link(trans("Attendee.name"), $sort_by, 'first_name', $sort_order, ['q' => $q , 'page' => $attendees->currentPage()])!!}
+                               {!!Html::sortable_link(trans("Attendee.first_name"), $sort_by, 'first_name', $sort_order, ['q' => $q , 'page' => $attendees->currentPage()])!!}
                             </th>
                             <th>
                                {!!Html::sortable_link(trans("Attendee.email"), $sort_by, 'email', $sort_order, ['q' => $q , 'page' => $attendees->currentPage()])!!}
+                            </th>
+                            <th>
+                               {!!Html::sortable_link(trans("Attendee.phone"), $sort_by, 'phone', $sort_order, ['q' => $q , 'page' => $attendees->currentPage()])!!}
+                            </th>
+                            <th>
+                               {!!Html::sortable_link(trans("Attendee.last_name"), $sort_by, 'last_name', $sort_order, ['q' => $q , 'page' => $attendees->currentPage()])!!}
                             </th>
                             <th>
                                {!!Html::sortable_link(trans("ManageEvent.ticket"), $sort_by, 'ticket_id', $sort_order, ['q' => $q , 'page' => $attendees->currentPage()])!!}
@@ -103,6 +109,10 @@
                                     data-href="{{route('showMessageAttendee', ['attendee_id'=>$attendee->id])}}"
                                     > {{$attendee->email}}</a>
                             </td>
+                            <td>{{{$attendee->phone}}}</td>
+
+                            <td>{{{$attendee->last_name}}}</td>
+
                             <td>
                                 {{{$attendee->ticket->title}}}
                             </td>

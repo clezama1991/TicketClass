@@ -90,7 +90,7 @@
                         class="at list-group-item"
                         :class = "{arrived : attendee.has_arrived || attendee.has_arrived == '1'}"
                         >
-                            @lang("Attendee.name"): <b>@{{ attendee.first_name }} @{{ attendee.last_name }} </b> &nbsp; <span v-if="!attendee.is_payment_received" class="label label-danger">@lang("Order.awaiting_payment")</span>
+                            @lang("Attendee.name"): <b>@{{ attendee.first_name }} </b> &nbsp; <span v-if="!attendee.is_payment_received" class="label label-danger">@lang("Order.awaiting_payment")</span>
                         <br>
                             @lang("Order.reference"): <b>@{{ attendee.order_reference + '-' + attendee.reference_index }}</b>
                         <br>

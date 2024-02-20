@@ -27,6 +27,7 @@ class Attendee extends MyBaseModel
         'first_name',
         'last_name',
         'email',
+        'phone',
         'event_id',
         'order_id',
         'ticket_id',
@@ -142,7 +143,8 @@ class Attendee extends MyBaseModel
      */
     public function getFullNameAttribute()
     {
-        return $this->first_name . ' ' . $this->last_name;
+        return $this->first_name;
+        // return $this->first_name . ' ' . $this->last_name;
     }
 
 

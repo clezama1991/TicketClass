@@ -129,7 +129,7 @@
                               <h4>@lang("Ticket.attendee_ref")</h4>
                                   {{$attendee->reference}}
                               <h4>@lang("Ticket.name")</h4>
-                                  {{$attendee->first_name.' '.$attendee->last_name}}--}}
+                                  {{$attendee->first_name}}--}}
                                   {{--</div>--}}
 
                   </div>

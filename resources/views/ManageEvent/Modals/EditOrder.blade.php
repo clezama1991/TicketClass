@@ -38,6 +38,12 @@
                         <input type="text" name="email" class="form-control" value="{{ $order->email }}">
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <label for="phone" class="form-control-label">@lang("Attendee.phone")</label>
+                        <input type="text" name="phone" class="form-control" value="{{ $order->phone }}">
+                    </div>
+                </div>
             </div> <!-- /end modal body-->
 
             <div class="modal-footer">

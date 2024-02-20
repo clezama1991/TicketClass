@@ -41,6 +41,7 @@ class EventTicketsController extends MyBaseController
             $nombre = $request->get('first_name');
             $apellido = $request->get('last_name');
             $email = $request->get('email');
+            $phone = $request->get('phone');
             $cantidad = $request->get('quantity');
             $email_ticket = $request->get('email_ticket');
             $getasientos = explode(',', $request->get('asientos_marcados')); 
@@ -111,6 +112,7 @@ class EventTicketsController extends MyBaseController
             $order->first_name = strip_tags($nombre);
             $order->last_name = strip_tags($apellido);
             $order->email = $email;
+            $order->phone = $phone;
             $order->order_status_id = 1;
             $order->amount = $order_total;
             $order->booking_fee = $booking_fee;
@@ -221,6 +223,7 @@ class EventTicketsController extends MyBaseController
                 $attendee->first_name = strip_tags($nombre);
                 $attendee->last_name = strip_tags($apellido);
                 $attendee->email = $email;
+                $attendee->phone = $phone;
                 $attendee->event_id = $event_id;
                 $attendee->order_id = $order->id;
                 $attendee->ticket_id = $ticket_id;

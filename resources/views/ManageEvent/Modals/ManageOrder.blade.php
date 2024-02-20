@@ -41,7 +41,7 @@
                 <div class="p0 well bgcolor-white order_overview">
                     <div class="row">
                         <div class="col-sm-6 col-xs-6">
-                            <b>@lang("Attendee.first_name")</b><br> {{$order->first_name}}
+                            <b>@lang("Attendee.first_name")</b><br> {{$order->fullname}}
                         </div>
                         <div class="col-sm-6 col-xs-6">
                             <b>@lang("Attendee.last_name")</b><br> {{$order->last_name}}
@@ -73,6 +73,10 @@
                             <b>Metodo de Pago</b><br> {{$order->name_payment_method}}
                         </div>
  
+                        <div class="col-sm-6 col-xs-6">
+                            <b>@lang("Attendee.phone")</b><br> {{$order->phone}}
+                        </div>
+
                     </div>
                 </div>
 

@@ -216,7 +216,7 @@
                             <div class="col-md-12">
                                 <h4>Asistente</h4>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                 {!! Form::label('first_name', trans("Attendee.first_name"), array('class'=>'control-label required')) !!}
 
@@ -227,7 +227,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                 {!! Form::label('last_name', trans("Attendee.last_name"), array('class'=>'control-label')) !!}
 
@@ -237,7 +237,17 @@
                                             ))  !!}
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                {!! Form::label('phone', trans("Attendee.phone"), array('class'=>'control-label')) !!}
+
+                                {!!  Form::text('phone', Input::old('phone'),
+                                            array(
+                                            'class'=>'form-control'
+                                            ))  !!}
+                                </div>
+                            </div>
+                            <div class="col-md-3">
                                 <div class="form-group">
                                         {!! Form::label('email', trans("Attendee.email_address"), array('class'=>'control-label required')) !!}
 
