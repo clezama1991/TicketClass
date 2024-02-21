@@ -635,6 +635,7 @@ class EventCheckoutController extends Controller
             $order->email = $request_data['order_email'];
             $order->order_status_id = isset($request_data['pay_offline']) ? config('attendize.order_awaiting_payment') : config('attendize.order_complete');
             $order->amount = $ticket_order['order_neto_price_without_paypal'];
+            $order->order_date = DB::raw('CURRENT_DATE');
             $order->amount_payment = $ticket_order['order_neto_price_online'];
             $order->services_fee = $ticket_order['order_total_price_service'];
             $order->booking_fee = $ticket_order['booking_fee'];

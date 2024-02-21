@@ -8,6 +8,7 @@ use DateInterval;
 use Carbon\Carbon;
 use App\Models\Event;
 use App\Models\EventStats;
+use App\Models\Order;
 
 class EventDashboardController extends MyBaseController
 {
@@ -45,12 +46,14 @@ class EventDashboardController extends MyBaseController
          * Otherwise, if a date does exist use these values
          */
         $result = [];
+        $resultFree = [];
         $tickets_data = [];
         foreach ($dateItter as $date) {
             $views = 0;
             $sales_volume = 0;
             $unique_views = 0;
             $tickets_sold = 0;
+            $tickets_sold_free = 0;
             $organiser_fees_volume = 0;
 
             foreach ($chartData as $item) {
@@ -60,7 +63,7 @@ class EventDashboardController extends MyBaseController
                     $organiser_fees_volume = $item['organiser_fees_volume'];
                     $unique_views = $item['unique_views'];
                     $tickets_sold = $item['tickets_sold'];
-
+                    
                     break;
                 }
             }
@@ -71,6 +74,24 @@ class EventDashboardController extends MyBaseController
                 'unique_views' => $unique_views,
                 'sales_volume' => $sales_volume + $organiser_fees_volume,
                 'tickets_sold' => $tickets_sold,
+            ];
+
+
+            
+            $Orders = Order::where('event_id', '=', $event->id)
+            ->where('order_date', $date->format('Y-m-d'))
+            ->where('payment_method','free')
+            ->where('is_cancelled',false)
+            ->get();
+
+            foreach ($Orders as $key => $value) {
+                $tickets_sold_free += $value->SumQuantyorderItems(); 
+
+            }
+
+            $resultFree[] = [
+                'date'         => $date->format('Y-m-d'),
+                'tickets_sold' => $tickets_sold_free,
             ];
         }
 
@@ -162,6 +183,7 @@ class EventDashboardController extends MyBaseController
             'tickets_data_totales'      => $tickets_data_totales,
             'tickets_data_totales_agrupadas'      => $tickets_data_totales_agrupadas,
             'chartData'  => json_encode($result),
+            'chartDataFree'  => json_encode($resultFree),
             'ticketData' => json_encode($tickets_data),
         ];
 

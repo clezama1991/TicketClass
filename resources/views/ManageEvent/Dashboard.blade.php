@@ -256,9 +256,29 @@
                 </div>
             </div>
 
+            
         </div>
         <div class="col-md-3 col-sm-6">
             
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel">
+                        <div class="panel-heading panel-default">
+                            <h3 class="panel-title">
+                                @lang("Dashboard.tickets_free")
+                        <span style="color: green; float: right;">
+                            {{$event->quantity_free}} @lang("basic.total")
+                        </span>
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="chart-wrap">
+                                <div style="height:200px;" class="statChart" id="theChartFree"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="panel panel-success ticket">
                 <div class="panel-body">
                     <i class="ico ico-clock"></i>
@@ -478,6 +498,7 @@
     <script> 
 
         var chartData = {!! $chartData  !!};
+        var chartDataFree = {!! $chartDataFree  !!};
         var ticketData = {!! $ticketData  !!};
 
 
@@ -522,6 +543,19 @@
             xkey: 'date',
             ykeys: ['tickets_sold'],
             labels: ["@lang("Dashboard.tickets_sold")"],
+            xLabels: 'day',
+            xLabelAngle: 30,
+            lineColors: ['#0390b5', '#0066ff'],
+            xLabelFormat: function (x) {
+                return formatDate(x);
+            }
+        });
+        new Morris.Line({
+            element: 'theChartFree',
+            data: chartDataFree,
+            xkey: 'date',
+            ykeys: ['tickets_sold'],
+            labels: ["@lang("Dashboard.tickets_free")"],
             xLabels: 'day',
             xLabelAngle: 30,
             lineColors: ['#0390b5', '#0066ff'],

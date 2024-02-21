@@ -17,5 +17,6 @@ return array(
     'this_event_is_on_now'    => 'Este evento ya está en marcha',
     'ticket_sales_volume'     => 'Volumen de venta de entradas',
     'tickets_sold'            => 'Entradas Vendidas',
+    'tickets_free'            => 'Entradas De Cortesias',
     'website_embed_code'      => 'Código de incrustación web',
 );

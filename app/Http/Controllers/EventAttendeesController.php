@@ -153,7 +153,8 @@ class EventAttendeesController extends MyBaseController
             $order = new Order();
             $order->first_name = $attendee_first_name;
             $order->last_name = $attendee_last_name;
-            $order->email = $attendee_email;
+            $order->email = $attendee_email;            
+            $order->order_date = DB::raw('CURRENT_DATE');
             $order->order_status_id = config('attendize.order_complete');
             $order->amount = $ticket_price;
             $order->account_id = Auth::user()->account_id;
@@ -329,6 +330,7 @@ class EventAttendeesController extends MyBaseController
                     $order->first_name = $attendee_first_name;
                     $order->last_name = $attendee_last_name;
                     $order->email = $attendee_email;
+                    $order->order_date = DB::raw('CURRENT_DATE');
                     $order->order_status_id = config('attendize.order_complete');
                     $order->amount = $ticket_price;
                     $order->account_id = Auth::user()->account_id;

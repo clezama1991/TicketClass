@@ -115,6 +115,7 @@ class EventTicketsController extends MyBaseController
             $order->phone = $phone;
             $order->order_status_id = 1;
             $order->amount = $order_total;
+            $order->order_date = DB::raw('CURRENT_DATE');
             $order->booking_fee = $booking_fee;
             $order->organiser_booking_fee = $organiser_booking_fee;
             $order->services_fee = $services_fee;
