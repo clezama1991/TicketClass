@@ -117,19 +117,29 @@
 
 <!--JS-->
 @include("Shared.Partials.LangScript")
-{!! HTML::script('assets/javascript/backend.js') !!}
-
+{!! HTML::script('assets/javascript/backend.js') !!} 
 
 <script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+
+<link href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.dataTables.min.css" rel="stylesheet"/>
+
+<script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+
+
 {{-- <script src="//datatables.net/download/build/nightly/jquery.dataTables.js"></script> --}}
 
 <script>
 
 var table = $('.DataTable').DataTable({
 		"order": [[ 1, "desc" ]],
-		"oLanguage": {
-			"sInfo": "Showing _START_ to _END_ of _TOTAL_ items."
-		}
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+        },
 	});
 
     $(".DataTable #filtros th").each( function ( i ) {  

@@ -182,7 +182,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <div class="panel">
                         <div class="panel-heading panel-default">
                             <h3 class="panel-title">
@@ -203,22 +203,59 @@
                                             <thead>
                                                 <tr>
                                                     <th>Grupo</th>
-                                                    <th style="    text-align-last: center;">Plataforma
-                                                        <br>
-                                                        Venta / Cortesia
-
-                                                    </th>
+                                                    <th>Cortesia</th> 
+                                                    <th>Venta</th>
                                                     <th>Online</th>
+                                                    <th>Total Boletos</th>
+                                                    <th>Total Sin Cargo Por Servicio</th>
+                                                    <th>Total de Cargo</th>
+                                                    <th>Total Vendidos</th>
+
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                @php
+                                                    $totalesxcortesia = 0;
+                                                    $totalesxplata = 0;
+                                                    $totalesxonline = 0;
+                                                    $totalesxtotal = 0;
+                                                    $totalesxsincargo = 0;
+                                                    $totalesxcargo = 0;
+                                                    $totalesxventa = 0;
+                                                @endphp
                                                 @foreach($tickets_data_totales_agrupadas as $totalesx)
+                                                
+                                                @php
+                                                    $totalesxcortesia += $totalesx['value']['cortesia'] ;
+                                                    $totalesxplata += $totalesx['value']['plata'] ;
+                                                    $totalesxonline += $totalesx['value']['online'] ;
+                                                    $totalesxtotal += $totalesx['value']['total'] ;
+                                                    $totalesxsincargo += $totalesx['value']['sincargo'] ;
+                                                    $totalesxcargo += $totalesx['value']['cargo'] ;
+                                                    $totalesxventa += $totalesx['value']['venta'] ;
+                                                @endphp
+                                                
                                                 <tr>
                                                     <td>{{$totalesx['label']}}</td> 
-                                                    <td class="text-center">{{$totalesx['value']['plata']}} / {{$totalesx['value']['cortesia']}}</td> 
+                                                    <td class="text-center">{{$totalesx['value']['cortesia']}} </td>                                                     
+                                                    <td class="text-center">{{$totalesx['value']['plata']}}</td> 
                                                     <td class="text-center">{{$totalesx['value']['online']}}</td> 
+                                                    <td class="text-center">{{$totalesx['value']['total']}}</td> 
+                                                    <td class="text-right">{{ format_money($totalesx['value']['sincargo'],1) }}</td> 
+                                                    <td class="text-right">{{ format_money($totalesx['value']['cargo'],1) }}</td> 
+                                                    <td class="text-right">{{ format_money($totalesx['value']['venta'],1) }}</td>  
                                                 </tr>
                                                 @endforeach
+                                                <tr>
+                                                    <td>-</td>
+                                                    <td class="text-center">{{$totalesxcortesia}}</td>
+                                                    <td class="text-center">{{$totalesxplata}}</td>
+                                                    <td class="text-center">{{$totalesxonline}}</td>
+                                                    <td class="text-center">{{$totalesxtotal}}</td>
+                                                    <td class="text-right">{{format_money($totalesxsincargo, 1 )}}</td>
+                                                    <td class="text-right">{{format_money($totalesxcargo, 1 )}}</td>
+                                                    <td class="text-right">{{format_money($totalesxventa, 1 )}}</td>
+                                                </tr>
                                             </tbody>
                                         </table> 
     
@@ -230,22 +267,57 @@
                                         <thead>
                                             <tr>
                                                 <th>Entrada</th>
-                                                <th style="    text-align-last: center;">Plataforma
-                                                    <br>
-                                                    Venta / Cortesia
-
-                                                </th>
+                                                <th>Cortesia</th> 
+                                                <th>Venta</th>
                                                 <th>Online</th>
+                                                <th>Total Boletos</th>
+                                                <th>Total Sin Cargo Por Servicio</th>
+                                                <th>Total de Cargo</th>
+                                                <th>Total Vendidos</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @php
+                                                $totalescortesia = 0;
+                                                $totalesplata = 0;
+                                                $totalesonline = 0;
+                                                $totalestotal = 0;
+                                                $totalessincargo = 0;
+                                                $totalescargo = 0;
+                                                $totalesventa = 0;
+                                            @endphp
                                             @foreach($tickets_data_totales as $totales)
+                                            @php
+                                                $totalescortesia += $totales['value']['cortesia'] ;
+                                                $totalesplata += $totales['value']['plata'] ;
+                                                $totalesonline += $totales['value']['online'] ;
+                                                $totalestotal += $totales['value']['total'] ;
+                                                $totalessincargo += $totales['value']['sincargo'] ;
+                                                $totalescargo += $totales['value']['cargo'] ;
+                                                $totalesventa += $totales['value']['venta'] ;
+                                            @endphp
+                                            
                                             <tr>
                                                 <td>{{$totales['label']}}</td> 
-                                                <td class="text-center">{{$totales['value']['plata']}} / {{$totales['value']['cortesia']}}</td> 
+                                                <td class="text-center">{{$totales['value']['cortesia']}}</td> 
+                                                <td class="text-center">{{$totales['value']['plata']}}</td> 
                                                 <td class="text-center">{{$totales['value']['online']}}</td> 
+                                                <td class="text-center">{{$totales['value']['total']}}</td> 
+                                                <td class="text-right">{{ format_money($totales['value']['sincargo'],1) }}</td> 
+                                                <td class="text-right">{{ format_money($totales['value']['cargo'],1) }}</td> 
+                                                <td class="text-right">{{ format_money($totales['value']['venta'],1) }}</td>
                                             </tr>
                                             @endforeach
+                                            <tr>
+                                                <td>-</td>
+                                                <td class="text-center">{{$totalescortesia}}</td>
+                                                <td class="text-center">{{$totalesplata}}</td>
+                                                <td class="text-center">{{$totalesonline}}</td>
+                                                <td class="text-center">{{$totalestotal}}</td>
+                                                <td class="text-right">{{format_money($totalessincargo, 1 )}}</td>
+                                                <td class="text-right">{{format_money($totalescargo, 1 )}}</td>
+                                                <td class="text-right">{{format_money($totalesventa, 1 )}}</td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -474,17 +546,35 @@
     @section('foot')
         <script>
             $('.DataTableAgrupacion').DataTable({
-                "order": [[ 1, "desc" ]],
-                "oLanguage": {
-                    "sInfo": "Showing _START_ to _END_ of _TOTAL_ items."
+                "order": [[ 0, "desc" ]],
+                dom: 'Bfrtip',
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
                 },
+                "buttons": [{
+                    extend: 'excelHtml5',
+                    title: 'Reporte de Entrada Agrupado por Zonas',
+                    text: "Exportar a Excel",
+                    exportOptions: {
+                    columns: ":not(.no-exportar)"
+                    }
+                }], 
                 "lengthChange": false,  
             });
 
             $('.DataTableDetalle').DataTable({
-                "order": [[ 1, "desc" ]],
-                "oLanguage": {
-                    "sInfo": "Showing _START_ to _END_ of _TOTAL_ items."
+                "order": [[ 0, "desc" ]],              
+                dom: 'Bfrtip',
+                "buttons": [{
+                    extend: 'excelHtml5',
+                    title: 'Reporte de Entrada Detallado',
+                    text: "Exportar a Excel",
+                    exportOptions: {
+                    columns: ":not(.no-exportar)"
+                    }
+                }],
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
                 },
                 "lengthChange": false, 
             });

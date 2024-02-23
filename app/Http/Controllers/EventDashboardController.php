@@ -103,6 +103,10 @@ class EventDashboardController extends MyBaseController
             $plata = 0;
             $cortesia = 0;
             $online = 0;
+            $sincargo = 0;
+            $cargo = 0;
+            $venta = 0;
+            $total = 0;
             if( is_null($value->payment_gateway_id)){
                 
                 if($value->payment_method != 'free'){
@@ -114,16 +118,25 @@ class EventDashboardController extends MyBaseController
              }else{
                 $online = $value->SumQuantyorderItems();
             }
+
             foreach ($value->orderItems as $key => $orderItems) {
+                $sincargo = $orderItems->quantity * $orderItems->unit_price;
+                $cargo = $orderItems->quantity * $orderItems->unit_booking_fee;
+                $venta = $sincargo + $cargo;
+                $total = $online + $plata;
                 if(!in_array($orderItems->title, $tickets_data_id)){
                     $tickets_data_id[] = $orderItems->title;                    
                     $tickets_data_totales[$orderItems->title] = [
                         'label' => $orderItems->title,
                         'group' => ($orderItems->ticket) ? $orderItems->ticket->group_zone : null,
                         'value' => [
-                            'plata' => $plata,
                             'cortesia' => $cortesia,
-                            'online' => $online
+                            'plata' => $plata,
+                            'online' => $online,
+                            'total' => $total,
+                            'sincargo' => $sincargo,
+                            'cargo' => $cargo,
+                            'venta' => $venta
                         ]
                     ];                    
                 }else{
@@ -131,9 +144,13 @@ class EventDashboardController extends MyBaseController
                         'label' => $orderItems->title,
                         'group' => ($orderItems->ticket) ? $orderItems->ticket->group_zone : null,
                         'value' => [
-                            'plata' => $tickets_data_totales[$orderItems->title]['value']['plata'] + $plata,
                             'cortesia' => $tickets_data_totales[$orderItems->title]['value']['cortesia'] + $cortesia,
-                            'online' => $tickets_data_totales[$orderItems->title]['value']['online'] + $online
+                            'plata' => $tickets_data_totales[$orderItems->title]['value']['plata'] + $plata,
+                            'online' => $tickets_data_totales[$orderItems->title]['value']['online'] + $online,
+                            'total' => $tickets_data_totales[$orderItems->title]['value']['total'] + $total,
+                            'sincargo' => $tickets_data_totales[$orderItems->title]['value']['sincargo'] + $sincargo,
+                            'cargo' => $tickets_data_totales[$orderItems->title]['value']['cargo'] + $cargo,
+                            'venta' => $tickets_data_totales[$orderItems->title]['value']['venta'] + $venta
                         ]
                     ];
                 }    
@@ -146,6 +163,9 @@ class EventDashboardController extends MyBaseController
             $plata = $value['value']['plata'] ?? 0;
             $cortesia = $value['value']['cortesia'] ?? 0;
             $online = $value['value']['online'] ?? 0; 
+            $sincargo = $value['value']['sincargo'] ?? 0; 
+            $cargo = $value['value']['cargo'] ?? 0; 
+            $venta = $value['value']['venta'] ?? 0; 
 
             if(!in_array($value['group'], $tickets_data_agrupadas_id)){
                 $tickets_data_agrupadas_id[] = $value['group'];                    
@@ -154,16 +174,31 @@ class EventDashboardController extends MyBaseController
                     'value' => [
                         'plata' => $plata,
                         'cortesia' => $cortesia,
-                        'online' => $online
+                        'online' => $online,
+                        'sincargo' => $sincargo,
+                        'cargo' => $cargo,
+                        'venta' => $venta,
+                        'total' => $online + $plata
                     ]
                 ];                    
             }else{
+                $plata = $tickets_data_totales_agrupadas[$value['group']]['value']['plata'] + $plata;
+                $cortesia = $tickets_data_totales_agrupadas[$value['group']]['value']['cortesia'] + $cortesia;
+                $online = $tickets_data_totales_agrupadas[$value['group']]['value']['online'] + $online;
+                $sincargo = $tickets_data_totales_agrupadas[$value['group']]['value']['sincargo'] + $sincargo;
+                $cargo = $tickets_data_totales_agrupadas[$value['group']]['value']['cargo'] + $cargo;
+                $venta = $tickets_data_totales_agrupadas[$value['group']]['value']['venta'] + $venta;
+
                 $tickets_data_totales_agrupadas[$value['group']] = [
                     'label' => $value['group'],
                     'value' => [
-                        'plata' => $tickets_data_totales_agrupadas[$value['group']]['value']['plata'] + $plata,
-                        'cortesia' => $tickets_data_totales_agrupadas[$value['group']]['value']['cortesia'] + $cortesia,
-                        'online' => $tickets_data_totales_agrupadas[$value['group']]['value']['online'] + $online
+                        'plata' => $plata,
+                        'cortesia' => $cortesia,
+                        'online' => $online,
+                        'sincargo' => $sincargo,
+                        'cargo' => $cargo,
+                        'venta' => $venta,
+                        'total' => $online + $plata
                     ]
                 ];
             }   
