@@ -19,6 +19,11 @@ class Event extends MyBaseModel
         return $this->tickets->sum('quantity_sold');
     }
 
+    public function cortesias(){
+        
+        return $this->orders->where('payment_method','free')->where('is_cancelled',false);
+    }
+
     public function getQuantityFreeAttribute(){
         
         $cortesia=0;

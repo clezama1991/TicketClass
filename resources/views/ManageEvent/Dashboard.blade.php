@@ -326,6 +326,53 @@
                         </div>
                     </div>
                 </div>
+
+                
+                <div class="col-md-12">
+                    <div class="panel">
+                        <div class="panel-heading panel-default">
+                            <h3 class="panel-title">
+                                Entradas de Cortesias
+                            </h3>
+                        </div>
+                        <div class="panel-body"> 
+                            
+                            <table class="table DataTableCortesias">
+                                <thead>
+                                    <tr>
+                                        <th>Referencia</th>
+                                        <th>Fecha</th> 
+                                        <th>Cantidad</th>
+                                        <th>Zona</th>
+                                        <th>Asientos</th>
+                                        <th>Nombre Completo</th>
+                                        <th>Detalle</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($event->cortesias() as $order)
+                                        <tr>
+                                            <td>{{$order->order_reference}}</td>
+                                            <td>{{ $order->created_at->format(config('attendize.default_datetime_format')) }}</td>
+                                            <td class="text-center">{{$order->SumQuantyorderItems()}}</td>
+                                            <td class="text-center">{{$order->ZoneOrden()}}</td>    
+                                             <td class="text-center">
+                                                @forelse ($order->order_seats_tickets() as $item)
+                                                    
+                                                {{$item}}
+                                                @empty
+                                                    -
+                                                @endforelse 
+                                             </td>
+                                             <td>{{$order->fullname}}</td>
+                                            <td>{{$order->last_name}}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table> 
+                        </div>
+                    </div>
+                </div>
             </div>
 
             
@@ -568,6 +615,23 @@
                 "buttons": [{
                     extend: 'excelHtml5',
                     title: 'Reporte de Entrada Detallado',
+                    text: "Exportar a Excel",
+                    exportOptions: {
+                    columns: ":not(.no-exportar)"
+                    }
+                }],
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
+                },
+                "lengthChange": false, 
+            });
+
+            $('.DataTableCortesias').DataTable({
+                "order": [[ 0, "desc" ]],              
+                dom: 'Bfrtip',
+                "buttons": [{
+                    extend: 'excelHtml5',
+                    title: 'Reporte de Entradas de Cortesias',
                     text: "Exportar a Excel",
                     exportOptions: {
                     columns: ":not(.no-exportar)"

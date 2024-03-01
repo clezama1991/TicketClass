@@ -53,6 +53,15 @@ class Order extends MyBaseModel
         return $quanty;
     }
 
+    public function ZoneOrden()
+    {
+        $quanty  = null;
+        foreach ($this->orderItems as $key => $value) {
+            $quanty = $value->tickets->group_zone;
+        }
+        return $quanty;
+    }
+
     /**
      * The attendees associated with the order.
      *
