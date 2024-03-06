@@ -68,15 +68,6 @@ class EventDashboardController extends MyBaseController
                 }
             }
 
-            $result[] = [
-                'date'         => $date->format('Y-m-d'),
-                'views'        => $views,
-                'unique_views' => $unique_views,
-                'sales_volume' => $sales_volume + $organiser_fees_volume,
-                'tickets_sold' => $tickets_sold,
-            ];
-
-
             
             $Orders = Order::where('event_id', '=', $event->id)
             ->where('order_date', $date->format('Y-m-d'))
@@ -93,6 +84,16 @@ class EventDashboardController extends MyBaseController
                 'date'         => $date->format('Y-m-d'),
                 'tickets_sold' => $tickets_sold_free,
             ];
+
+            $result[] = [
+                'date'         => $date->format('Y-m-d'),
+                'views'        => $views,
+                'unique_views' => $unique_views,
+                'sales_volume' => $sales_volume + $organiser_fees_volume,
+                'tickets_sold' => $tickets_sold - $tickets_sold_free,
+            ];
+
+
         }
 
         $tickets_data_id = [];
