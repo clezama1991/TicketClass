@@ -80,7 +80,7 @@
 
         <div class="col-sm-3">
             <div class="stat-box">
-                <h3>{{ money($event->sales_volume - $event->amout_commision_paypal(), $event->currency) }}</h3>
+                <h3>{{ money($event->amount_orders() + $event->amount_orders_online(), $event->currency) }}</h3>
                 <span>Total Organizador</span>
             </div>
         </div>

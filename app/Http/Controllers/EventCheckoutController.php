@@ -630,8 +630,8 @@ class EventCheckoutController extends Controller
             if ($ticket_order['order_requires_payment'] && !isset($request_data['pay_offline'])) {
                 $order->payment_gateway_id = $ticket_order['payment_gateway']->id;
             }
-            $order->first_name = strip_tags($request_data['order_first_name']);
-            $order->last_name = strip_tags($request_data['order_last_name']);
+            $order->first_name = strip_tags($request_data['order_first_name']).' '.strip_tags($request_data['order_last_name']);
+            $order->last_name = null;
             $order->email = $request_data['order_email'];
             $order->order_status_id = isset($request_data['pay_offline']) ? config('attendize.order_awaiting_payment') : config('attendize.order_complete');
             $order->amount = $ticket_order['order_neto_price_without_paypal'];
