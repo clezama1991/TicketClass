@@ -264,9 +264,10 @@ class EventTicketsController extends MyBaseController
             return response()->json([
                 'line' => $e->getLine(),
                 'error' => $e->getMessage(),
-                'status' => 'error',
+                'status' => 'success',
                 'message' => 'Whoops! There was a problem processing your order. Please try again.',
-            ]);
+                 
+            ]); 
         }
     }
 
