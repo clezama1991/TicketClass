@@ -347,6 +347,59 @@ class EventCheckoutController extends Controller
      * @param $event_id
      * @return \Illuminate\Http\JsonResponse
      */
+    public function postCompletedOrder(Request $request)
+    {
+
+        $transaction_id = $request->get('id');
+        $order = Order::where('transaction_id', '=', $transaction_id)->first();
+        $order->is_completed_payment = true;
+        $order->save();
+
+        $url = route('showOrderDetails', [
+            'is_embedded'     => $this->is_embedded,
+            'order_reference' => $order->order_reference,
+        ]);
+
+        return redirect($url);
+
+    }
+    public function postCancelOrder(Request $request)
+    {
+        
+        $transaction_id = $request->get('id');
+        $order = Order::where('transaction_id', '=', $transaction_id)->first();
+        
+        $attendees = Attendee::where('order_id','=',$order)->get();
+
+        foreach ($attendees as $key => $value) {
+            $attendee_id = $value->id;
+            $attendee = Attendee::scope()->findOrFail($attendee_id);
+            $error_message = false; //Prevent "variable doesn't exist" error message
+ 
+
+            $attendee->ticket->decrement('quantity_sold');
+            $attendee->ticket->decrement('sales_volume', $attendee->ticket->price);
+            $attendee->ticket->event->decrement('sales_volume', $attendee->ticket->price);
+            $attendee->is_cancelled = 1;
+            $attendee->save();
+
+            $eventStats = EventStats::where('event_id', $attendee->event_id)->where('date', $attendee->created_at->format('Y-m-d'))->first();
+            if($eventStats){
+                $eventStats->decrement('tickets_sold',  1);
+                $eventStats->decrement('sales_volume',  $attendee->ticket->price);
+            }
+ 
+            $order->order_status_id = 4;
+            $order->is_cancelled = true;
+            $order->save();
+
+        } 
+
+
+
+
+    }
+
     public function postCreateOrder(Request $request, $event_id)
     {
         //If there's no session kill the request and redirect back to the event homepage.
@@ -411,6 +464,7 @@ class EventCheckoutController extends Controller
                     'amount'      => $orderService->getGrandTotal(),
                     'currency'    => $event->currency->code,
                     'description' => 'Order for customer: ' . $request->get('order_email'),
+                    'order_id' => $order->id,
             ];
 
 
@@ -419,18 +473,28 @@ class EventCheckoutController extends Controller
                 $payment = $this->ProccessPaymentOpenpay($request, $event, $transaction_data);
                 
                 if($payment['error_code']!='200'){
-
-                    return response()->json([
-                        'status'   => 'error',
-                        'messages' => $payment['description'],
-                    ]);
+					session()->flash('message', $payment['description']);
+					return response()->redirectToRoute('showEventCheckout', [
+						'event_id'          => $event_id,
+						'is_payment_failed' => 1,
+					]);
+                    
 
                 }else{
 
                     session()->push('ticket_order_' . $event_id . '.transaction_id',
                     $payment['data']);
     
-                     return $this->completeOrder($event_id);
+                    $this->completeOrder($event_id, true, true);
+
+                    
+                    return response()->json([
+                        'status'      => 'success',
+                        'message'     => 'Your session has expired.',
+                        'redirectUrl' => $payment['url']
+                    ]);
+ 
+
                 }
 
  
@@ -602,7 +666,7 @@ class EventCheckoutController extends Controller
      * @param bool|true $return_json
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
-    public function completeOrder($event_id, $return_json = true)
+    public function completeOrder($event_id, $return_json = true, $openpay = false)
     {
 
         DB::beginTransaction();
@@ -644,6 +708,8 @@ class EventCheckoutController extends Controller
             $order->account_id = $event->account->id;
             $order->event_id = $ticket_order['event_id'];
             $order->is_payment_received = isset($request_data['pay_offline']) ? 0 : 1;
+            $order->is_completed_payment = ($openpay) ? 0 : 1;
+
 
             // Calculating grand total including tax
             $orderService = new OrderService($ticket_order['order_total'], $ticket_order['total_booking_fee'], $event);
@@ -953,8 +1019,11 @@ class EventCheckoutController extends Controller
                 'amount' => $transaction_data['amount'],
                 'currency' => 'MXN',
                 'description' => $transaction_data['description'],
-                'order_id' => 'evt-'.$event->id,
+                'order_id' =>  $transaction_data['order_id'],
                 'device_session_id' => $request->deviceIdHiddenFieldName,
+                'confirm' => false,
+                "use_3d_secure"=>"true",
+                'redirect_url' => url('/completed_order'),
                 'customer' => $customer);
 
             $charge = $openpay->charges->create($chargeRequest);
@@ -962,6 +1031,7 @@ class EventCheckoutController extends Controller
             return [
                 'data' => $charge->id,
                 'error_code' => '200',
+                'url' => $charge->payment_method->url,
                 'description' => 'success'
             ];
 
@@ -1015,109 +1085,6 @@ class EventCheckoutController extends Controller
                    ];
         }
     }
-
-    public function ProccessPaymentOpenpayOld($request, $event, $transaction_data)
-    {
-  
-        $COUNTRY_CODE = 'MX';
-        $activeAccountPaymentGateway = $event->account->getGateway($event->account->payment_gateway_id);
-        
-        if($activeAccountPaymentGateway->config['production_mode']=='0'){
-            $OPENPAY_ID = $activeAccountPaymentGateway->config['apiId0'];
-            $OPENPAY_SK = $activeAccountPaymentGateway->config['apiKeyPivate0'];            
-            $OPENPAY_PRODUCTION_MODE = false;            
-        }else{
-            $OPENPAY_ID = $activeAccountPaymentGateway->config['apiId1'];
-            $OPENPAY_SK = $activeAccountPaymentGateway->config['apiKeyPivate1'];            
-            $OPENPAY_PRODUCTION_MODE = true;            
-        }
-
-        
-        // dd($activeAccountPaymentGateway, $OPENPAY_ID, $COUNTRY_CODE);
-
-        try {
-            // create instance OpenPay
-            $openpay = Openpay::getInstance($OPENPAY_ID, $OPENPAY_SK, $COUNTRY_CODE); //Openpay::getInstance(env('OPENPAY_ID'), env('OPENPAY_SK'));
-            
-            Openpay::setProductionMode($OPENPAY_PRODUCTION_MODE); //Openpay::setProductionMode(env('OPENPAY_PRODUCTION_MODE'));
-            
-            // create object customer
-            $customer = array(
-                'name' => $request->holder_name,
-                // 'last_name' => $request->last_name,
-                'email' => 'test@gmail.com'
-            );
-
-            // create object charge
-            $chargeRequest =  array(
-                "method" => "card",
-                'source_id' => $request->token_id,
-                'device_session_id' => $request->deviceIdHiddenFieldName,
-                'amount' => $transaction_data['amount'],
-                'description' => $transaction_data['description'],
-                'customer' => $customer,
-                'send_email' => false,
-                'confirm' => false,
-                'redirect_url' => 'http://www.openpay.mx/index.html'
-            );
-
-            $charge = $openpay->charges->create($chargeRequest);
-
-            return [
-                'data' => $charge->id,
-                'error_code' => '200',
-                'description' => 'success'
-            ];
-
-        } catch (OpenpayApiTransactionError $e) {
-            return [ 
-                    'category' => $e->getCategory(),
-                    'error_code' => $e->getErrorCode(),
-                    'description' => $e->getMessage(),
-                    'http_code' => $e->getHttpCode(),
-                    'request_id' => $e->getRequestId() 
-            ];
-        } catch (OpenpayApiRequestError $e) {
-            return [
-                    'category' => $e->getCategory(),
-                    'error_code' => $e->getErrorCode(),
-                    'description' => $e->getMessage(),
-                    'http_code' => $e->getHttpCode(),
-                    'request_id' => $e->getRequestId()
-                   ];
-        } catch (OpenpayApiConnectionError $e) {
-            return [
-                    'category' => $e->getCategory(),
-                    'error_code' => $e->getErrorCode(),
-                    'description' => $e->getMessage(),
-                    'http_code' => $e->getHttpCode(),
-                    'request_id' => $e->getRequestId()
-                   ];
-        } catch (OpenpayApiAuthError $e) {
-            return [
-                    'category' => $e->getCategory(),
-                    'error_code' => $e->getErrorCode(),
-                    'description' => $e->getMessage(),
-                    'http_code' => $e->getHttpCode(),
-                    'request_id' => $e->getRequestId()
-                   ];
-        } catch (OpenpayApiError $e) {
-            return [
-                    'category' => $e->getCategory(),
-                    'error_code' => $e->getErrorCode(),
-                    'description' => $e->getMessage(),
-                    'http_code' => $e->getHttpCode(),
-                    'request_id' => $e->getRequestId()
-                   ];
-        } catch (Exception $e) {
-            return [
-                    'category' => $e->getCategory(),
-                    'error_code' => $e->getErrorCode(),
-                    'description' => $e->getMessage(),
-                    'http_code' => $e->getHttpCode(),
-                    'request_id' => $e->getRequestId()
-                   ];
-        }
-    }
+ 
 }
 

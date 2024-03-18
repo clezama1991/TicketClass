@@ -307,12 +307,12 @@
                                     {!! nl2br(e($event->pre_order_display_message)) !!}
                                 </div>
                             @endif
+                            {!! Form::hidden('is_embedded', $is_embedded) !!}
 
-                            <div class="row">
+                            <div class="row d-none">
                                 <div class="col-12">
                                     <div class="card border-0">
                                         <div class="card-body">
-                                            {!! Form::hidden('is_embedded', $is_embedded) !!}
                                             {!! Form::submit(trans("Public_ViewEvent.checkout_submit"), ['id' => 'pay-button', 'class' => 'btn btn-lg btn-success card-submit', 'style' => 'width:100%;']) !!}
                                         </div>
                                     </div>
@@ -328,6 +328,7 @@
     <img src="https://cdn.attendize.com/lg.png" />
 </section>
 @if(session()->get('message'))
+
     <script>showMessage('{{session()->get('message')}}');</script>
 @endif
 

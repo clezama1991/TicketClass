@@ -162,14 +162,22 @@ Route::group(
             'as'   => 'showEventCheckoutPaymentReturn',
             'uses' => 'EventCheckoutController@showEventCheckoutPaymentReturn',
         ]);
-
-
+ 
         Route::post('{event_id}/checkout/create', [
             'as'   => 'postCreateOrder',
             'uses' => 'EventCheckoutController@postCreateOrder',
         ]);
+
     });
 
+    Route::get('completed_order', [
+        'as'   => 'postCompletedOrder',
+        'uses' => 'EventCheckoutController@postCompletedOrder',
+    ]);
+    Route::get('cancel_order', [
+        'as'   => 'postCancelOrder',
+        'uses' => 'EventCheckoutController@postCancelOrder',
+    ]);
     /*
      * Public view order routes
      */

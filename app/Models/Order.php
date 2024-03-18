@@ -34,6 +34,32 @@ class Order extends MyBaseModel
         'order_email.email'         => 'Please enter a valid email',
     ];
 
+    
+    /**
+     * Boot all of the bootable traits on the model.
+     */
+    public static function boot()
+    {
+        parent::boot();
+        
+        static::creating(function ($order) {
+            $user_id = null;
+            if(Auth::check()) {
+                $user_id = Auth::user()->id;
+            } 
+            do {
+                    //generate a random string using Laravel's str_random helper
+                    $token = Str::Random(5) . date('jn');
+                    
+            } //check if the token already exists and if it does, try again 
+			while (Order::where('order_reference', $token)->first());
+            
+            $order->order_reference = $token;
+            $order->user_id = $user_id;
+        
+		});
+    }
+    
     /**
      * The items associated with the order.
      *
@@ -234,30 +260,6 @@ class Order extends MyBaseModel
         return file_exists($pdf_file);
     }
 
-    /**
-     * Boot all of the bootable traits on the model.
-     */
-    public static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($order) {
-            $user_id = null;
-            if(Auth::check()) {
-                $user_id = Auth::user()->id;
-            } 
-            do {
-                    //generate a random string using Laravel's str_random helper
-                    $token = Str::Random(5) . date('jn');
-                    
-            } //check if the token already exists and if it does, try again 
-			while (Order::where('order_reference', $token)->first());
-            
-            $order->order_reference = $token;
-            $order->user_id = $user_id;
-        
-		});
-    }
 
     
     public function order_seats_tickets(){

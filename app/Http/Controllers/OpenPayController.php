@@ -32,12 +32,12 @@ use App\Models\Event;
     {
  
  
-        $event = Event::findOrFail(52);
+        $event = Event::findOrFail(61);
 
         $activeAccountPaymentGateway = $event->account->getGateway($event->account->payment_gateway_id);
  
-        $OPENPAY_ID = $activeAccountPaymentGateway->config['apiId'];
-        $OPENPAY_SK = $activeAccountPaymentGateway->config['apiKey'];
+        $OPENPAY_ID = 'mxovvyuwdcugptyk5j15';
+        $OPENPAY_SK = 'sk_18f9ae7d01304a5faf0f27a71080e238';
         $COUNTRY_CODE = 'MX';
         $OPENPAY_PRODUCTION_MODE = false;
         $OPENPAY_AMOUNT = 500;
@@ -49,32 +49,35 @@ use App\Models\Event;
             $openpay = Openpay::getInstance($OPENPAY_ID, $OPENPAY_SK, $COUNTRY_CODE); //Openpay::getInstance(env('OPENPAY_ID'), env('OPENPAY_SK'));
             
             Openpay::setProductionMode($OPENPAY_PRODUCTION_MODE); //Openpay::setProductionMode(env('OPENPAY_PRODUCTION_MODE'));
-            
-            // create object customer
+
             $customer = array(
                 'name' => $request->holder_name,
-                // 'last_name' => $request->last_name,
-                'email' => 'test@gmail.com'
-            );
+                'last_name' => null,
+                'phone_number' => null,
+                'email' => 'test@gmail.com');
 
-            // create object charge
-            $chargeRequest =  array(
-                "method" => "card",
+            $chargeRequest = array(
+                'method' => 'card',
                 'source_id' => $request->token_id,
-                'device_session_id' => $request->deviceIdHiddenFieldName,
                 'amount' => 100,
-                'description' => 'Cargo terminal virtual a mi merchant',
-                'customer' => $customer,
-                'send_email' => false,
-                'confirm' => false,
-                'redirect_url' => 'http://www.openpay.mx/index.html'
-            );
+                'currency' => 'MXN',
+                "use_3d_secure"=>true,
+                "redirect_url"=>route('postCompletedOrder', ['event_id' => 61]),
+                'description' => 'asdad',
+                'order_id' =>  rand(),
+                'device_session_id' => $request->deviceIdHiddenFieldName,
+                'customer' => $customer);
 
             $charge = $openpay->charges->create($chargeRequest);
+            // dd($charge, $charge->payment_method->url);
 
-            return response()->json([
-                'data' => $charge->id
-            ]);
+            return redirect($charge->payment_method->url);
+            
+            return [
+                'data' => $charge,
+                'error_code' => '200',
+                'description' => 'success'
+            ];
 
         } catch (OpenpayApiTransactionError $e) {
             return response()->json([
