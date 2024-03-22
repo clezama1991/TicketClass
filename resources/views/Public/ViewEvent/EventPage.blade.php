@@ -221,7 +221,7 @@
                                                                     </div>
                                                                 </div>
 
-                                                                <div class="row m-5 mapa{{$ticket->id}}">
+                                                                <div class="row m-1 mapa{{$ticket->id}}">
  
                                                                     @if ($ticket->select_seat == 1)
                                                                         {{-- <div class="col-md-12"
@@ -328,10 +328,7 @@
                                                                 
                                                                     @if ($ticket->select_seat == 1)
                                                                         <div class="col-md-12"> 
-                                                                            <div class="row" style="text-align: justify;">
-                                                                            <div class="col-md-3" >
-                                                                                <h5>Filas</h5>
-                                                                            </div>
+                                                                            <div class="row" style="text-align: justify;"> 
                                                                             <div class="col-md-9">
                                                                                 <h5>Asientos</h5>
                                                                             </div></div>
@@ -339,11 +336,11 @@
                                                                     @endif
                                                                     @foreach ($ticket_seats as $key_file => $seats)
                                                                     
-                                                                        <div class="col-md-12">
-
+                                                                        <div class="col-md-12 mb-4">
+<span style='  white-space: break-word;'> Fila {{ $abecedario[$key_abecedario]}}  <span>
                                                                             <div class="seats__grid">
                                                                                 <ul class="nostyle seats__row "
-                                                                                    style="list-style:none;padding:0;margin:0;display: flex;justify-content: center;">
+                                                                                    style="list-style:none;padding:0;margin:0;display: ruby-text;justify-content: center;">
                                                                                     <li class="seat"
                                                                                         style="font-weight: bolder;width: 30px;position: absolute;left: 20px;">
                                                                                         {{ $abecedario[$key_abecedario]}}</li>
@@ -354,7 +351,7 @@
                                                                                             @if ($seat->is_available != 2)
                                                                                                 <li class="seat seatSelect st0 asiento_{{$seat->id}} 
                                                                                                     {{ $seat->is_available == 3 ? "bg-info" : 'bg-white' }}"
-                                                                                                    style="width: 25px; padding-left: 1px;     border: 1px solid;
+                                                                                                    style="width: 25px;height: 25px; padding-left: 1px;     border: 1px solid;
                                                                                                     border-radius: 5px; margin-right:.6px; margin-left:.6px; font-size:13px"
                                                                                                     id="{{ $seat->id }}"
                                                                                                     data-asiento="{{ $seat->seat() }}"
@@ -371,7 +368,7 @@
                                                                                             @else
                                                                                                 <li class="seat seatSelect st0 asiento_{{$seat->id}} 
                                                                                                     {{ $seat->is_available == 3 ? "bg-info" : 'bg-white' }}"
-                                                                                                    style="width: 25px; padding-left: 1px;     border: 1px solid;
+                                                                                                    style="width: 25px;height: 25px; padding-left: 1px;     border: 1px solid;
                                                                                                     border-radius: 5px; margin-right:.6px; margin-left:.6px;; font-size:13px"
                                                                                                     id="{{ $seat->id }}"
                                                                                                     data-asiento="{{ $seat->seat() }}"
