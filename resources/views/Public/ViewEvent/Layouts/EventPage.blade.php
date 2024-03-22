@@ -67,7 +67,10 @@
                 width: 100% !important;
             }
             }
-
+            .row {
+                padding: 0 !important;
+                margin: 0 !important;
+            }
             img[usemap] {
                 border:0;
                 height:auto;
