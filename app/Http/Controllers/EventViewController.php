@@ -26,6 +26,10 @@ class EventViewController extends Controller
      */
     public function showEventHome(Request $request, $event_id, $slug = '', $preview = false)
     {
+        if($event_id==61){
+            return redirect('https://panel.ticketmatico.com/e/62/gregorian');
+        }
+        
         $event = Event::findOrFail($event_id); 
         $abecedario = range('A', 'Z'); 
 
