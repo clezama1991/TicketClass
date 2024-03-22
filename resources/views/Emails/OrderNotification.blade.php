@@ -56,33 +56,7 @@
             </td>
             <td>
                 {{$order_item->quantity}}
-            </td>
-            <td>
-                @isFree($order_item->unit_price)
-                @lang("Public_ViewEvent.free")
-                @else
-                {{money($order_item->unit_price, $order->event->currency)}}
-                @endif
-            </td>
-            <td>
-                @requiresPayment($order_item->unit_booking_fee)
-                    @isFree($order_item->unit_price)
-                    -
-                    @else
-                    {{money($order_item->unit_booking_fee, $order->event->currency)}}
-                    @endif
-                @else
-                    -
-                @endif
-            </td>
-            <td>
-                @isFree($order_item->unit_price)
-                @lang("Public_ViewEvent.free")
-                @else
-                {{money(($order_item->unit_price + $order_item->unit_booking_fee) * ($order_item->quantity), $order->event->currency)}}
-                @endif
-
-            </td>
+            </td> 
         </tr>
         @endforeach
         <tr>
