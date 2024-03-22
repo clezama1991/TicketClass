@@ -15,6 +15,11 @@ class OrderMailer
         $orderService = new OrderService($order->amount, $order->organiser_booking_fee, $order->event);
         $orderService->calculateFinalCosts();
 
+        $file_name = $order->order_reference;
+        $file_path = public_path(config('attendize.event_pdf_tickets_path')) . '/' . $file_name . '.pdf';
+        $file_exists = file_exists($file_path);
+       
+
         $data = [
             'order'        => $order,
             'attendee'        => $order->attendees,
@@ -22,11 +27,16 @@ class OrderMailer
             'subject'         => 'Compra Exitosa',
             'event'           => $order->event,
             'email_logo'      => $order->event->organiser->full_logo_path,
+            'file_path'      => $file_path,
+            'file_exists'      => $file_exists,
         ];
 
-        Mail::send('Emails.messageTicketsSalesCompleted', $data, function ($message) use ($order, $data) {
+        Mail::send('Emails.messageTicketsSalesCompleted', $data, function ($message) use ($order, $data, $file_path,$file_exists) {
             $message->to($order->email, $order->first_name)
                 ->subject($data['subject'] . ' - Evento '.$order->event->title);
+                if($file_exists){
+                    $message->attach($file_path);
+                }
         });
  
         $data = [
@@ -51,22 +61,33 @@ class OrderMailer
         
         try {
                   
-            $data = [
-                'order' => $order,
-                'orderService' => $orderService
-            ];
 
             $file_name = $order->order_reference;
             $file_path = public_path(config('attendize.event_pdf_tickets_path')) . '/' . $file_name . '.pdf';
-            if (!file_exists($file_path)) {
-                Log::error("Cannot send actual ticket to : " . $order->email . " as ticket file does not exist on disk");
-                return;
-            }
+            $file_exists = file_exists($file_path);
 
-            Mail::send('Mailers.TicketMailer.SendOrderTickets', $data, function ($message) use ($order, $file_path) {
+            if (!file_exists($file_path)) {
+                // Log::error("Cannot send actual ticket to : " . $order->email . " as ticket file does not exist on disk");
+                // return;
+            } 
+
+            $data = [
+                'order'        => $order,
+                'attendee'        => $order->attendees,
+                'message_content' => 'jeje bien',
+                'subject'         => 'Compra Exitosa',
+                'event'           => $order->event,
+                'email_logo'      => $order->event->organiser->full_logo_path,
+                'file_path'      => $file_path,
+                'file_exists'      => $file_exists,
+            ];
+
+            Mail::send('Emails.messageTicketsSalesCompleted', $data, function ($message) use ($order, $file_path,$file_exists) {
                 $message->to($order->email);
                 $message->subject(trans("Controllers.tickets_for_event", ["event" => $order->event->title]));
-                $message->attach($file_path);
+                if($$file_exists){
+                    $message->attach($file_path);
+                }
             });
             
             if (count(Mail::failures()) > 0) {

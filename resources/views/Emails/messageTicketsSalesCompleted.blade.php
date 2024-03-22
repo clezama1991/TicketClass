@@ -217,6 +217,36 @@
             </td>
         </tr>
 
+        <tr>
+            <td>
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff"
+                    style="padding:20px 30px 20px 30px">
+                    <tbody>
+                        <tr>
+                            <td style="font-weight:400;text-align: center;">
+                               Si no se adjunto el boleto digital puedes descargarlo en el siguiente enlace
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td style="height: 20px"></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:400;text-align: center;"> 
+
+                                <a class="ticket_download_link"
+                                href="{{ route('showOrderTickets', ['order_reference' => $order->order_reference] ).'?download=1' }}">
+                                    {{ @trans("Public_ViewEvent.download_tickets") }}</a>  
+                                    
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+
     </tbody>
 </table>
 

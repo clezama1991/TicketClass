@@ -799,10 +799,8 @@ Route::group(
     Route::post('charge', 'OpenPayController@store');
     
     Route::get('/hola', 'OpenPayController@form');
-    
-    
-    Route::get('ValidarOrdenesRechazadas', 'EventCronController@ValidarOrdenesRechazadas');
-    
+      
 
 });
 
+Route::get('ValidarOrdenesRechazadas', 'EventCronController@ValidarOrdenesRechazadas');
