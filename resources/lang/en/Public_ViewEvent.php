@@ -75,4 +75,6 @@ return [
     'your_information'                  => 'Tu información',
     'your_message'                      => 'Tu mensaje',
     'your_name'                         => 'Tu nombre',
+    
+    'download_tickets'                  => 'DESCARGA TUS BOLETOS DIGITALES HACIENDO CLICK AQUI',
 ];

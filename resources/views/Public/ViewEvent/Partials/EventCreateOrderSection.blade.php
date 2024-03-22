@@ -285,6 +285,9 @@
                                                 <div class="well">
                                                     {!! Markdown::parse($event->offline_payment_instructions) !!}
                                                 </div>
+
+                                                {!! Form::submit(trans("Public_ViewEvent.checkout_submit"), ['id' => 'pay-button', 'class' => 'btn btn-lg btn-success card-submit', 'style' => 'width:100%;']) !!}
+                                       
                                             </div>
 
                                         @endif
@@ -313,7 +316,6 @@
                                 <div class="col-12">
                                     <div class="card border-0">
                                         <div class="card-body">
-                                            {!! Form::submit(trans("Public_ViewEvent.checkout_submit"), ['id' => 'pay-button', 'class' => 'btn btn-lg btn-success card-submit', 'style' => 'width:100%;']) !!}
                                         </div>
                                     </div>
                                 </div>
