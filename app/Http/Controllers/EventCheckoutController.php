@@ -258,20 +258,20 @@ class EventCheckoutController extends Controller
          * to the the checkout page.
          */
         if ($request->ajax()) {
+                return response()->json([
+                    'status'      => 'success',
+                    'redirectUrl' => route('showEventCheckout', [
+                            'event_id'    => $event_id,
+                            'is_embedded' => $this->is_embedded,
+                        ]) . '#order_form',
+                ]);
+            }
+        } catch (\Throwable $th) {
             return response()->json([
-                'status'      => 'success',
-                'redirectUrl' => route('showEventCheckout', [
-                        'event_id'    => $event_id,
-                        'is_embedded' => $this->is_embedded,
-                    ]) . '#order_form',
+                'status'  => 'error',
+                'message' => $th->getMessage(),
             ]);
         }
-    } catch (\Throwable $th) {
-        return response()->json([
-            'status'  => 'error',
-            'message' => $th->getMessage(),
-        ]);
-    }
 
         /*
          * Maybe display something prettier than this?
@@ -470,7 +470,10 @@ class EventCheckoutController extends Controller
 
             if($ticket_order['payment_gateway']->id == config('attendize.payment_gateway_openpay')){
 
-                $payment = $this->ProccessPaymentOpenpay($request, $event, $transaction_data);
+				$ticket_order = session()->get('ticket_order_' . $event_id);
+				$request_data = $ticket_order['request_data'][0];
+
+                $payment = $this->ProccessPaymentOpenpay($request, $event, $transaction_data, $request_data);
                 
                 if($payment['error_code']!='200'){
 					session()->flash('message', $payment['description']);
@@ -982,7 +985,7 @@ class EventCheckoutController extends Controller
 
     }
 
-    public function ProccessPaymentOpenpay($request, $event, $transaction_data)
+    public function ProccessPaymentOpenpay($request, $event, $transaction_data, $request_data)
     {
   
         $COUNTRY_CODE = 'MX';
@@ -1003,29 +1006,29 @@ class EventCheckoutController extends Controller
 
         try {
             // create instance OpenPay
-            $openpay = Openpay::getInstance($OPENPAY_ID, $OPENPAY_SK, $COUNTRY_CODE); //Openpay::getInstance(env('OPENPAY_ID'), env('OPENPAY_SK'));
             
-            Openpay::setProductionMode($OPENPAY_PRODUCTION_MODE); //Openpay::setProductionMode(env('OPENPAY_PRODUCTION_MODE'));
+			$openpay = Openpay::getInstance('mgzijadvcenoigcrf4bo','sk_6e2174165e644e42b17d32409e44069c'); 
 
             $customer = array(
-                'name' => $request->holder_name,
-                'last_name' => null,
+                'name' => strip_tags($request_data['order_first_name']),
+                'last_name' => strip_tags($request_data['order_last_name']),
                 'phone_number' => null,
-                'email' => 'test@gmail.com');
+                'email' => $request_data['order_email']
+			);
 
             $chargeRequest = array(
                 'method' => 'card',
-                'source_id' => $request->token_id,
+                //'source_id' => $request->token_id,
                 'amount' => $transaction_data['amount'],
                 'currency' => 'MXN',
                 'description' => $transaction_data['description'],
                 'order_id' =>  $transaction_data['order_id'],
-                'device_session_id' => $request->deviceIdHiddenFieldName,
+                //'device_session_id' => $request->deviceIdHiddenFieldName,
                 'confirm' => false,
                 "use_3d_secure"=>"true",
                 'redirect_url' => url('/completed_order'),
                 'customer' => $customer);
-
+ 
             $charge = $openpay->charges->create($chargeRequest);
 
             return [
@@ -1034,6 +1037,7 @@ class EventCheckoutController extends Controller
                 'url' => $charge->payment_method->url,
                 'description' => 'success'
             ];
+			
 
         } catch (OpenpayApiTransactionError $e) {
             return [ 
@@ -1041,7 +1045,8 @@ class EventCheckoutController extends Controller
                     'error_code' => $e->getErrorCode(),
                     'description' => $e->getMessage(),
                     'http_code' => $e->getHttpCode(),
-                    'request_id' => $e->getRequestId() 
+                    'request_id' => $e->getRequestId(),
+                    'id' => '1'
             ];
         } catch (OpenpayApiRequestError $e) {
             return [
@@ -1049,7 +1054,8 @@ class EventCheckoutController extends Controller
                     'error_code' => $e->getErrorCode(),
                     'description' => $e->getMessage(),
                     'http_code' => $e->getHttpCode(),
-                    'request_id' => $e->getRequestId()
+                    'request_id' => $e->getRequestId(),
+                    'id' => '2'
                    ];
         } catch (OpenpayApiConnectionError $e) {
             return [
@@ -1057,7 +1063,8 @@ class EventCheckoutController extends Controller
                     'error_code' => $e->getErrorCode(),
                     'description' => $e->getMessage(),
                     'http_code' => $e->getHttpCode(),
-                    'request_id' => $e->getRequestId()
+                    'request_id' => $e->getRequestId(),
+                    'id' => '3'
                    ];
         } catch (OpenpayApiAuthError $e) {
             return [
@@ -1065,7 +1072,8 @@ class EventCheckoutController extends Controller
                     'error_code' => $e->getErrorCode(),
                     'description' => $e->getMessage(),
                     'http_code' => $e->getHttpCode(),
-                    'request_id' => $e->getRequestId()
+                    'request_id' => $e->getRequestId(),
+                    'id' => '4'
                    ];
         } catch (OpenpayApiError $e) {
             return [
@@ -1073,7 +1081,8 @@ class EventCheckoutController extends Controller
                     'error_code' => $e->getErrorCode(),
                     'description' => $e->getMessage(),
                     'http_code' => $e->getHttpCode(),
-                    'request_id' => $e->getRequestId()
+                    'request_id' => $e->getRequestId(),
+                    'id' => '5'
                    ];
         } catch (Exception $e) {
             return [
@@ -1081,7 +1090,8 @@ class EventCheckoutController extends Controller
                     'error_code' => $e->getErrorCode(),
                     'description' => $e->getMessage(),
                     'http_code' => $e->getHttpCode(),
-                    'request_id' => $e->getRequestId()
+                    'request_id' => $e->getRequestId(),
+                    'id' => '6'
                    ];
         }
     }

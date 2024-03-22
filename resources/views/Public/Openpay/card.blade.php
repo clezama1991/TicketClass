@@ -3,34 +3,7 @@
 <script type='text/javascript' src="https://openpay.s3.amazonaws.com/openpay-data.v1.min.js"></script>
 
 <script type="text/javascript">
-    $(document).ready(function() {
-
-        OpenPay.setId('mxovvyuwdcugptyk5j15');
-        OpenPay.setApiKey('pk_c41b75b2ce2241fba15391b873fe5c4a');
-        OpenPay.setSandboxMode(true);
-        //Se genera el id de dispositivo
-          var deviceSessionId = OpenPay.deviceData.setup("payment-form", "deviceIdHiddenFieldName");
-
-          $('#pay-button').on('click', function(event) {
-              event.preventDefault();
-              $("#pay-button").prop( "disabled", true);
-              OpenPay.token.extractFormAndCreate('payment-form', sucess_callbak, error_callbak);                
-          });
-
-          var sucess_callbak = function(response) {
-            var token_id = response.data.id;
-            $('#token_id').val(token_id); 
-            $('#payment-form').submit();
-          };
-
-          var error_callbak = function(response) {
-           console.log('aqio',response);
-              var desc = response.data.description != undefined ? response.data.description : response.message;
-              alert("ERROR [" + response.status + "] " + desc);
-              $("#pay-button").prop("disabled", false);
-          };
-
-    });
+    
 </script>
 <style>
     ::-webkit-input-placeholder {
@@ -349,52 +322,14 @@
                    justify-content: center;">
                        <div class="card-body text-center"  style=" display: flex;
                        justify-content: center;">
-                            {!! Form::submit('Pagar Con OpenPay', ['id' => 'pay-button', 'class' => 'btn btn-md btn-primary card-submit', 'style' => 'width:100%;']) !!}
+                            {!! Form::submit('Pagar Con OpenPay', ['id' => 'pay-buttson', 'class' => 'btn btn-md btn-primary card-submit', 'style' => 'width:100%;']) !!}
                        </div>
                    </div>
                </div>
            </div>
           
            <br>
-           <br>
-            <div class="pymnt-cntnt d-none" style="    text-align: left;">
-                <div class="card-expl">
-                    <div class="credit">
-                        <h4>Tarjetas de crédito</h4>
-                    </div>
-                    <div class="debit">
-                        <h4>Tarjetas de débito</h4>
-                    </div>
-                </div>
-                <div class="sctn-row d-none">
-                    <div class="sctn-col l">
-                        <label>Nombre del titular</label><input type="text" class="card-name"
-                            placeholder="Como aparece en la tarjeta" autocomplete="off"
-                            data-openpay-card="holder_name" name="holder_name" value="prueba">
-                    </div>
-                    <div class="sctn-col">
-                        <label>Número de tarjeta</label><input type="text" placeholder="Número de tarjeta" class="card-number1" autocomplete="off"
-                            data-openpay-card="card_number" name="card_number" value="4111111111111111">
-                    </div>
-                </div>
-                <div class="sctn-row d-none">
-                    <div class="sctn-col l">
-                        <label>Fecha de expiración</label>
-                        <div class="sctn-col half l"><input type="number" max="12" class="card-expiry-month" placeholder="Mes"
-                                data-openpay-card="expiration_month" value="12"></div>
-                        <div class="sctn-col half l"><input type="number" min="24" max="26" class="card-expiry-year" placeholder="Año"
-                                data-openpay-card="expiration_year" value="{{date('y')+1}}"></div>
-                    </div>
-                    <div class="sctn-col cvv"><label>Código de seguridad</label>
-                        <div class="sctn-col half l"><input type="number" class="card-cvc" placeholder="3 dígitos"
-                                autocomplete="off" data-openpay-card="cvv2" value="123"></div>
-                    </div>
-                </div>
-                <div class="openpay"> 
-                    <div class="logo"><br><br>Transacciones realizadas vía:</div>
-                    <div class="shield">Tus pagos se realizan de forma segura con encriptación de 256 bits</div>
-                </div>
-            </div>
+           <br> 
         </div>
     </div>
 </div> 

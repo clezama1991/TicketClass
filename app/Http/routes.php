@@ -174,6 +174,7 @@ Route::group(
         'as'   => 'postCompletedOrder',
         'uses' => 'EventCheckoutController@postCompletedOrder',
     ]);
+
     Route::get('cancel_order', [
         'as'   => 'postCancelOrder',
         'uses' => 'EventCheckoutController@postCancelOrder',
@@ -799,5 +800,9 @@ Route::group(
     
     Route::get('/hola', 'OpenPayController@form');
     
+    
+    Route::get('ValidarOrdenesRechazadas', 'EventCronController@ValidarOrdenesRechazadas');
+    
+
 });
 
