@@ -85,7 +85,7 @@ class OrderMailer
             Mail::send('Emails.messageTicketsSalesCompleted', $data, function ($message) use ($order, $file_path,$file_exists) {
                 $message->to($order->email);
                 $message->subject(trans("Controllers.tickets_for_event", ["event" => $order->event->title]));
-                if($$file_exists){
+                if($file_exists){
                     $message->attach($file_path);
                 }
             });
