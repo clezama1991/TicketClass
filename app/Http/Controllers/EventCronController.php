@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Attendee;
 use App\Models\EventStats;
 use App\Models\Order;
+use App\Models\SeatTicket;
 use Carbon\Carbon;
 use Cookie;
 use DB;
@@ -51,7 +52,9 @@ class EventCronController extends Controller
 
                             $attendee->ticket->decrement('quantity_sold');
                             $attendee->ticket->decrement('sales_volume', $attendee->ticket->price);
+                            $attendee->ticket->decrement('organiser_fees_volume', $attendee->ticket->price_service);
                             $attendee->ticket->event->decrement('sales_volume', $attendee->ticket->price);
+                            $attendee->ticket->event->decrement('organiser_fees_volume', $attendee->ticket->price_service);
                             $attendee->is_cancelled = 1;
                             $attendee->save();
 
@@ -59,13 +62,25 @@ class EventCronController extends Controller
                             if($eventStats){
                                 $eventStats->decrement('tickets_sold',  1);
                                 $eventStats->decrement('sales_volume',  $attendee->ticket->price);
+                                $eventStats->decrement('organiser_fees_volume',  $attendee->ticket->price_service);
                             }
                 
                             $order->order_status_id = 4;
                             $order->is_cancelled = true;
                             $order->save();
                             $order->delete();
-        
+                            
+                            if(!is_null($order->seating)){
+                                $array=explode(',',$order->seating); 
+                                $seatings = SeatTicket::whereIn('id',$array)->get();
+                                foreach ($seatings as $key => $seating) {
+                                    $seating->is_available = 1;
+                                    $seating->save();
+                                }
+                            }
+
+
+
                         }
                         
 
@@ -79,7 +94,7 @@ class EventCronController extends Controller
 		        return response()->json(['success' => 'error'], 400);
              }  
 
-		return response()->json(['success' => 'success'], 200);
+		return response()->json(['success' => 'success','count'=> count($orders)], 200);
 
     }
 }
