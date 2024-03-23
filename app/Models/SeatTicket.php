@@ -37,4 +37,9 @@ class SeatTicket extends Model
         return  $abecedario[$this->row-1].''.$this->column;
     }
     
+    public function seatRows(){
+        $abecedario = range('A', 'Z');         
+        return  $abecedario[$this->row-1];
+    }
+    
 }
