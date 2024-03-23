@@ -558,5 +558,16 @@ ICSTemplate;
         return ($this->map) ? $this->map->url : null;
     }
 
+    public function seat_row()
+    {
+        
+        $tickets_id = $this->tickets->pluck('id')->toArray();
+ 
+        $SeatTicket = SeatTicket::whereIn('ticket_id',$tickets_id)->get()->last();
+
+        return $SeatTicket->row ?? 0;
+
+    }
+
 
 }

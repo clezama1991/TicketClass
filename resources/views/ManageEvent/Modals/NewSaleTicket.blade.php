@@ -87,13 +87,12 @@
                                             $titulo_fila = $abecedario[$key_abecedario];
                                         @endphp
                                         <div class="col-md-12">
-                                            
                                             <div class="seats__grid">
                                                 <ul class="nostyle seats__row " style="list-style:none;padding:0;margin:0;display: flex;justify-content: center;">
-                                                    <li class="seat" style="font-weight: bolder;width: 30px;position: absolute;left: 20px;">{{ $titulo_fila }}</li>
-
+                                                    
                                                     @foreach ($seats as $t => $seat)
                                                         @if ($key_file == $seat->row)
+                                                        <li class="seat" style="font-weight: bolder;width: 30px;position: absolute;left: 20px;">{{ $seat->seatRows() }}</li>
 
                                                             @if ($seat->is_available != 2) 
                                                                 <li class="seat seatSelect {{ $seat->is_available == 3 ? "btns-danger": ($seat->is_available == 0 ? "btns-warning" : "btns-info") }}" style="width: 25px; padding-left: 1px;"

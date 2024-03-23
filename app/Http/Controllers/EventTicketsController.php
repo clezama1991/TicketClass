@@ -488,12 +488,13 @@ class EventTicketsController extends MyBaseController
 
             if ($select_seat) {
                 $asiento = 1;
+                $LastSeatsRow = $ticket->event->seat_row();
                 // Guarda las sillas disponibles para el tipo de ticket
                 for ($i = 1; $i <= count($filas); $i++) {
                     $cantPorFila = $filas[$i - 1];
                     for ($j = 1; $j <= $cantPorFila; $j++) {
                         $seat = new SeatTicket();
-                        $seat->row = $i;
+                        $seat->row = ($i+$LastSeatsRow);
                         $seat->column = $asiento;
                         $seat->ticket_id = $ticket->id;
                         $seat->is_available = in_array($asiento, $s_blancas) ? 2 : 1;
@@ -690,6 +691,7 @@ class EventTicketsController extends MyBaseController
         $ticket->group_zone = $request->get('group_zone') =='' ? 'General' : $request->get('group_zone');
         $ticket->save();
 
+        $LastSeatsRow = $ticket->event->seat_row();
         if ($select_seat && $seat_anterior == 0) {
             $asiento = 1;
             // Guarda las sillas disponibles para el tipo de ticket
@@ -697,7 +699,7 @@ class EventTicketsController extends MyBaseController
                 $cantPorFila = $filas[$i - 1];
                 for ($j = 1; $j <= $cantPorFila; $j++) {
                     $seat = new SeatTicket();
-                    $seat->row = $i;
+                    $seat->row = ($i+$LastSeatsRow);
                     $seat->column = $asiento;
                     $seat->ticket_id = $ticket->id;
                     $seat->is_available = in_array($asiento, $s_blancas) ? 2 : 1;

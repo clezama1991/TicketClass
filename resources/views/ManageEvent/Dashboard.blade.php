@@ -40,7 +40,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-sm-3">
+        <div class="col-sm-3" style="display: none">
             <div class="stat-box">
                 <h3>{{ money(($event->sales_volume) + $event->organiser_fees_volume , $event->currency) }}</h3>
                 <span>@lang("Dashboard.sales_volume")</span>
@@ -52,19 +52,19 @@
                 <span>@lang("Dashboard.orders")</span>
             </div>
         </div>
-        <div class="col-sm-2">
+        <div class="col-sm-3">
             <div class="stat-box">
                 <h3>{{ $event->quantity_without_free }}</h3>
                 <span>@lang("Dashboard.tickets_sold")</span>
             </div>
         </div>
-        <div class="col-sm-2">
+        <div class="col-sm-3">
             <div class="stat-box">
                 <h3>{{ $event->quantity_free  }}</h3>
                 <span>Entradas de Cortesia</span>
             </div>
         </div>
-        <div class="col-sm-2">
+        <div class="col-sm-3">
             <div class="stat-box">
                 <h3>{{ $event->quantity_free + $event->quantity_without_free  }}</h3>
                 <span>Total de Entradas</span>

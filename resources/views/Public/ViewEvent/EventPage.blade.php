@@ -335,15 +335,15 @@
                                                                         </div>
                                                                     @endif
                                                                     @foreach ($ticket_seats as $key_file => $seats)
-                                                                    
+                                                                  
                                                                         <div class="col-md-12 mb-4">
-<span style='  white-space: break-word;'> Fila {{ $abecedario[$key_abecedario]}}  <span>
+<span style='  white-space: break-word;'> Fila {{ $abecedario[$key_file-1]}}  <span>
                                                                             <div class="seats__grid">
                                                                                 <ul class="nostyle seats__row "
                                                                                     style="list-style:none;padding:0;margin:0;display: ruby-text;justify-content: center;">
                                                                                     <li class="seat"
                                                                                         style="font-weight: bolder;width: 30px;position: absolute;left: 20px;">
-                                                                                        {{ $abecedario[$key_abecedario]}}</li>
+                                                                                        {{ $abecedario[$key_file]}}</li>
 
                                                                                     @foreach ($seats as $t => $seat)
                                                                                         @if ($key_file == $seat->row)
