@@ -167,7 +167,7 @@
                         <tr>
                             <td align="right"
                                 style="font-size:25px;color:#1a1a1a;padding-bottom:5px;border-bottom:1px solid #a89dff">
-                                <b>TOTAL A PAGAR</b>
+                                <b>Total Pagado</b>
                             </td>
                         </tr>
                         <tr>
@@ -195,19 +195,18 @@
                     <tbody>
                         <tr>
                             <td style="font-weight:400;text-align: center;">
-                                ESTE CORREO CONTIENE LA INFORMACIÓN NECESARIA PARA QUE PUEDAS ACUDIR A
-                                CUALQUIER SUCURSAL TICKETMATICO PARA IMPRIMIR TUS BOLETOS, RECUERDA LLEVAR TU
-                                INE IMPRESA POR LOS DOS LADOS.
-                            </td>
+                             
+                            ESTE CORREO CONTIENE TUS BOLETOS DIGITALES, DESCÁRGALOS PARA PODER ACCEDER AL EVENTO.
+                        
+                        </td>
 
                         </tr>
                         <tr>
                             <td style="height: 20px"></td>
                         </tr>
                         <tr>
-                            <td style="font-weight:400;text-align: center;">
-                                PUNTOS DE VENTA: CUEVA DE CHUCHO COLONIA CENTRO,MORELIA DE 11 AM A 7:00 PM Y
-                                DIA DEL EVENTO EN EL RECINTO DEL LUGAR
+                            <td style="font-weight:400;text-align: center;"> 
+
                             </td>
 
                         </tr>
@@ -250,43 +249,6 @@
     </tbody>
 </table>
 
-
-
-
-
-
-<div style="display:none">
-
-    Estimado: {{ $attendee->first_name }} {{ $attendee->last_name }}
-
-    ¡Tu pago referenciado ha sido recibido!
-
-
-    Número de Reservación:
-    {{$order->order_reference}}
-
-
-    ESTE CORREO CONTIENE LA INFORMACIÓN NECESARIA PARA QUE PUEDAS ACUDIR A CUALQUIER SUCURSAL TICKETMATICO PARA IMPRIMIR
-    TUS BOLETOS
-
-
-
-    Evento: {{$event->title}}
-    Fecha: {{$event->start_date}}
-    Lugar: {{$event->location_address}}
-    Código Postal: {{$event->location_post_code}}
-    Ciudad: {{$event->location_state}}, {{$event->location_country}}
-
-    Zona:
-    {{-- {{$event->sections_map()}} --}}
-
-    Lugares asignados:
-    {{-- {{$event->sections_map()}} --}}
-
-    Cliente: {{ $attendee->first_name }} {{ $attendee->last_name }}
-    Total Pagado: ${{$order->amount}}
-
-</div>
 @stop
 
 @section('footer')
