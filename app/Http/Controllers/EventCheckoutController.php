@@ -364,9 +364,30 @@ class EventCheckoutController extends Controller
 			$order->is_completed_payment = true;
 			$order->save();
 
-            
-            $order = Order::scope()->find($order_id);   
-            $this->dispatch(new SendOrderTickets($order));
+            $order = Order::where('transaction_id', '=', $transaction_id)->first();
+
+            $file_name = $order->order_reference;
+            $file_path = public_path(config('attendize.event_pdf_tickets_path')) . '/' . $file_name . '.pdf';
+            $file_exists = file_exists($file_path);
+            $data = [
+                'order'        => $order,
+                'attendee'        => $order->attendees,
+                'message_content' => 'jeje bien',
+                'subject'         => 'Compra Exitosa',
+                'event'           => $order->event,
+                'email_logo'      => $order->event->organiser->full_logo_path,
+                'file_path'      => $file_path,
+                'file_exists'      => $file_exists,
+            ];
+
+            Mail::send('Emails.messageTicketsSalesCompleted', $data, function ($message) use ($order, $data, $file_path,$file_exists) {
+                $message->to($order->email, $order->first_name)
+                    ->subject($data['subject'] . ' - Evento '.$order->event->title);
+                    if($file_exists){
+                        $message->attach($file_path);
+                    }
+            });
+ 
 
 			$url = route('showOrderDetails', [
 				'is_embedded'     => $this->is_embedded,

@@ -66,6 +66,14 @@ class GenerateTicket extends Job implements ShouldQueue
         foreach ($imgs as $img) {
             $images[] = base64_encode(file_get_contents(public_path($img->image_path)));
         }
+        
+        $bg = null;
+        if(isset($images) && count($images) > 0){
+            foreach($images as $img){
+                $bg = "data:image/png;base64,".$img;
+            }  
+        }
+
 
         $data = [
             'order'     => $order,
@@ -75,10 +83,17 @@ class GenerateTicket extends Job implements ShouldQueue
             'css'       => file_get_contents(public_path('assets/stylesheet/ticket.css')),
             'image'     => base64_encode(file_get_contents(public_path($image_path))),
             'images'    => $images,
+            'bg'    => $bg,
         ];
         try {
             PDF::setOutputMode('F'); // force to file
-            PDF::html('Public.ViewEvent.Partials.PDFTicket', $data, $file_path);
+            
+            if ($order->payment_gateway_id != null) {
+                PDF::html('Public.ViewEvent.Partials.PDFTicketV3', $data, $file_path);
+            }else{
+                PDF::html('Public.ViewEvent.Partials.PDFTicketV2', $data, $file_path); 
+            } 
+
             Log::info("Ticket generated!");
         } catch(\Exception $e) {
             Log::error("Error generating ticket. This can be due to permissions on vendor/nitmedia/wkhtml2pdf/src/Nitmedia/Wkhtml2pdf/lib. This folder requires write and execute permissions for the web user");

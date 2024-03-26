@@ -904,6 +904,19 @@ class EventAttendeesController extends MyBaseController
     {
         $attendee = Attendee::scope()->findOrFail($attendee_id);
 
+        $images = [];
+        $imgs = $attendee->event->images;
+        foreach ($imgs as $img) {
+            $images[] = base64_encode(file_get_contents(public_path($img->image_path)));
+        }
+        
+        $bg = null;
+        if(isset($images) && count($images) > 0){
+            foreach($images as $img){
+                $bg = "data:image/png;base64,".$img;
+            }  
+        }
+
         $data = [
             'order'     => $attendee->order,
             'event'     => $attendee->event,
@@ -911,11 +924,17 @@ class EventAttendeesController extends MyBaseController
             'attendees' => [$attendee],
             'css'       => file_get_contents(public_path('assets/stylesheet/ticket.css')),
             'image'     => base64_encode(file_get_contents(public_path($attendee->event->organiser->full_logo_path))),
-
+            'bg'     => $bg
         ];
 
         if ($request->get('download') == '1') {
-            return PDF::html('Public.ViewEvent.Partials.PDFTicket', $data, 'Tickets');
+            
+            if ($this->payment_gateway_id != null) {
+                return PDF::html('Public.ViewEvent.Partials.PDFTicketV3', $data, 'Tickets');
+            }else{
+                return PDF::html('Public.ViewEvent.Partials.PDFTicketV2', $data, 'Tickets'); 
+            } 
+
         }
         return view('Public.ViewEvent.Partials.PDFTicket', $data);
     }

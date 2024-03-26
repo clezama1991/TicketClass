@@ -231,6 +231,20 @@ class Order extends MyBaseModel
      */
     public function generatePdfTickets()
     {
+
+        $images = [];
+        $imgs = $this->event->images;
+        foreach ($imgs as $img) {
+            $images[] = base64_encode(file_get_contents(public_path($img->image_path)));
+        }
+        
+        $bg = null;
+        if(isset($images) && count($images) > 0){
+            foreach($images as $img){
+                $bg = "data:image/png;base64,".$img;
+            }  
+        }
+
         $data = [
             'order'     => $this,
             'event'     => $this->event,
@@ -238,6 +252,7 @@ class Order extends MyBaseModel
             'attendees' => $this->attendees,
             'css'       => file_get_contents(public_path('assets/stylesheet/ticket.css')),
             'image'     => base64_encode(file_get_contents(public_path($this->event->organiser->full_logo_path))),
+            'bg'     => $bg
         ];
 
         $pdf_file_path = public_path(config('attendize.event_pdf_tickets_path')) . '/' . $this->order_reference;
@@ -252,8 +267,13 @@ class Order extends MyBaseModel
         }
 
         PDF::setOutputMode('F'); // force to file
-        PDF::html('Public.ViewEvent.Partials.PDFTicket', $data, $pdf_file_path);
 
+        if ($this->payment_gateway_id != null) {
+            PDF::html('Public.ViewEvent.Partials.PDFTicketV3', $data, $pdf_file_path);
+        }else{
+            PDF::html('Public.ViewEvent.Partials.PDFTicketV2', $data, $pdf_file_path); 
+        } 
+ 
         $this->ticket_pdf_path = config('attendize.event_pdf_tickets_path') . '/' . $this->order_reference . '.pdf';
         $this->save();
 

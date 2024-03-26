@@ -29,19 +29,39 @@ class QueueHandler
          *   2 Order Confirmation email to buyer
          *   3 Generate /  Send Tickets
          */
+         
+        $images = [];
+        $imgs = $order->event->images;
+        foreach ($imgs as $img) {
+            $images[] = base64_encode(file_get_contents(public_path($img->image_path)));
+        }
+        
+        $bg = null;
+        if(isset($images) && count($images) > 0){
+            foreach($images as $img){
+                $bg = "data:image/png;base64,".$img;
+            }  
+        }
 
         $data = [
             'order'     => $order,
             'event'     => $order->event,
             'tickets'   => $order->event->tickets,
             'attendees' => $order->attendees,
+            'image'     => base64_encode(file_get_contents(public_path($order->event->organiser->full_logo_path))),
+            'bg' => $bg,
         ];
 
         $pdf_file = storage_path() . '/' . $order->order_reference;
         exit($pdf_file);
 
         PDF::setOutputMode('F'); // force to file
-        PDF::html('Public.ViewEvent.Partials.PDFTicket', $data, $pdf_file);
+           
+        if ($order->payment_gateway_id != null) {
+            PDF::html('Public.ViewEvent.Partials.PDFTicketV3', $data, $pdf_file);
+        }else{
+            PDF::html('Public.ViewEvent.Partials.PDFTicketV2', $data, $pdf_file); 
+        } 
 
         //1
         $this->orderMailer->sendOrderNotification($order);
