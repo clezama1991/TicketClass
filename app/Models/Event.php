@@ -327,7 +327,48 @@ class Event extends MyBaseModel
 
     public function startDateFormattedGeneric($format)
     {
-        return $this->start_date->format($format);
+        
+        $shortDayNames = [
+            'Sun' =>'Domingo',
+            'Mon' =>'Lunes', 
+            'Tue' =>'Martes', 
+            'Wed' =>'Miércoles', 
+            'Thu' =>'Jueves', 
+            'Fri' =>'Viernes', 
+            'Sat' =>'Sábado'
+        ];
+
+        $shortMonthNames = [
+            'Jan' =>'Enero', 
+            'Feb' =>'Febrero', 
+            'Mar' =>'Mazo', 
+            'Apr' =>'Abril', 
+            'May' =>'Mayo', 
+            'Jun' =>'Junio', 
+            'Jul' =>'Julio', 
+            'Aug' =>'Agosto', 
+            'Sep' =>'Septiembre', 
+            'Oct' =>'Octubre', 
+            'Nov' =>'Noviembre', 
+            'Dec' =>'Diciembre'
+        ];
+
+        $result = $this->start_date->format($format);
+
+     
+        foreach ($shortMonthNames as $keyM => $valueM) {
+            if( strpos( $result, $keyM ) !== false) {
+               $result = str_replace($keyM, $valueM, $result);
+            }
+        }
+        foreach ($shortDayNames as $key => $value) {
+            if( strpos( $result, $key ) !== false) {
+                $result = str_replace($key, $value, $result);
+            }
+        }
+
+ 
+        return $result;
     }
 
     /**
