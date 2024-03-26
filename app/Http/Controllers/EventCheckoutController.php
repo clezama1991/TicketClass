@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Jobs\SendOrderTickets;
 
 use App\Events\OrderCompletedEvent;
 use App\Models\Account;
@@ -347,6 +348,7 @@ class EventCheckoutController extends Controller
      * @param $event_id
      * @return \Illuminate\Http\JsonResponse
      */
+    
     public function postCompletedOrder(Request $request)
     {
 
@@ -358,9 +360,13 @@ class EventCheckoutController extends Controller
 		$order = Order::where('transaction_id', '=', $transaction_id)->first();
 		
 		if($charge->status=='completed'){
-			
+
 			$order->is_completed_payment = true;
 			$order->save();
+
+            
+            $order = Order::scope()->find($order_id);   
+            $this->dispatch(new SendOrderTickets($order));
 
 			$url = route('showOrderDetails', [
 				'is_embedded'     => $this->is_embedded,

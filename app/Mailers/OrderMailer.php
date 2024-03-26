@@ -19,7 +19,7 @@ class OrderMailer
         $file_path = public_path(config('attendize.event_pdf_tickets_path')) . '/' . $file_name . '.pdf';
         $file_exists = file_exists($file_path);
        
-
+/*
         $data = [
             'order'        => $order,
             'attendee'        => $order->attendees,
@@ -38,7 +38,7 @@ class OrderMailer
                     $message->attach($file_path);
                 }
         });
- 
+ */
         $data = [
             'order' => $order,
             'orderService' => $orderService
@@ -70,34 +70,37 @@ class OrderMailer
                 // Log::error("Cannot send actual ticket to : " . $order->email . " as ticket file does not exist on disk");
                 // return;
             } 
+            if($order->is_completed_payment){
+                
+                $data = [
+                    'order'        => $order,
+                    'attendee'        => $order->attendees,
+                    'message_content' => 'jeje bien',
+                    'subject'         => 'Compra Exitosa',
+                    'event'           => $order->event,
+                    'email_logo'      => $order->event->organiser->full_logo_path,
+                    'file_path'      => $file_path,
+                    'file_exists'      => $file_exists,
+                ];
 
-            $data = [
-                'order'        => $order,
-                'attendee'        => $order->attendees,
-                'message_content' => 'jeje bien',
-                'subject'         => 'Compra Exitosa',
-                'event'           => $order->event,
-                'email_logo'      => $order->event->organiser->full_logo_path,
-                'file_path'      => $file_path,
-                'file_exists'      => $file_exists,
-            ];
-
-            Mail::send('Emails.messageTicketsSalesCompleted', $data, function ($message) use ($order, $file_path,$file_exists) {
-                $message->to($order->email);
-                $message->subject(trans("Controllers.tickets_for_event", ["event" => $order->event->title]));
-                if($file_exists){
-                    $message->attach($file_path);
-                }
-            });
+                Mail::send('Emails.messageTicketsSalesCompleted', $data, function ($message) use ($order, $file_path,$file_exists) {
+                    $message->to($order->email);
+                    $message->subject(trans("Controllers.tickets_for_event", ["event" => $order->event->title]));
+                    if($file_exists){
+                        $message->attach($file_path);
+                    }
+                });
             
-            if (count(Mail::failures()) > 0) {
-                
-                Log::info("Error ticket in OrderMailer to: " . $order->email);
+            
+                if (count(Mail::failures()) > 0) {
+                    
+                    Log::info("Error ticket in OrderMailer to: " . $order->email);
 
-            }else{
-                
-                Log::info("Success ticket in OrderMailer to: " . $order->email);
+                }else{
+                    
+                    Log::info("Success ticket in OrderMailer to: " . $order->email);
 
+                }
             }
             
         } catch (\Exception $th) { 
