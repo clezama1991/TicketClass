@@ -325,6 +325,11 @@ class Event extends MyBaseModel
         return $this->start_date->format(config('attendize.default_datetime_format'));
     }
 
+    public function startDateFormattedGeneric($format)
+    {
+        return $this->start_date->format($format);
+    }
+
     /**
      * Parse end_date to a Carbon instance
      *

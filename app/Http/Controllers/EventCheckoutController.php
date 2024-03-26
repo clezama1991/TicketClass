@@ -1021,6 +1021,14 @@ class EventCheckoutController extends Controller
                 $organiser_full_logo_path = public_path($order->event->organiser->full_logo_path);
             }
             
+            
+            $bg = null;
+            if(isset($images) && count($images) > 0){
+                foreach($images as $img){
+                    $bg = "data:image/png;base64,".$img;
+                }  
+            }
+
             $data = [ 
                 'order'     => $order,
                 'event'     => $order->event,
@@ -1029,13 +1037,18 @@ class EventCheckoutController extends Controller
                 'css'       => file_get_contents(public_path('assets/stylesheet/ticket.css')),
                 'image'     => base64_encode(file_get_contents($organiser_full_logo_path)),
                 'images'    => $images,
+                'bg'    => $bg,
             ];
 
             // dd($images,$organiser_full_logo_path, $data);
             // dd($data);
             if ($request->get('download') == '1') {
                 if ($order->event->version_ticket == '1') {
-                    return PDF::html('Public.ViewEvent.Partials.PDFTicketV2', $data, 'Tickets');
+                    if ($order->payment_gateway_id != null) {
+                        return PDF::html('Public.ViewEvent.Partials.PDFTicketV3', $data, 'Tickets');
+                    }else{
+                        return PDF::html('Public.ViewEvent.Partials.PDFTicketV2', $data, 'Tickets'); 
+                    } 
                 }else{
                     return PDF::html('Public.ViewEvent.Partials.PDFTicket', $data, 'Tickets');
                 }
