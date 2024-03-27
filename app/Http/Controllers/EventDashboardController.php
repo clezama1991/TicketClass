@@ -101,17 +101,23 @@ class EventDashboardController extends MyBaseController
         $tickets_data_agrupadas_id = [];
         $tickets_data_totales_agrupadas = [];
         foreach ($event->orders->where('is_cancelled',false) as $key => $value) {
-            $plata = 0;
             $cortesia = 0;
+            $plata = 0;
             $online = 0;
+            $ventaplata = 0;
+            $ventaonline = 0;
             $sincargo = 0;
             $cargo = 0;
             $venta = 0;
             $total = 0;
+
+            $ventaenlinea = true;
+
             if( is_null($value->payment_gateway_id)){
                 
                 if($value->payment_method != 'free'){
                     $plata += $value->SumQuantyorderItems();
+                    $ventaenlinea = false;
                 }else{
                     $cortesia += $value->SumQuantyorderItems();
                 }
@@ -122,6 +128,11 @@ class EventDashboardController extends MyBaseController
 
             foreach ($value->orderItems as $key => $orderItems) {
                 $sincargo = $orderItems->quantity * $orderItems->unit_price;
+                if($ventaenlinea){
+                    $ventaonline+= $sincargo;
+                }else{
+                    $ventaplata+= $sincargo;
+                }
                 $cargo = $orderItems->quantity * $orderItems->unit_booking_fee;
                 $venta = $sincargo + $cargo;
                 $total = $online + $plata;
@@ -137,7 +148,9 @@ class EventDashboardController extends MyBaseController
                             'total' => $total,
                             'sincargo' => $sincargo,
                             'cargo' => $cargo,
-                            'venta' => $venta
+                            'venta' => $venta,
+                            'ventaonline' => $ventaonline,
+                            'ventaplata' => $ventaplata,
                         ]
                     ];                    
                 }else{
@@ -151,7 +164,9 @@ class EventDashboardController extends MyBaseController
                             'total' => $tickets_data_totales[$orderItems->title]['value']['total'] + $total,
                             'sincargo' => $tickets_data_totales[$orderItems->title]['value']['sincargo'] + $sincargo,
                             'cargo' => $tickets_data_totales[$orderItems->title]['value']['cargo'] + $cargo,
-                            'venta' => $tickets_data_totales[$orderItems->title]['value']['venta'] + $venta
+                            'venta' => $tickets_data_totales[$orderItems->title]['value']['venta'] + $venta,
+                            'ventaonline' => $tickets_data_totales[$orderItems->title]['value']['ventaonline'] + $ventaonline,
+                            'ventaplata' => $tickets_data_totales[$orderItems->title]['value']['ventaplata'] + $ventaplata
                         ]
                     ];
                 }    
@@ -167,6 +182,8 @@ class EventDashboardController extends MyBaseController
             $sincargo = $value['value']['sincargo'] ?? 0; 
             $cargo = $value['value']['cargo'] ?? 0; 
             $venta = $value['value']['venta'] ?? 0; 
+            $ventaonline = $value['value']['ventaonline'] ?? 0; 
+            $ventaplata = $value['value']['ventaplata'] ?? 0; 
 
             if(!in_array($value['group'], $tickets_data_agrupadas_id)){
                 $tickets_data_agrupadas_id[] = $value['group'];                    
@@ -179,6 +196,8 @@ class EventDashboardController extends MyBaseController
                         'sincargo' => $sincargo,
                         'cargo' => $cargo,
                         'venta' => $venta,
+                        'ventaonline' => $ventaonline,
+                        'ventaplata' => $ventaplata,
                         'total' => $online + $plata
                     ]
                 ];                    
@@ -189,6 +208,8 @@ class EventDashboardController extends MyBaseController
                 $sincargo = $tickets_data_totales_agrupadas[$value['group']]['value']['sincargo'] + $sincargo;
                 $cargo = $tickets_data_totales_agrupadas[$value['group']]['value']['cargo'] + $cargo;
                 $venta = $tickets_data_totales_agrupadas[$value['group']]['value']['venta'] + $venta;
+                $ventaonline = $tickets_data_totales_agrupadas[$value['group']]['value']['ventaonline'] + $ventaonline;
+                $ventaplata = $tickets_data_totales_agrupadas[$value['group']]['value']['ventaplata'] + $ventaplata;
 
                 $tickets_data_totales_agrupadas[$value['group']] = [
                     'label' => $value['group'],
@@ -199,6 +220,8 @@ class EventDashboardController extends MyBaseController
                         'sincargo' => $sincargo,
                         'cargo' => $cargo,
                         'venta' => $venta,
+                        'ventaonline' => $ventaonline,
+                        'ventaplata' => $ventaplata,
                         'total' => $online + $plata
                     ]
                 ];

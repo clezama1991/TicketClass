@@ -39,34 +39,62 @@
 @stop
 
 @section('content')
+
+    @php
+        $totalesxcortesia = 0;
+        $totalesxplata = 0;
+        $totalesxonline = 0;
+        $totalesxtotal = 0;
+        $totalesxsincargo = 0;
+        $totalesxcargo = 0;
+        $totalesxventa = 0;
+        $ventaonline = 0;
+        $ventaplata = 0;
+    @endphp
+
+    @foreach($tickets_data_totales_agrupadas as $totalesx)
+                                                
+        @php
+            $totalesxcortesia += $totalesx['value']['cortesia'] ;
+            $totalesxplata += $totalesx['value']['plata'] ;
+            $totalesxonline += $totalesx['value']['online'] ;
+            $totalesxtotal += $totalesx['value']['total'] ;
+            $totalesxsincargo += $totalesx['value']['sincargo'] ;
+            $totalesxcargo += $totalesx['value']['cargo'] ;
+            $totalesxventa += $totalesx['value']['venta'] ;
+            $ventaonline += $totalesx['value']['ventaonline'] ;
+            $ventaplata += $totalesx['value']['ventaplata'] ;
+        @endphp
+    @endforeach
+
     <div class="row">
-        <div class="col-sm-3" style="display: none">
+        <div class="col-sm-3" style="di">
             <div class="stat-box">
-                <h3>{{ money(($event->sales_volume) + $event->organiser_fees_volume , $event->currency) }}</h3>
+                <h3>{{ money($totalesxventa, $event->currency) }}</h3>
                 <span>@lang("Dashboard.sales_volume")</span>
             </div>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-2">
             <div class="stat-box">
                 <h3>{{ $event->orders->count() }}</h3>
                 <span>@lang("Dashboard.orders")</span>
             </div>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-2">
             <div class="stat-box">
                 <h3>{{ $event->quantity_without_free }}</h3>
                 <span>@lang("Dashboard.tickets_sold")</span>
             </div>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-2">
             <div class="stat-box">
                 <h3>{{ $event->quantity_free  }}</h3>
-                <span>Entradas de Cortesia</span>
+                <span>Cortesia</span>
             </div>
         </div>
         <div class="col-sm-3">
             <div class="stat-box">
-                <h3>{{ $event->quantity_free + $event->quantity_without_free  }}</h3>
+                <h3>{{ $totalesxtotal  }}</h3>
                 <span>Total de Entradas</span>
             </div>
         </div>
@@ -80,28 +108,28 @@
 
         <div class="col-sm-3">
             <div class="stat-box">
-                <h3>{{ money($event->amount_orders() + $event->amount_orders_online(), $event->currency) }}</h3>
+                <h3>{{ money($totalesxsincargo, $event->currency) }}</h3>
                 <span>Total Organizador</span>
             </div>
         </div>
 
         <div class="col-sm-3">
             <div class="stat-box">
-                <h3>{{ money($event->organiser_fees_volume, $event->currency) }}</h3>
+                <h3>{{ money($totalesxcargo, $event->currency) }}</h3>
                 <span>Total Cargo por Servicio</span>
             </div>
         </div>
 
         <div class="col-sm-3">
             <div class="stat-box">
-                <h3>{{ money($event->amount_orders(), $event->currency) }}</h3>
+                <h3>{{ money($ventaplata, $event->currency) }}</h3>
                 <span>Total en Fisco</span>
             </div>
         </div>
 
         <div class="col-sm-3">
             <div class="stat-box">
-                <h3>{{ money($event->amount_orders_online(), $event->currency) }}</h3>
+                <h3>{{ money($ventaonline, $event->currency) }}</h3>
                 <span>Total en Linea</span>
             </div>
         </div>
