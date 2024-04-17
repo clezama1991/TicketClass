@@ -347,7 +347,7 @@
 
                                                                                     @foreach ($seats as $t => $seat)
                                                                                         @if ($key_file == $seat->row)
-                                                                                        @if ($t>0)
+                                                                                        {{-- @if ($t>0) --}}
                                                                                             @if ($seat->is_available != 2)
                                                                                                 <li class="seat seatSelect st0 asiento_{{$seat->id}} 
                                                                                                     {{ $seat->is_available == 3 ? "bg-info" : 'bg-white' }}"
@@ -367,22 +367,22 @@
                                                                                                     id="silla{{ $seat->id }}">
                                                                                             @else
                                                                                                 <li class="seat seatSelect st0 asiento_{{$seat->id}} 
-                                                                                                    {{ $seat->is_available == 3 ? "bg-info" : 'bg-white' }}"
+                                                                                                    {{ ($seat->is_available == 3 || $seat->is_available == 2) ? "bg-info" : 'bg-white' }}"
                                                                                                     style="width: 25px;height: 25px; padding-left: 1px;     border: 1px solid;
                                                                                                     border-radius: 5px; margin-right:.6px; margin-left:.6px;; font-size:13px"
                                                                                                     id="{{ $seat->id }}"
                                                                                                     data-asiento="{{ $seat->seat() }}"
                                                                                                     data-ticket="{{ $ticket->id }}"
                                                                                                     data-seatzone="{{ $ticket_seat_zone }}"
-                                                                                                    title="{{ $seat->is_available == 3 ? "Asiento Ocupado" : " " . $seat->seat() }}"
-                                                                                                    {{ $seat->is_available == 3 ? 'disabled' : '' }}>
+                                                                                                    title="{{ ($seat->is_available == 3 || $seat->is_available == 2) ? "Asiento Ocupado" : " " . $seat->seat() }}"
+                                                                                                    {{ ($seat->is_available == 3 || $seat->is_available == 2) ? 'disabled' : '' }}>
                                                                                                    
                                                                                                     <span
-                                                                                                        class="seat__num"
-                                                                                                        aria-label="C10">{{ $seat->column }}</span>
+                                                                                                        class="seat__num1 aquiestacargando"
+                                                                                                        aria-label="C10" >{{ $seat->column }}</span>
                                                                                                 </li>
                                                                                             @endif
-                                                                                            @endif
+                                                                                            {{-- @endif --}}
                                                                                             @php
                                                                                                 $termina = $seat->row;
                                                                                             @endphp

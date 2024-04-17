@@ -422,6 +422,7 @@ class EventCheckoutController extends Controller
 
 				$order->order_status_id = 4;
 				$order->is_cancelled = true;
+				$order->delete_by = 'OpenPay por '.$charge->status;
 				$order->save();
 				$order->delete();
 
@@ -476,6 +477,7 @@ class EventCheckoutController extends Controller
  
             $order->order_status_id = 4;
             $order->is_cancelled = true;
+			$order->delete_by = 'postCancelOrder';
             $order->save();
 
         } 

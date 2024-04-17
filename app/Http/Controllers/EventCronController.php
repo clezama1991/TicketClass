@@ -67,6 +67,7 @@ class EventCronController extends Controller
                 
                             $order->order_status_id = 4;
                             $order->is_cancelled = true;
+							$order->delete_by = 'cron';
                             $order->save();
                             $order->delete();
                             
