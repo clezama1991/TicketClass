@@ -38,7 +38,7 @@ class EventCronController extends Controller
     public function ValidarOrdenesRechazadas()
     {
 		
-        $orders = Order::where('is_completed_payment',false)->whereDate('created_at', Carbon::today())->where('created_at', '<=', Carbon::now()->subMinutes(env('MINUTES_MIN_VALIDATE_ORDER')))->get();
+        $orders = Order::where('is_completed_payment',false)->whereDate('created_at', Carbon::today())->where('payment_gateway_id',3)->where('created_at', '<=', Carbon::now()->subMinutes(env('MINUTES_MIN_VALIDATE_ORDER')))->get();
   
          
         $openpay = Openpay::getInstance('mgzijadvcenoigcrf4bo','sk_6e2174165e644e42b17d32409e44069c'); 
@@ -110,7 +110,7 @@ class EventCronController extends Controller
     public function DobleVerificacionOrdenesRechazadas()
     {
 		
-            $orders = Order::where('order_status_id',4)->where('is_cancelled',true)->where('is_cancelled_confirmed',false)->withTrashed()->get();
+            $orders = Order::where('order_status_id',4)->where('is_cancelled',true)->where('is_cancelled_confirmed',false)->where('payment_gateway_id',3)->withTrashed()->get();
    
             DB::beginTransaction();
 
