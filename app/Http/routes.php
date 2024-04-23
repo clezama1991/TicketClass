@@ -804,3 +804,5 @@ Route::group(
 });
 
 Route::get('ValidarOrdenesRechazadas', 'EventCronController@ValidarOrdenesRechazadas');
+Route::get('DobleVerificacionOrdenesRechazadas', 'EventCronController@DobleVerificacionOrdenesRechazadas');
+Route::get('DobleVerificacionAsientosBloquedos', 'EventCronController@DobleVerificacionAsientosBloquedos');
