@@ -91,9 +91,9 @@ class OrderMailer
                         $message->attach($file_path);
                     }
                 });
-                
+
                 OrderComments::create([
-                    'event_id' => $order->id,
+                    'order_id' => $order->id,
                     'comment'     => 'Correo enviado desde OrderMailer',
                 ]);
             
@@ -110,7 +110,7 @@ class OrderMailer
             }else{
                  
                 OrderComments::create([
-                    'event_id' => $order->id,
+                    'order_id' => $order->id,
                     'comment'     => 'Orden no pudo enviar el Correo porque la orden no esta completada desde OrderMailer',
                 ]);
 

@@ -57,7 +57,7 @@ class EventCronController extends Controller
                     if($charge->status!='completed'){
 
                         OrderComments::create([
-                            'event_id' => $order->id,
+                            'order_id' => $order->id,
                             'comment'     => 'Orden cancelada por el cron, tiempo excedido'
                         ]);
 
@@ -133,7 +133,7 @@ class EventCronController extends Controller
 
                         
                         OrderComments::create([
-                            'event_id' => $order->id,
+                            'order_id' => $order->id,
                             'comment'     => 'Orden reactiva por el cron, estatus en openpay completada'
                         ]);
 
@@ -193,7 +193,7 @@ class EventCronController extends Controller
 
                         
                         OrderComments::create([
-                            'event_id' => $order->id,
+                            'order_id' => $order->id,
                             'comment'     => 'Orden con doble verificacion de cancelacion confirmada'
                         ]);
 

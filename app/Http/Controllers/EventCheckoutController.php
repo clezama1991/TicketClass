@@ -363,7 +363,7 @@ class EventCheckoutController extends Controller
 		if($charge->status=='completed'){
 
             OrderComments::create([
-                'event_id' => $order->id,
+                'order_id' => $order->id,
                 'comment'     => 'Orden completada por Openpay',
             ]);
 
@@ -395,7 +395,7 @@ class EventCheckoutController extends Controller
             });
  
             OrderComments::create([
-                'event_id' => $order->id,
+                'order_id' => $order->id,
                 'comment'     => 'Correo enviado en la Orden',
             ]);
 
@@ -407,7 +407,7 @@ class EventCheckoutController extends Controller
 		}else{
 		
             OrderComments::create([
-                'event_id' => $order->id,
+                'order_id' => $order->id,
                 'comment'     => 'Orden Anulada por OpenPay por '.$charge->status,
             ]);
 
@@ -491,7 +491,7 @@ class EventCheckoutController extends Controller
             }
  
             OrderComments::create([
-                'event_id' => $order->id,
+                'order_id' => $order->id,
                 'comment'     => 'Orden Cancelada por un usuario'
             ]);
 
