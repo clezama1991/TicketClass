@@ -6,6 +6,7 @@ use App\Models\Attendee;
 use App\Models\EventStats;
 use App\Models\Order;
 use App\Models\SeatTicket;
+use App\Models\OrderComments;
 use Carbon\Carbon;
 use Cookie;
 use DB;
@@ -54,6 +55,11 @@ class EventCronController extends Controller
                     $charge = $openpay->charges->get($transaction_id); 
                      
                     if($charge->status!='completed'){
+
+                        OrderComments::create([
+                            'event_id' => $order->id,
+                            'comment'     => 'Orden cancelada por el cron, tiempo excedido'
+                        ]);
 
                         $attendees = Attendee::where('order_id','=',$order->id)->get();
 
@@ -125,6 +131,13 @@ class EventCronController extends Controller
                     
                     if($charge->status=='completed'){
 
+                        
+                        OrderComments::create([
+                            'event_id' => $order->id,
+                            'comment'     => 'Orden reactiva por el cron, estatus en openpay completada'
+                        ]);
+
+
                         $order->order_status_id = 1;
                         $order->is_cancelled = false;
                         $order->is_completed_payment = true;
@@ -177,6 +190,13 @@ class EventCronController extends Controller
                         
                         $order->is_cancelled_confirmed = true;
                         $order->save();
+
+                        
+                        OrderComments::create([
+                            'event_id' => $order->id,
+                            'comment'     => 'Orden con doble verificacion de cancelacion confirmada'
+                        ]);
+
                     } 
 
                 }

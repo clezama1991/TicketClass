@@ -16,6 +16,7 @@ use App\Models\PaymentGateway;
 use App\Models\QuestionAnswer;
 use App\Models\ReservedTickets;
 use App\Models\Ticket;
+use App\Models\OrderComments;
 use App\Services\Order as OrderService;
 use Carbon\Carbon;
 use Cookie;
@@ -361,6 +362,11 @@ class EventCheckoutController extends Controller
 		
 		if($charge->status=='completed'){
 
+            OrderComments::create([
+                'event_id' => $order->id,
+                'comment'     => 'Orden completada por Openpay',
+            ]);
+
 			$order->is_completed_payment = true;
 			$order->save();
 
@@ -388,6 +394,10 @@ class EventCheckoutController extends Controller
                     }
             });
  
+            OrderComments::create([
+                'event_id' => $order->id,
+                'comment'     => 'Correo enviado en la Orden',
+            ]);
 
 			$url = route('showOrderDetails', [
 				'is_embedded'     => $this->is_embedded,
@@ -396,6 +406,11 @@ class EventCheckoutController extends Controller
 
 		}else{
 		
+            OrderComments::create([
+                'event_id' => $order->id,
+                'comment'     => 'Orden Anulada por OpenPay por '.$charge->status,
+            ]);
+
 			$attendees = Attendee::where('order_id','=',$order->id)->get();
 
 			foreach ($attendees ?? [] as $value) {
@@ -475,6 +490,11 @@ class EventCheckoutController extends Controller
                 $eventStats->decrement('sales_volume',  $attendee->ticket->price);
             }
  
+            OrderComments::create([
+                'event_id' => $order->id,
+                'comment'     => 'Orden Cancelada por un usuario'
+            ]);
+
             $order->order_status_id = 4;
             $order->is_cancelled = true;
 			$order->delete_by = 'postCancelOrder';

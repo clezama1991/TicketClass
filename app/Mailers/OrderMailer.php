@@ -3,6 +3,7 @@
 namespace App\Mailers;
 
 use App\Models\Order;
+use App\Models\OrderComments;
 use App\Services\Order as OrderService;
 use Log;
 use Mail;
@@ -90,6 +91,11 @@ class OrderMailer
                         $message->attach($file_path);
                     }
                 });
+                
+                OrderComments::create([
+                    'event_id' => $order->id,
+                    'comment'     => 'Correo enviado desde OrderMailer',
+                ]);
             
             
                 if (count(Mail::failures()) > 0) {
@@ -101,6 +107,13 @@ class OrderMailer
                     Log::info("Success ticket in OrderMailer to: " . $order->email);
 
                 }
+            }else{
+                 
+                OrderComments::create([
+                    'event_id' => $order->id,
+                    'comment'     => 'Orden no pudo enviar el Correo porque la orden no esta completada desde OrderMailer',
+                ]);
+
             }
             
         } catch (\Exception $th) { 
