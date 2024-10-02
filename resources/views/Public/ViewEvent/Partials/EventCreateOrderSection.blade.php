@@ -70,7 +70,7 @@
                                         align="center">
                                         <div style="padding:10px 0px 5px 0px; margin:0px 5px 10px 5px">
                             
-                                            <img src="{{asset($event->map->url)}}" >
+                                            {{-- <img src="{{asset($event->map->url)}}" > --}}
                             
                                         </div>
                                     </div>
