@@ -12,6 +12,8 @@ use Cookie;
 use Illuminate\Http\Request;
 use Mail;
 use Validator;
+use Seatsio\Region;
+use Seatsio\SeatsioClient;
 
 class EventViewController extends Controller
 {

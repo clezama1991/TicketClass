@@ -21,9 +21,13 @@ class EventCustomizeController extends MyBaseController
      */
     public function showCustomize($event_id = '', $tab = '')
     {
+        
+        $charts_a = seatsio('maps');
+        
         $data = $this->getEventViewData($event_id, [
             'currencies'               	 => Currency::pluck('title', 'id'),
-            'maps'   => Maps::pluck('name', 'id'),
+            // 'maps'   => Maps::pluck('name', 'id'),
+            'maps'   => $charts_a,
             'available_bg_images'        => $this->getAvailableBackgroundImages(),
             'available_bg_images_thumbs' => $this->getAvailableBackgroundImagesThumbs(),
             'tab'                        => $tab,

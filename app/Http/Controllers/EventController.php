@@ -12,6 +12,7 @@ use App\Models\EventImage;
 use App\Models\Maps;
 use Illuminate\Http\Request;
 use Spatie\GoogleCalendar\Event as GCEvent;
+ 
 
 class EventController extends MyBaseController
 {
@@ -23,10 +24,12 @@ class EventController extends MyBaseController
      */
     public function showCreateEvent(Request $request)
     {
+        $charts_a = seatsio('maps');
         $data = [
             'modal_id'     => $request->get('modal_id'),
             'organisers'   => Organiser::scope()->pluck('name', 'id'),
-            'maps'   => Maps::pluck('name', 'id'),
+            // 'maps'   => Maps::pluck('name', 'id'),
+            'maps'   => $charts_a,
             'organiser_id' => $request->get('organiser_id') ? $request->get('organiser_id') : false,
         ];
 
@@ -197,6 +200,8 @@ class EventController extends MyBaseController
             $eventImage->save();
         }
 
+        seatsio('create_event', $event->id, $event->map_id); 
+        
         return response()->json([
             'status'      => 'success',
             'id'          => $event->id,

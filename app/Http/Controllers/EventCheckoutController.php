@@ -66,7 +66,7 @@ class EventCheckoutController extends Controller
      * @param $event_id
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
-    public function postValidateTickets(Request $request, $event_id)
+    public function postValidateTicketsOld(Request $request, $event_id)
     {
         // dd($request);
         /*
@@ -254,6 +254,198 @@ class EventCheckoutController extends Controller
             'account_payment_gateway' => $activeAccountPaymentGateway,
             'payment_gateway'         => $paymentGateway
         ]);
+
+        /*
+         * If we're this far assume everything is OK and redirect them
+         * to the the checkout page.
+         */
+        if ($request->ajax()) {
+                return response()->json([
+                    'status'      => 'success',
+                    'redirectUrl' => route('showEventCheckout', [
+                            'event_id'    => $event_id,
+                            'is_embedded' => $this->is_embedded,
+                        ]) . '#order_form',
+                ]);
+            }
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => $th->getMessage(),
+            ]);
+        }
+
+        /*
+         * Maybe display something prettier than this?
+         */
+        exit('Please enable Javascript in your browser.');
+    }
+    /**
+     * Validate a ticket request. If successful reserve the tickets and redirect to checkout
+     *
+     * @param Request $request
+     * @param $event_id
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
+    public function postValidateTickets(Request $request, $event_id)
+    {
+        // dd($request);
+        /*
+         * Order expires after X min
+         */
+        try {
+            //code...
+        $order_expires_time = Carbon::now()->addMinutes(config('attendize.checkout_timeout_after'));
+
+        $event = Event::findOrFail($event_id);
+        
+        
+
+        if (!$request->has('tickets_seats')) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'No tickets selected',
+            ]);
+        }
+
+        $ticket_uuii = explode(',',$request->get('tickets_seats')); 
+        
+        $ticket_ids = SeatTicket::whereIn('uuii',$ticket_uuii)
+        ->whereHas('ticket', function ($q2) use ($event_id) {
+            $q2->where('event_id', $event_id);
+        })
+        ->pluck('ticket_id')->toArray();
+
+        // $ticket_ids = $request->get('tickets');
+
+        
+        $asientos_ids = $ticket_ids;
+        
+        // return response()->json([
+        //     'status'  => 'error',
+        //     'ticket_uuii' => $ticket_uuii,
+        //     'ticket_ids' => $ticket_ids,
+        //     'asientos_ids' => $asientos_ids,
+        // ]);
+
+         /*
+         * Remove any tickets the user has reserved
+         */
+        ReservedTickets::where('session_id', '=', session()->getId())->delete();
+
+        /*
+         * Go though the selected tickets and check if they're available
+         * , tot up the price and reserve them to prevent over selling.
+         */
+
+        $validation_rules = [];
+        $validation_messages = [];
+        $tickets = [];
+        $order_total = 0;
+        $order_total_neto = 0;
+        $order_total_price_service = 0;
+        $order_neto_price_online = 0;
+        $amount_payment = 0;
+        $total_ticket_quantity = 0;
+        $order_neto_price_without_paypal = 0;
+        $booking_fee = 0;
+        $organiser_booking_fee = 0;
+        $quantity_available_validation_rules = []; 
+        foreach ($ticket_ids as $ticket_id) {
+            $current_ticket_quantity = 1;
+
+            if ($current_ticket_quantity < 1) {
+                continue;
+            }
+
+            $total_ticket_quantity = $total_ticket_quantity + $current_ticket_quantity;
+            $ticket = Ticket::find($ticket_id);
+            $ticket_quantity_remaining = $ticket->quantity_remaining;
+            $max_per_person = min($ticket_quantity_remaining, $ticket->max_per_person);
+ 
+  
+
+            $price_tickets_online = ($ticket->price + $ticket->price_paypal);
+
+            $order_total = $order_total + ($current_ticket_quantity * $price_tickets_online);
+            $order_neto_price_online += ($current_ticket_quantity * ($ticket->price_neto + $ticket->price_paypal));
+            $order_neto_price_without_paypal += ($current_ticket_quantity * $ticket->price_neto);
+            $order_total_neto = $order_total_neto + ($current_ticket_quantity * $ticket->price_neto);
+            $order_total_price_service = $order_total_price_service + ($current_ticket_quantity * $ticket->price_service);
+            $booking_fee = $booking_fee + ($current_ticket_quantity * $ticket->booking_fee);
+            $organiser_booking_fee = $organiser_booking_fee + ($current_ticket_quantity * $ticket->organiser_booking_fee);
+
+            $tickets[] = [
+                'ticket'                => $ticket,
+                
+                'asientos_ids'      => $asientos_ids,
+                'qty'                   => $current_ticket_quantity,
+                'price'                 => ($current_ticket_quantity * $price_tickets_online),
+                'booking_fee'           => $order_total_price_service,
+                'order_total_price_service'           => $order_total_price_service,
+                'organiser_booking_fee' => ($current_ticket_quantity * $ticket->organiser_booking_fee),
+                'full_price'            => $price_tickets_online + $ticket->total_booking_fee,
+            ];
+ 
+        }
+
+        // return response()->json([
+        //     'status'  => 'error',
+        //     'ticket_uuii' => $ticket_uuii,
+        //     'ticket_ids' => $ticket_ids,
+        //     'asientos_ids' => $asientos_ids,
+        //     'tickets' => $tickets,
+        // ]);
+        if (empty($tickets)) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'No tickets selected.',
+            ]);
+        }
+
+        if (config('attendize.enable_dummy_payment_gateway') == TRUE) {
+            $activeAccountPaymentGateway = new AccountPaymentGateway();
+            $activeAccountPaymentGateway->fill(['payment_gateway_id' => config('attendize.payment_gateway_dummy')]);
+            $paymentGateway = $activeAccountPaymentGateway;
+        } else {
+            $activeAccountPaymentGateway = $event->account->getGateway($event->account->payment_gateway_id);
+            //if no payment gateway configured and no offline pay, don't go to the next step and show user error
+            if (empty($activeAccountPaymentGateway) && !$event->enable_offline_payments) {
+                return response()->json([
+                    'status'  => 'error',
+                    'message' => 'No payment gateway configured',
+                ]);
+            }
+            $paymentGateway = $activeAccountPaymentGateway ? $activeAccountPaymentGateway->payment_gateway : false;
+        }
+
+        /*
+         * The 'ticket_order_{event_id}' session stores everything we need to complete the transaction.
+         */ 
+        session()->put('ticket_order_' . $event->id, [
+            'validation_rules'        => $validation_rules,
+            'validation_messages'     => $validation_messages,
+            'event_id'                => $event->id,
+            'tickets'                 => $tickets,
+            'total_ticket_quantity'   => $total_ticket_quantity,
+            'order_started'           => time(),
+            'expires'                 => $order_expires_time,
+            'reserved_tickets_id'     => $ticket_uuii,
+            'order_total'             => $order_total,
+            'order_total_neto'             => $order_total_neto,
+            'order_neto_price_online'             => $order_neto_price_online,
+            'order_neto_price_without_paypal'             => $order_neto_price_without_paypal,
+            'order_total_price_service'             => $order_total_price_service,
+            'booking_fee'             => $booking_fee,
+            'organiser_booking_fee'   => $organiser_booking_fee,
+            'total_booking_fee'       => $booking_fee + $organiser_booking_fee,
+            'order_requires_payment'  => (ceil($order_total) == 0) ? false : true,
+            'account_id'              => $event->account->id,
+            'affiliate_referral'      => Cookie::get('affiliate_' . $event_id),
+            'account_payment_gateway' => $activeAccountPaymentGateway,
+            'payment_gateway'         => $paymentGateway
+        ]);
+
 
         /*
          * If we're this far assume everything is OK and redirect them
@@ -545,7 +737,7 @@ class EventCheckoutController extends Controller
         $orderRequiresPayment = $ticket_order['order_requires_payment'];
 
         if (env('APP_ENV')=='local') {
-            // return $this->completeOrder($event_id);
+            return $this->completeOrder($event_id);
         }
          
         if ($orderRequiresPayment && $request->get('pay_offline') && $event->enable_offline_payments) {
@@ -783,13 +975,16 @@ class EventCheckoutController extends Controller
 
         try {
 
-            $seat_reserved = ReservedTickets::where('session_id', '=', session()->getId())->where('event_id', $event_id)->first()->seat_reserved;
+            $order_session = session()->get('ticket_order_' . $event_id);
+
+            // $seat_reserved = ReservedTickets::where('session_id', '=', session()->getId())->where('event_id', $event_id)->first()->seat_reserved;
             $order = new Order();
-            $order->seating = $seat_reserved;
-            $seatings = explode(",",$seat_reserved);
+            // $order->seating = $seat_reserved;
+            $seatings = $order_session['reserved_tickets_id']; 
             $ticket_order = session()->get('ticket_order_' . $event_id);
             $request_data = $ticket_order['request_data'][0];
             $event = Event::findOrFail($ticket_order['event_id']);
+            // dd($event->account->id);
             $attendee_increment = 1;
             $ticket_questions = isset($request_data['ticket_holder_questions']) ? $request_data['ticket_holder_questions'] : [];
             
@@ -863,6 +1058,8 @@ class EventCheckoutController extends Controller
              * Add the attendees
              */
             $posicion_seat = 0;
+            $account_id =  $event->account->id;
+            // dd($ticket_order['tickets']);
             foreach ($ticket_order['tickets'] as $attendee_details) {
 
                 /*
@@ -883,6 +1080,7 @@ class EventCheckoutController extends Controller
                  * Insert order items (for use in generating invoices)
                  */
                 $orderItem = new OrderItem();
+                $orderItem->ticket_id = $attendee_details['ticket']['id'];
                 $orderItem->title = $attendee_details['ticket']['title'];
                 $orderItem->quantity = $attendee_details['qty'];
                 $orderItem->order_id = $order->id;
@@ -908,7 +1106,7 @@ class EventCheckoutController extends Controller
                     $attendee->event_id = $event_id;
                     $attendee->order_id = $order->id;
                     $attendee->ticket_id = $attendee_details['ticket']['id'];
-                    $attendee->account_id = $event->account->id;
+                    $attendee->account_id = $account_id;
                     $attendee->reference_index = $attendee_increment;
                     $attendee->seat = $seat;
                     $attendee->save();
@@ -947,11 +1145,27 @@ class EventCheckoutController extends Controller
                     $attendee_increment++;
                 }
 
-                foreach ($seatings as $key => $value) {
-                    # code...
-                    SeatTicket::whereId($value)->update(['is_available'=>3]);
-                }
 
+                // dd($seatings);
+
+
+            }
+
+            foreach ($seatings as $key => $value) { 
+                    
+                SeatTicket::where('uuii',$value)->update(['is_available'=>3]);
+
+                $status_set = ['1'=>'free', '0'=>'booked', '3'=>'vendido'];
+      
+                $seatsioClient = new \Seatsio\SeatsioClient(env('WORKSPACE_SECRET_KEY')); 
+      
+                $event = 'event'.$event_id;
+      
+                $uuii = [$value];
+       
+                $seatsioClient->events->changeObjectStatus($event, $uuii, 'vendido');
+
+                
             }
 
         } catch (Exception $e) {
@@ -968,7 +1182,7 @@ class EventCheckoutController extends Controller
         //save the order to the database
         DB::commit();
         //forget the order in the session
-        session()->forget('ticket_order_' . $event->id);
+        session()->forget('ticket_order_' . $event_id);
 
         /*
          * Remove any tickets the user has reserved after they have been ordered for the user

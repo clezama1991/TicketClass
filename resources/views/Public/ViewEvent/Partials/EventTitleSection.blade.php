@@ -17,13 +17,13 @@
                     <!--style="margin-top:10px"-->
 
                     {{-- {{ $event->start_date->format('l') }},  --}}
-                     {{ $event->startDateFormatted() }}
+                     {{ $event->startDateFormattedGeneric('d/m/Y h:i A') }}
                     <span class="boldear800">
-                        @if($event->start_date->diffInDays($event->end_date) == 0)
+                        {{-- @if($event->start_date->diffInDays($event->end_date) == 0)
                                 {{ $event->end_date->format('H:i') }}
                             @else
                                 {{ $event->endDateFormatted() }}
-                            @endif
+                            @endif --}}
                     </span>
 
 
